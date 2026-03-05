@@ -6,38 +6,44 @@ class LiveMatchService {
   static final LiveMatchService instance = LiveMatchService._();
 
   static const _collection = 'featured_match';
-  static const _docId = 'admin_current';
-
-  FeaturedMatch? cachedMatch;
+  static const _docId      = 'admin_current';
 
   late final _docRef = FirebaseFirestore.instance
       .collection(_collection)
       .doc(_docId);
 
+
+  FeaturedMatch? _cached;
+  int?           _cachedHash;
+
+
   Stream<FeaturedMatch?> streamFeaturedMatch() {
-    return _docRef.snapshots().map((doc) {
-      print('📡 ${DateTime.now()} — cache: ${doc.metadata.isFromCache} — runs: ${doc.data()?['scores']?['teamA']?['runs']}');
-      if (!doc.exists || doc.data() == null) return null;
-      final match = FeaturedMatch.fromDoc(doc);
-      cachedMatch = match;
-      return match;
-    });
-  }
-  Future<void> warmCache() async {
-    try {
-      final doc = await _docRef.get(const GetOptions(source: Source.cache));
-      if (doc.exists && doc.data() != null) {
-        cachedMatch = FeaturedMatch.fromDoc(doc);
-      }
-    } catch (_) {} // no cache yet, ignore
+    return _docRef
+        .snapshots()
+        .map(_parseSnapshotSync);
   }
 
 
   Future<FeaturedMatch?> fetchMatch() async {
     final doc = await _docRef.get();
     if (!doc.exists || doc.data() == null) return null;
-    final match = FeaturedMatch.fromDoc(doc);
-    cachedMatch = match; // ← cache fetch too
+    return _parseSnapshotSync(doc);
+  }
+
+
+  FeaturedMatch? _parseSnapshotSync(DocumentSnapshot doc) {
+    if (!doc.exists || doc.data() == null) return null;
+
+    final raw = doc.data() as Map<String, dynamic>;
+
+
+    final hash = raw.hashCode;
+    if (hash == _cachedHash && _cached != null) return _cached;
+
+    final match = FeaturedMatch.fromMap(raw);
+
+    _cached     = match;
+    _cachedHash = hash;
     return match;
   }
 }

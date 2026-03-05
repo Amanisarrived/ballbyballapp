@@ -17,6 +17,21 @@ class CurrentOver {
     );
   }
 
+  // ── Equality — required for listEquals() to work correctly ──
+  // Without this, every Firestore snapshot creates NEW objects,
+  // listEquals always returns false, and UI rebuilds on every event
+  // even when currentOver data hasn't actually changed.
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is CurrentOver &&
+              runtimeType == other.runtimeType &&
+              type == other.type &&
+              value == other.value &&
+              dismissal == other.dismissal;
+
+  @override
+  int get hashCode => Object.hash(type, value, dismissal);
 
   bool get isWicket  => type == 'wicket';
   bool get isWide    => type == 'wides';
@@ -26,10 +41,10 @@ class CurrentOver {
 
   String get label {
     switch (type) {
-      case 'wicket': return 'W';
-      case 'wides':  return 'Wd';
+      case 'wicket':  return 'W';
+      case 'wides':   return 'Wd';
       case 'noBalls': return 'Nb';
-      default:       return value == 0 ? '·' : '$value';
+      default:        return value == 0 ? '·' : '$value';
     }
   }
 }

@@ -17,7 +17,7 @@ class FeaturedMatch {
   final LiveMatch? liveMatch;
   final Map<String, TeamScore> scores;
   final Map<String, PlayerStat> playerStats;
-  final List<CurrentOver> currentOver; // ← list of balls this over
+  final List<CurrentOver> currentOver;
 
   const FeaturedMatch({
     required this.meta,
@@ -32,26 +32,20 @@ class FeaturedMatch {
 
   // ── Convenience getters ──────────────────────────────────
 
-  /// Score for the currently batting team
   TeamScore? get battingScore =>
       liveMatch != null ? scores[liveMatch!.battingTeam] : null;
 
-  /// The batting Team object
   Team get battingTeam =>
       liveMatch?.battingTeam == 'teamA' ? teamA : teamB;
 
-  /// The bowling Team object
   Team get bowlingTeam =>
       liveMatch?.bowlingTeam == 'teamA' ? teamA : teamB;
 
-  /// Legal balls only (excludes wides & no-balls)
   int get legalBallsThisOver =>
       currentOver.where((b) => b.isLegal).length;
 
-  /// Whether the over is complete
   bool get isOverComplete => legalBallsThisOver >= 6;
 
-  /// Find any player across both teams by id
   Player? findPlayer(String id) {
     try {
       return [...teamA.players, ...teamB.players]
@@ -64,10 +58,9 @@ class FeaturedMatch {
   PlayerStat statOf(String playerId) =>
       playerStats[playerId] ?? const PlayerStat();
 
-  // ── fromDoc ──────────────────────────────────────────────
-  factory FeaturedMatch.fromDoc(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>? ?? {};
-
+  // ── fromMap — used by compute() in LiveMatchService ──────
+  // Must take a plain Map so it can run in a background isolate
+  factory FeaturedMatch.fromMap(Map<String, dynamic> data) {
     final meta = MatchMeta.fromMap(
       Map<String, dynamic>.from(data['meta'] as Map? ?? {}),
     );
@@ -106,7 +99,6 @@ class FeaturedMatch {
       ),
     );
 
-    // ← parse array of balls, not a single map
     final overRaw = data['currentOver'] as List<dynamic>? ?? [];
     final currentOver = overRaw
         .map((b) => CurrentOver.fromMap(
@@ -124,6 +116,12 @@ class FeaturedMatch {
       playerStats: playerStats,
       currentOver: currentOver,
     );
+  }
+
+  // ── fromDoc — now just extracts Map and delegates to fromMap
+  factory FeaturedMatch.fromDoc(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>? ?? {};
+    return FeaturedMatch.fromMap(data);
   }
 
   @override

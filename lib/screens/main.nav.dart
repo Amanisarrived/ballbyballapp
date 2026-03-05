@@ -1,3 +1,4 @@
+
 import 'package:ballbyball/screens/mainscreens/homescreen/home_screen.dart';
 import 'package:ballbyball/screens/mainscreens/productscreen/prodcut_screen.dart';
 import 'package:ballbyball/screens/mainscreens/settingscreen/setting_screen.dart';
@@ -28,6 +29,7 @@ class _MainNavState extends State<MainNav> with TickerProviderStateMixin {
     HomeScreen(),
     ShopScreen(),
    SettingsScreen(),
+
   ];
 
   @override

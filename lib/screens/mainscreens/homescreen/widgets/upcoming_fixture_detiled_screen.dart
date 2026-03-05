@@ -464,7 +464,7 @@ class _WinnerChip extends StatelessWidget {
           const SizedBox(width: 14),
           Expanded(
             child: Text(
-              fixture.winningTeam,
+              fixture.resultSummary,
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 13,

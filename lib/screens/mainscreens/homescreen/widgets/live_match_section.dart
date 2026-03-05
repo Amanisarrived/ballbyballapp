@@ -11,7 +11,6 @@ class LiveMatchSection extends StatefulWidget {
 }
 
 class _LiveMatchSectionState extends State<LiveMatchSection> {
-  // ── Stream locked once, never recreated on rebuild ────
   late final Stream<FeaturedMatch?> _stream =
   LiveMatchService.instance.streamFeaturedMatch();
 
@@ -19,11 +18,8 @@ class _LiveMatchSectionState extends State<LiveMatchSection> {
   Widget build(BuildContext context) {
     return StreamBuilder<FeaturedMatch?>(
       stream: _stream,
-      // ── Show cached data instantly — no skeleton flash ─
-      initialData: LiveMatchService.instance.cachedMatch,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting &&
-            snapshot.data == null) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return _buildSkeleton();
         }
 
@@ -31,7 +27,7 @@ class _LiveMatchSectionState extends State<LiveMatchSection> {
           return const SizedBox.shrink();
         }
 
-        return LiveMatchCard(match: snapshot.data!);
+        return LiveMatchCard(key: const ValueKey('live_match_card'), match: snapshot.data!,);
       },
     );
   }
@@ -84,7 +80,8 @@ class _LiveMatchSectionState extends State<LiveMatchSection> {
     return Column(
       children: [
         Container(
-          width: 48, height: 48,
+          width: 48,
+          height: 48,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.white.withAlpha(15),
@@ -92,7 +89,8 @@ class _LiveMatchSectionState extends State<LiveMatchSection> {
         ),
         const SizedBox(height: 8),
         Container(
-          width: 50, height: 8,
+          width: 50,
+          height: 8,
           decoration: BoxDecoration(
             color: Colors.white.withAlpha(15),
             borderRadius: BorderRadius.circular(4),
@@ -100,7 +98,8 @@ class _LiveMatchSectionState extends State<LiveMatchSection> {
         ),
         const SizedBox(height: 6),
         Container(
-          width: 60, height: 20,
+          width: 60,
+          height: 20,
           decoration: BoxDecoration(
             color: Colors.white.withAlpha(15),
             borderRadius: BorderRadius.circular(4),

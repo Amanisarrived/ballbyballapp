@@ -47,16 +47,37 @@ class PlayerStat {
     );
   }
 
-  /// Strike rate
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is PlayerStat &&
+              runtimeType == other.runtimeType &&
+              runs == other.runs &&
+              balls == other.balls &&
+              fours == other.fours &&
+              sixes == other.sixes &&
+              isOut == other.isOut &&
+              dismissal == other.dismissal &&
+              overs == other.overs &&
+              ballsBowled == other.ballsBowled &&
+              runsConceded == other.runsConceded &&
+              wickets == other.wickets &&
+              wides == other.wides &&
+              noBalls == other.noBalls;
+
+  @override
+  int get hashCode => Object.hash(
+    runs, balls, fours, sixes, isOut, dismissal,
+    overs, ballsBowled, runsConceded, wickets, wides, noBalls,
+  );
+
   double get strikeRate => balls > 0 ? (runs / balls * 100) : 0.0;
 
-  /// Economy rate
   double get economy {
     final totalBalls = overs * 6 + ballsBowled;
     return totalBalls > 0 ? (runsConceded / totalBalls * 6) : 0.0;
   }
 
-  /// Bowling figures e.g. "3/24"
   String get bowlingFigures => '$wickets/$runsConceded';
 
   Map<String, dynamic> toMap() => {

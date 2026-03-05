@@ -25,13 +25,17 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: false, // disables local cache
+  );
+
 
 
 
 
   final isGranted = await NotificationPreference.isGranted();
   if (isGranted) {
-    await NotificationService().init();
+     NotificationService().init();
   }
   final showPermissionScreen =
   await NotificationPreference.shouldShowPermissionScreen();
