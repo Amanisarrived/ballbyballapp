@@ -23,7 +23,7 @@ class UpcomingSection extends StatelessWidget {
           return _buildLoading();
         }
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const SizedBox.shrink();
+          return previewMode ? _buildHorizontalEmpty() : _buildVerticalEmpty();
         }
         return previewMode
             ? _buildHorizontal(snapshot.data!)
@@ -76,7 +76,8 @@ class UpcomingSection extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => UpcomingFixtureDetailScreen(fixture: fixtures[index]),
+                      builder: (_) => UpcomingFixtureDetailScreen(
+                          fixture: fixtures[index]),
                     ),
                   );
                 },
@@ -86,6 +87,116 @@ class UpcomingSection extends StatelessWidget {
           },
         ),
       ],
+    );
+  }
+
+  // ── EMPTY STATE — horizontal (preview card strip) ───────
+  Widget _buildHorizontalEmpty() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionTitle(),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 195,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xFF111111),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white.withAlpha(10)),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(6),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white.withAlpha(12)),
+                    ),
+                    child: const Icon(
+                      Icons.sports_cricket_rounded,
+                      color: Color(0xFF444444),
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'No upcoming matches',
+                    style: TextStyle(
+                      color: Color(0xFF666666),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Check back soon',
+                    style: TextStyle(
+                      color: Color(0xFF3A3A3A),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ── EMPTY STATE — vertical (full tab) ───────────────────
+  Widget _buildVerticalEmpty() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 72,
+              height: 72,
+              decoration: BoxDecoration(
+                color: const Color(0xFF111111),
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white.withAlpha(12)),
+              ),
+              child: const Icon(
+                Icons.sports_cricket_rounded,
+                color: Color(0xFF3A3A3A),
+                size: 32,
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'No upcoming matches',
+              style: TextStyle(
+                color: Color(0xFFAAAAAA),
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Fixtures will appear here once\nthey are scheduled.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xFF555555),
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                height: 1.6,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -141,7 +252,7 @@ class UpcomingSection extends StatelessWidget {
             padding: const EdgeInsets.only(left: 4, right: 4, bottom: 4),
             itemCount: 3,
             separatorBuilder: (_, __) => const SizedBox(width: 10),
-            itemBuilder: (_, _) => _skeletonCardH(),
+            itemBuilder: (_, __) => _skeletonCardH(),
           ),
         )
             : ListView.builder(
@@ -196,18 +307,27 @@ class UpcomingSection extends StatelessWidget {
             height: 36,
             decoration: BoxDecoration(
               color: Colors.white.withAlpha(6),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius:
+              const BorderRadius.vertical(top: Radius.circular(16)),
             ),
           ),
           const SizedBox(height: 14),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [_shimmerCircle(44), _shimmerCircle(24), _shimmerCircle(44)],
+            children: [
+              _shimmerCircle(44),
+              _shimmerCircle(24),
+              _shimmerCircle(44)
+            ],
           ),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [_shimmerBox(50, 8), const SizedBox(width: 30), _shimmerBox(50, 8)],
+            children: [
+              _shimmerBox(50, 8),
+              const SizedBox(width: 30),
+              _shimmerBox(50, 8)
+            ],
           ),
         ],
       ),
@@ -229,13 +349,18 @@ class UpcomingSection extends StatelessWidget {
             height: 36,
             decoration: BoxDecoration(
               color: Colors.white.withAlpha(5),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius:
+              const BorderRadius.vertical(top: Radius.circular(20)),
             ),
           ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [_shimmerCircle(62), _shimmerCircle(42), _shimmerCircle(62)],
+            children: [
+              _shimmerCircle(62),
+              _shimmerCircle(42),
+              _shimmerCircle(62)
+            ],
           ),
         ],
       ),

@@ -10,6 +10,9 @@ class UpcomingFixtureCardScreen extends StatelessWidget {
 
   bool get isCompleted => fixture.winningTeam.isNotEmpty;
 
+  bool get isOngoing =>
+      !isCompleted && DateTime.now().isAfter(fixture.dateTime);
+
   bool _isWinner(String teamName) {
     if (!isCompleted) return false;
     return fixture.winningTeam.toLowerCase().startsWith(teamName.toLowerCase());
@@ -40,13 +43,8 @@ class UpcomingFixtureCardScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // ── Top bar ──
             _buildTopBar(matchDate),
-
-            // ── Teams section ──
             _buildTeamsSection(team1Won, team2Won),
-
-            // ── Bottom bar ──
             _buildBottomBar(),
           ],
         ),
@@ -66,7 +64,8 @@ class UpcomingFixtureCardScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.emoji_events_rounded, size: 11, color: Color(0xFF666666)),
+          const Icon(Icons.emoji_events_rounded,
+              size: 11, color: Color(0xFF666666)),
           const SizedBox(width: 6),
           Expanded(
             child: Text(
@@ -82,8 +81,7 @@ class UpcomingFixtureCardScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          // Status pill
-          _StatusPill(isCompleted: isCompleted),
+          _StatusPill(isCompleted: isCompleted, isOngoing: isOngoing),
         ],
       ),
     );
@@ -97,7 +95,6 @@ class UpcomingFixtureCardScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       child: Row(
         children: [
-          // Team 1
           Expanded(
             child: _TeamSide(
               name: fixture.team1,
@@ -107,14 +104,11 @@ class UpcomingFixtureCardScreen extends StatelessWidget {
               align: CrossAxisAlignment.start,
             ),
           ),
-
-          // Center divider with VS or time
           _CenterDivider(
             dateTime: fixture.dateTime,
             isCompleted: isCompleted,
+            isOngoing: isOngoing,
           ),
-
-          // Team 2
           Expanded(
             child: _TeamSide(
               name: fixture.team2,
@@ -130,10 +124,11 @@ class UpcomingFixtureCardScreen extends StatelessWidget {
   }
 
   // ─────────────────────────────────────────────
-  // BOTTOM BAR — result or date/venue
+  // BOTTOM BAR — result / ongoing / date
   // ─────────────────────────────────────────────
   Widget _buildBottomBar() {
-    final dateLabel = DateFormat('EEE, dd MMM • hh:mm a').format(fixture.dateTime);
+    final dateLabel =
+    DateFormat('EEE, dd MMM • hh:mm a').format(fixture.dateTime);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -167,9 +162,32 @@ class UpcomingFixtureCardScreen extends StatelessWidget {
           ),
         ],
       )
+          : isOngoing
+          ? Row(
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xFF4CAF50),
+            ),
+          ),
+          const SizedBox(width: 7),
+          const Text(
+            'Match is currently ongoing',
+            style: TextStyle(
+              color: Color(0xFF4CAF50),
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      )
           : Row(
         children: [
-          const Icon(Icons.calendar_today_rounded, size: 11, color: Color(0xFF555555)),
+          const Icon(Icons.calendar_today_rounded,
+              size: 11, color: Color(0xFF555555)),
           const SizedBox(width: 6),
           Text(
             dateLabel,
@@ -190,7 +208,8 @@ class UpcomingFixtureCardScreen extends StatelessWidget {
 // ─────────────────────────────────────────────
 class _StatusPill extends StatefulWidget {
   final bool isCompleted;
-  const _StatusPill({required this.isCompleted});
+  final bool isOngoing;
+  const _StatusPill({required this.isCompleted, required this.isOngoing});
 
   @override
   State<_StatusPill> createState() => _StatusPillState();
@@ -222,6 +241,7 @@ class _StatusPillState extends State<_StatusPill>
 
   @override
   Widget build(BuildContext context) {
+    // ── ENDED ──
     if (widget.isCompleted) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -242,6 +262,47 @@ class _StatusPillState extends State<_StatusPill>
       );
     }
 
+    // ── ONGOING — green pulsing ──
+    if (widget.isOngoing) {
+      return AnimatedBuilder(
+        animation: _pulse,
+        builder: (_, __) => Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: const Color(0xFF4CAF50).withOpacity(0.08),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: const Color(0xFF4CAF50).withOpacity(_pulse.value * 0.6),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 5,
+                height: 5,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFF4CAF50).withOpacity(_pulse.value),
+                ),
+              ),
+              const SizedBox(width: 5),
+              const Text(
+                'ONGOING',
+                style: TextStyle(
+                  color: Color(0xFF4CAF50),
+                  fontSize: 8,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.8,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // ── UPCOMING — red pulsing ──
     return AnimatedBuilder(
       animation: _pulse,
       builder: (_, __) => Container(
@@ -302,7 +363,6 @@ class _TeamSide extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Logo
         Stack(
           children: [
             AnimatedContainer(
@@ -351,8 +411,6 @@ class _TeamSide extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Winner crown badge
             if (isWinner)
               Positioned(
                 bottom: 0,
@@ -374,10 +432,7 @@ class _TeamSide extends StatelessWidget {
               ),
           ],
         ),
-
         const SizedBox(height: 10),
-
-        // Team name
         AnimatedDefaultTextStyle(
           duration: const Duration(milliseconds: 300),
           style: TextStyle(
@@ -392,7 +447,7 @@ class _TeamSide extends StatelessWidget {
             name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center
+            textAlign: TextAlign.center,
           ),
         ),
       ],
@@ -422,8 +477,13 @@ class _TeamSide extends StatelessWidget {
 class _CenterDivider extends StatelessWidget {
   final DateTime dateTime;
   final bool isCompleted;
+  final bool isOngoing;
 
-  const _CenterDivider({required this.dateTime, required this.isCompleted});
+  const _CenterDivider({
+    required this.dateTime,
+    required this.isCompleted,
+    required this.isOngoing,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -434,18 +494,19 @@ class _CenterDivider extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
         children: [
-          // Top line
           Container(width: 1, height: 14, color: Colors.white.withAlpha(12)),
           const SizedBox(height: 8),
-
-          // VS circle
           Container(
             width: 42,
             height: 42,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: const Color(0xFF181818),
-              border: Border.all(color: Colors.white.withAlpha(15)),
+              border: Border.all(
+                color: isOngoing
+                    ? const Color(0xFF4CAF50).withOpacity(0.3)
+                    : Colors.white.withAlpha(15),
+              ),
             ),
             child: isCompleted
                 ? const Center(
@@ -454,6 +515,18 @@ class _CenterDivider extends StatelessWidget {
                 style: TextStyle(
                   color: Color(0xFF555555),
                   fontSize: 9,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            )
+                : isOngoing
+                ? const Center(
+              child: Text(
+                'VS',
+                style: TextStyle(
+                  color: Color(0xFF4CAF50),
+                  fontSize: 10,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.5,
                 ),
@@ -483,9 +556,7 @@ class _CenterDivider extends StatelessWidget {
               ],
             ),
           ),
-
           const SizedBox(height: 8),
-          // Bottom line
           Container(width: 1, height: 14, color: Colors.white.withAlpha(12)),
         ],
       ),

@@ -17,10 +17,6 @@ class CurrentOver {
     );
   }
 
-  // ── Equality — required for listEquals() to work correctly ──
-  // Without this, every Firestore snapshot creates NEW objects,
-  // listEquals always returns false, and UI rebuilds on every event
-  // even when currentOver data hasn't actually changed.
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

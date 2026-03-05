@@ -68,10 +68,17 @@ class TrendingCard extends StatelessWidget {
               ),
 
               // Trending animated chip — top left
-              Positioned(
+              const Positioned(
                 top: 12,
                 left: 12,
-                child: const _AnimatedTrendingChip(),
+                child: _AnimatedTrendingChip(),
+              ),
+
+              // YouTube chip — top right
+              const Positioned(
+                top: 12,
+                right: 12,
+                child: _YoutubeChip(),
               ),
 
               // Play icon — center
@@ -115,6 +122,58 @@ class TrendingCard extends StatelessWidget {
   }
 }
 
+// ── YouTube chip ───────────────────────────────────────────────
+class _YoutubeChip extends StatelessWidget {
+  const _YoutubeChip();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.55),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.08),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // YouTube "play" logo shape
+          Container(
+            width: 14,
+            height: 10,
+            decoration: BoxDecoration(
+              color: const Color(0xFFFF0000).withOpacity(0.9),
+              borderRadius: BorderRadius.circular(2),
+            ),
+            child: const Center(
+              child: Icon(
+                Icons.play_arrow_rounded,
+                color: Colors.white,
+                size: 9,
+              ),
+            ),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            'YouTube',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.85),
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Animated trending chip ─────────────────────────────────────
 class _AnimatedTrendingChip extends StatefulWidget {
   const _AnimatedTrendingChip();
 
