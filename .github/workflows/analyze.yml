@@ -1,0 +1,47 @@
+name: BallByBall — Analyze & Build Check
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  analyze_and_build:
+    name: Analyze & Build Check
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── Step 1: Checkout code ─────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── Step 2: Setup Java ────────────────────────────────
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      # ── Step 3: Setup Flutter ─────────────────────────────
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.41.4"
+          channel: stable
+          cache: true
+
+      # ── Step 4: Get dependencies ──────────────────────────
+      - name: Get Flutter packages
+        run: flutter pub get
+
+      # ── Step 5: Flutter Analyze ───────────────────────────
+      - name: Run flutter analyze
+        run: |
+          flutter analyze --no-fatal-infos --no-fatal-warnings
+          echo "✅ Code analysis passed"
+
+      # ── Step 6: Build APK (Debug) — No signing needed ─────
+      - name: Build Debug APK
+        run: |
+          flutter build apk --debug
+          echo "✅ Debug build successful"
