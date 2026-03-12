@@ -24,7 +24,7 @@ class BannerService {
     } catch (e) {
       return [];
     }
-  }
+  }   
 
 
   static Stream<List<String>> streamBanners() {
