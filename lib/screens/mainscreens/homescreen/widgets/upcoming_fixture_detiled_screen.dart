@@ -3,7 +3,7 @@ import 'package:ballbyball/models/upcoming_fixture_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'dart:ui' as ui;
+
 
 // ════════════════════════════════════════════════════════════
 //  DESIGN TOKENS  — premium dark sports broadcast
@@ -11,7 +11,6 @@ import 'dart:ui' as ui;
 const _bg      = Color(0xFF050505);
 const _glass   = Color(0xFF0E0E0E);
 const _glass2  = Color(0xFF121212);
-const _glass3  = Color(0xFF181818);
 const _stroke  = Color(0xFF1E1E1E);
 const _stroke2 = Color(0xFF252525);
 const _red     = Color(0xFFCC0000);
@@ -336,8 +335,8 @@ class _TeamLogo extends StatelessWidget {
             ? CachedNetworkImage(
           imageUrl: logo,
           fit: BoxFit.cover,
-          placeholder: (_, __) => _Fallback(name: name),
-          errorWidget: (_, __, ___) => _Fallback(name: name),
+          placeholder: (_, _) => _Fallback(name: name),
+          errorWidget: (_, _, _) => _Fallback(name: name),
         )
             : _Fallback(name: name),
       ),
@@ -739,7 +738,7 @@ class _PotmSpotlight extends StatelessWidget {
                                 imageUrl:
                                 fixture.playerOfMatchPhoto,
                                 fit: BoxFit.cover,
-                                errorWidget: (_, __, ___) =>
+                                errorWidget: (_, _, _) =>
                                 const _PersonIcon(),
                               )
                                   : const _PersonIcon(),

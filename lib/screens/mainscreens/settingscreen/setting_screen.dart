@@ -462,9 +462,6 @@ Future<void> _launch(String url) async {
   } catch (_) {}
 }
 
-Future<void> _openAppSettings() async {
-  await _launch('app-settings:');
-}
 
 void _shareApp(BuildContext context) {
 

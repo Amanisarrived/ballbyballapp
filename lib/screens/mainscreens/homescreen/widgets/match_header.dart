@@ -532,8 +532,8 @@ class _TeamScoreBlock extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: logo,
                     fit: BoxFit.cover,
-                    placeholder: (_, __) => Container(color: const Color(0xFF1A1A1A)),
-                    errorWidget: (_, __, ___) => Container(
+                    placeholder: (_, _) => Container(color: const Color(0xFF1A1A1A)),
+                    errorWidget: (_, _, _) => Container(
                       color: const Color(0xFF1A1A1A),
                       child: const Icon(Icons.sports_cricket_rounded,
                           color: Color(0xFF444444), size: 24),

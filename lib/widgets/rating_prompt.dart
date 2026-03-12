@@ -17,8 +17,8 @@ class RatingPrompt {
       barrierDismissible: false,
       barrierColor: Colors.black.withOpacity(0.7),
       transitionDuration: const Duration(milliseconds: 350),
-      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
-      transitionBuilder: (ctx, anim, _, __) {
+      pageBuilder: (_, _, _) => const SizedBox.shrink(),
+      transitionBuilder: (ctx, anim, _, _) {
         final curved = CurvedAnimation(
           parent: anim,
           curve: Curves.easeOutBack,
@@ -321,7 +321,7 @@ class _AnimatedStarIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: controller,
-      builder: (_, __) {
+      builder: (_, _) {
         final scale = Tween<double>(begin: 0.5, end: 1.0)
             .animate(CurvedAnimation(
           parent: controller,

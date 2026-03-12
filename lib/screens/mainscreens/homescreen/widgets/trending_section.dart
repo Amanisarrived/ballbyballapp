@@ -126,7 +126,7 @@ class _TrendingShimmer extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: 4,
-          itemBuilder: (_, __) => const _ShimmerCard(),
+          itemBuilder: (_,_) => const _ShimmerCard(),
         ),
       ],
     );
@@ -165,7 +165,7 @@ class _ShimmerCardState extends State<_ShimmerCard>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _animation,
-      builder: (_, __) => Container(
+      builder: (_, _) => Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         height: 90,
         decoration: BoxDecoration(

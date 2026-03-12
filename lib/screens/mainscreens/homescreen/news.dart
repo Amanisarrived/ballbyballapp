@@ -267,7 +267,7 @@ class _NewsShimmerState extends State<_NewsShimmer>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _anim,
-      builder: (_, __) => SingleChildScrollView(
+      builder: (_, _) => SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

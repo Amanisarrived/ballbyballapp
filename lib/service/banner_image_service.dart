@@ -22,7 +22,6 @@ class BannerService {
 
       return List<String>.from(data[_field] ?? []);
     } catch (e) {
-      print("Banner fetch error: $e");
       return [];
     }
   }

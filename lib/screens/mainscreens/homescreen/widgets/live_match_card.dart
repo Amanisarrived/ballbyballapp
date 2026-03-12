@@ -74,10 +74,10 @@ class _LiveMatchCardState extends State<LiveMatchCard>
     return (score.runs / totalBalls * 6).toStringAsFixed(2);
   }
 
-  String _calculateRequiredRR(int runsNeeded, int ballsRemaining) {
-    if (ballsRemaining == 0) return '0.00';
-    return (runsNeeded / ballsRemaining * 6).toStringAsFixed(2);
-  }
+  // String _calculateRequiredRR(int runsNeeded, int ballsRemaining) {
+  //   if (ballsRemaining == 0) return '0.00';
+  //   return (runsNeeded / ballsRemaining * 6).toStringAsFixed(2);
+  // }
 
   DateTime? _parseMatchTime() {
     if (matchDate.isEmpty || matchTime.isEmpty) return null;
@@ -575,7 +575,7 @@ class _LiveMatchCardState extends State<LiveMatchCard>
   Widget _liveChip() {
     return AnimatedBuilder(
       animation: _controller,
-      builder: (_, __) {
+      builder: (_, _) {
         final pulse = 0.5 + 0.5 * sin(2 * pi * _controller.value);
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),

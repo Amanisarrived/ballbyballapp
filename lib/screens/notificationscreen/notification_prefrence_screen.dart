@@ -128,7 +128,7 @@ class _NotificationPermissionScreenState
       context,
       PageRouteBuilder(
         pageBuilder: (_, _, _) => const SplashScreen(),
-        transitionsBuilder: (_, anim, __, child) =>
+        transitionsBuilder: (_, anim, _, child) =>
             FadeTransition(opacity: anim, child: child),
         transitionDuration: const Duration(milliseconds: 400),
       ),
@@ -236,7 +236,7 @@ class _NotificationPermissionScreenState
                       AnimatedBuilder(
                         animation:
                         Listenable.merge([_bellSwing, _pulseAnim]),
-                        builder: (_, __) => Transform.rotate(
+                        builder: (_, _) => Transform.rotate(
                           angle: _bellSwing.value,
                           child: Stack(
                             alignment: Alignment.center,
@@ -369,7 +369,7 @@ class _NotificationPermissionScreenState
                       // Spinning cricket ball
                       AnimatedBuilder(
                         animation: _spinAnim,
-                        builder: (_, __) => Transform.rotate(
+                        builder: (_, _) => Transform.rotate(
                           angle: _spinAnim.value,
                           child: Image.asset(
                             'assets/spin.png',

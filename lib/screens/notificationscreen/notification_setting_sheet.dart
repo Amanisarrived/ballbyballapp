@@ -6,8 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // ── Tokens (match your app's design tokens) ───────────────
-const _bg      = Color(0xFF060606);
-const _surface = Color(0xFF0D0D0D);
 const _raised  = Color(0xFF131313);
 const _card    = Color(0xFF111111);
 const _line    = Color(0xFF1C1C1C);

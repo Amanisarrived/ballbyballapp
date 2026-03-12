@@ -43,7 +43,7 @@ class TrendingCard extends StatelessWidget {
               Image.network(
                 movie.getYoutubeThumbnail() ?? '',
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
+                errorBuilder: (_, _, _) => Container(
                   color: const Color(0xFF1E1E1E),
                   child: const Icon(Icons.sports_cricket,
                       color: Colors.white12, size: 48),
@@ -208,7 +208,7 @@ class _AnimatedTrendingChipState extends State<_AnimatedTrendingChip>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _pulse,
-      builder: (_, __) => Container(
+      builder: (_, _) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: Colors.black.withOpacity(0.55),

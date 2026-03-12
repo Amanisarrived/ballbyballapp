@@ -32,8 +32,8 @@ class AppAnalytics {
       name: 'button_tap',
       parameters: {
         'button_name': buttonName,
-        if (screen != null) 'screen': screen,
-        if (extra != null) 'extra': extra,
+        'screen': ?screen,
+        'extra': ?extra,
       },
     );
   }
@@ -82,7 +82,7 @@ class AppAnalytics {
       name: 'notification_opened',
       parameters: {
         'notification_type': type,
-        if (title != null) 'title': title,
+        'title': ?title,
       },
     );
   }

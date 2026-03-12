@@ -207,7 +207,7 @@ class UpcomingFixtureCard extends StatelessWidget {
                 ? CachedNetworkImage(
               imageUrl: logo,
               fit: BoxFit.cover,
-              placeholder: (_, __) => Container(
+              placeholder: (_, _) => Container(
                 color: const Color(0xFF1C1C1C),
                 child: const Center(
                   child: SizedBox(
@@ -219,7 +219,7 @@ class UpcomingFixtureCard extends StatelessWidget {
                   ),
                 ),
               ),
-              errorWidget: (_, __, ___) => _logoFallback(name),
+              errorWidget: (_, _, _) => _logoFallback(name),
             )
                 : _logoFallback(name),
           ),
@@ -419,7 +419,7 @@ class _PulsingChipState extends State<_PulsingChip>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _pulse,
-      builder: (_, __) => Container(
+      builder: (_, _) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
         decoration: BoxDecoration(
           color: widget.bgColor.withOpacity(0.08),

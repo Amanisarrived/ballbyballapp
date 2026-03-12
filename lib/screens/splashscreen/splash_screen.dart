@@ -93,8 +93,8 @@ class _SplashScreenState extends State<SplashScreen>
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
-            pageBuilder: (_, __, ___) => const MainNav(),
-            transitionsBuilder: (_, anim, __, child) =>
+            pageBuilder: (_, _, _) => const MainNav(),
+            transitionsBuilder: (_, anim, _, child) =>
                 FadeTransition(opacity: anim, child: child),
             transitionDuration: const Duration(milliseconds: 400),
           ),
@@ -271,7 +271,7 @@ class _SplashScreenState extends State<SplashScreen>
                   opacity: _contentFade,
                   child: AnimatedBuilder(
                     animation: _wicketRotate,
-                    builder: (_, __) => Transform.rotate(
+                    builder: (_, _) => Transform.rotate(
                       angle: _wicketRotate.value,
                       child: Image.asset(
                         'assets/spin.png',
@@ -291,7 +291,7 @@ class _SplashScreenState extends State<SplashScreen>
                     padding: const EdgeInsets.symmetric(horizontal: 48),
                     child: AnimatedBuilder(
                       animation: _progressAnim,
-                      builder: (_, __) => Column(
+                      builder: (_, _) => Column(
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(2),

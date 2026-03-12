@@ -443,9 +443,9 @@ class _VoteTeamBtnState extends State<_VoteTeamBtn>
                         ? CachedNetworkImage(
                       imageUrl: widget.logo,
                       fit: BoxFit.cover,
-                      placeholder: (_, __) =>
+                      placeholder: (_, _) =>
                           _Fallback(name: widget.name),
-                      errorWidget: (_, __, ___) =>
+                      errorWidget: (_, _, _) =>
                           _Fallback(name: widget.name),
                     )
                         : _Fallback(name: widget.name),
@@ -557,7 +557,7 @@ class _ResultBar extends StatelessWidget {
 
     return AnimatedBuilder(
       animation: animation,
-      builder: (_, __) {
+      builder: (_, _) {
         final t1Animated = t1pct * animation.value;
         final t2Animated = t2pct * animation.value;
 

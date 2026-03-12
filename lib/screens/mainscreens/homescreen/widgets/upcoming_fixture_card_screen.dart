@@ -266,7 +266,7 @@ class _StatusPillState extends State<_StatusPill>
     if (widget.isOngoing) {
       return AnimatedBuilder(
         animation: _pulse,
-        builder: (_, __) => Container(
+        builder: (_, _) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: const Color(0xFF4CAF50).withOpacity(0.08),
@@ -305,7 +305,7 @@ class _StatusPillState extends State<_StatusPill>
     // ── UPCOMING — red pulsing ──
     return AnimatedBuilder(
       animation: _pulse,
-      builder: (_, __) => Container(
+      builder: (_, _) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: const Color(0xFFCC0000).withOpacity(0.08),
@@ -395,7 +395,7 @@ class _TeamSide extends StatelessWidget {
                       ? CachedNetworkImage(
                     imageUrl: logo,
                     fit: BoxFit.cover,
-                    placeholder: (_, __) => const Center(
+                    placeholder: (_, _) => const Center(
                       child: SizedBox(
                         width: 16,
                         height: 16,
@@ -405,7 +405,7 @@ class _TeamSide extends StatelessWidget {
                         ),
                       ),
                     ),
-                    errorWidget: (_, __, ___) => _fallback(name),
+                    errorWidget: (_, _, _) => _fallback(name),
                   )
                       : _fallback(name),
                 ),

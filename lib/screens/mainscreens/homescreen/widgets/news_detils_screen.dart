@@ -154,9 +154,9 @@ class _HeroImage extends StatelessWidget {
               child: CachedNetworkImage(
                 imageUrl: news.imageUrl,
                 fit: BoxFit.cover,
-                placeholder: (_, __) =>
+                placeholder: (_, _) =>
                     Container(color: const Color(0xFF0E0E0E)),
-                errorWidget: (_, __, ___) => _NoImage(),
+                errorWidget: (_, _, _) => _NoImage(),
               ),
             )
           else

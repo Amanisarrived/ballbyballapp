@@ -393,7 +393,7 @@ class _BannerSkeletonState extends State<_BannerSkeleton>
       padding: const EdgeInsets.fromLTRB(14, 0, 14, 16),
       child: AnimatedBuilder(
         animation: _a,
-        builder: (_, __) => Container(
+        builder: (_, _) => Container(
           height: 190,
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(_a.value),
@@ -557,7 +557,7 @@ class _CatStrip extends SliverPersistentHeaderDelegate {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         itemCount: ShopService.categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 6),
+        separatorBuilder: (_, _) => const SizedBox(width: 6),
         itemBuilder: (_, i) {
           final cat = ShopService.categories[i];
           final sel = p.selectedCategory == cat;
@@ -639,7 +639,7 @@ class _FeaturedBanner extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 14),
             itemCount: items.take(8).length,
-            separatorBuilder: (_, __) => const SizedBox(width: 10),
+            separatorBuilder: (_, _) => const SizedBox(width: 10),
             itemBuilder: (_, i) =>
                 _BannerCard(product: items[i], w: _bW, h: _bH, imgH: _bImgH),
           ),
@@ -1215,7 +1215,7 @@ class _ShimmerState extends State<_Shimmer>
 
   Widget _box(double w, double h, double r) => AnimatedBuilder(
     animation: _a,
-    builder: (_, __) => Container(
+    builder: (_, _) => Container(
       width: w,
       height: h,
       decoration: BoxDecoration(
@@ -1273,7 +1273,7 @@ class _ShimmerState extends State<_Shimmer>
                   mainAxisExtent: _cardH,
                 ),
                 itemCount: 6,
-                itemBuilder: (_, __) => _box(double.infinity, _cardH, 18),
+                itemBuilder: (_, _) => _box(double.infinity, _cardH, 18),
               ),
             ),
           ],

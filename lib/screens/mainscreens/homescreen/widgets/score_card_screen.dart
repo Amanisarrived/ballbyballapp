@@ -156,7 +156,7 @@ class _LiveMatchHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<FeaturedMatch?>(
       valueListenable: matchNotifier,
-      builder: (_, match, __) {
+      builder: (_, match, _) {
         if (match == null) return const SizedBox.shrink();
         return RepaintBoundary(
           child: MatchHeader(match: match),
@@ -174,7 +174,7 @@ class _LiveScoresScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<FeaturedMatch?>(
       valueListenable: notifier,
-      builder: (_, match, __) {
+      builder: (_, match, _) {
         if (match == null) return const SizedBox.shrink();
         return RepaintBoundary(
           child: ScoresScreen(match: match),
@@ -192,7 +192,7 @@ class _LiveSquadsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<FeaturedMatch?>(
       valueListenable: notifier,
-      builder: (_, match, __) {
+      builder: (_, match, _) {
         if (match == null) return const SizedBox.shrink();
         return RepaintBoundary(
           child: SquadsScreen(match: match),

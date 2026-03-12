@@ -23,8 +23,8 @@ class _FeaturedNewsCardState extends State<FeaturedNewsCard> {
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (_, anim, __) => NewsDetailScreen(news: widget.news),
-        transitionsBuilder: (_, anim, __, child) => FadeTransition(
+        pageBuilder: (_, anim, _) => NewsDetailScreen(news: widget.news),
+        transitionsBuilder: (_, anim, _, child) => FadeTransition(
           opacity: CurvedAnimation(parent: anim, curve: Curves.easeOut),
           child: child,
         ),
@@ -68,9 +68,9 @@ class _FeaturedNewsCardState extends State<FeaturedNewsCard> {
                       ? CachedNetworkImage(
                     imageUrl: widget.news.imageUrl,
                     fit: BoxFit.cover,
-                    placeholder: (_, __) =>
+                    placeholder: (_, _) =>
                         Container(color: const Color(0xFF1C1C1C)),
-                    errorWidget: (_, __, ___) => _imgFallback(),
+                    errorWidget: (_, _,_) => _imgFallback(),
                   )
                       : _imgFallback(),
 
@@ -284,8 +284,8 @@ class _NewsCardState extends State<NewsCard> {
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (_, anim, __) => NewsDetailScreen(news: widget.news),
-        transitionsBuilder: (_, anim, __, child) => FadeTransition(
+        pageBuilder: (_, anim, _) => NewsDetailScreen(news: widget.news),
+        transitionsBuilder: (_, anim, _, child) => FadeTransition(
           opacity: CurvedAnimation(parent: anim, curve: Curves.easeOut),
           child: child,
         ),
@@ -320,9 +320,9 @@ class _NewsCardState extends State<NewsCard> {
                         ? CachedNetworkImage(
                       imageUrl: widget.news.imageUrl,
                       fit: BoxFit.cover,
-                      placeholder: (_, __) =>
+                      placeholder: (_, _) =>
                           Container(color: const Color(0xFF1A1A1A)),
-                      errorWidget: (_, __, ___) => Container(
+                      errorWidget: (_, _, _) => Container(
                         color: const Color(0xFF1A1A1A),
                         child: const Icon(Icons.article_outlined,
                             color: Colors.white12, size: 22),

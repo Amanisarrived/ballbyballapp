@@ -21,7 +21,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedTab = 0;
 
-  // One scroll controller per tab — avoids "attached to multiple" error
   final _scrollControllers = List.generate(4, (_) => ScrollController());
 
   // FAB visibility per tab
@@ -33,8 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Attach listener to all controllers
     for (int i = 0; i < _scrollControllers.length; i++) {
       final ctrl = _scrollControllers[i];
       ctrl.addListener(() {
@@ -55,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
     AppAnalytics.screenHome();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final info = await PackageInfo.fromPlatform();
+      final _ = await PackageInfo.fromPlatform();
       if (!mounted) return;
       await RatingPrompt.checkAndShow(
         context,

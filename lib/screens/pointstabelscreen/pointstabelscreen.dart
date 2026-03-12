@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-const _bg      = Color(0xFF060606);
 const _surface = Color(0xFF0F0F0F);
 const _line    = Color(0xFF1A1A1A);
 const _red     = Color(0xFFCC0000);
@@ -390,7 +389,7 @@ class _TeamRow extends StatelessWidget {
                       ? CachedNetworkImage(
                     imageUrl: team.logo,
                     fit: BoxFit.cover,
-                    errorWidget: (_, __, ___) => _LogoFb(name: team.name),
+                    errorWidget: (_, _, _) => _LogoFb(name: team.name),
                   )
                       : _LogoFb(name: team.name),
                 ),

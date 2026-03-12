@@ -47,7 +47,7 @@ class UpcomingSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.only(left: 4, right: 4, bottom: 4),
             itemCount: displayFixtures.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 10),
+            separatorBuilder: (_, _) => const SizedBox(width: 10),
             itemBuilder: (context, index) {
               return UpcomingFixtureCard(fixture: displayFixtures[index]);
             },
@@ -201,42 +201,42 @@ class UpcomingSection extends StatelessWidget {
   }
 
   // ── Pill/chip badge header ───────────────────────────────
-  Widget _pillHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-        decoration: BoxDecoration(
-          color: const Color(0xFF1A1A1A),
-          borderRadius: BorderRadius.circular(50),
-          border: Border.all(color: Colors.white.withAlpha(18)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 6,
-              height: 6,
-              decoration: const BoxDecoration(
-                color: Color(0xFFCC0000),
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 7),
-            const Text(
-              'Upcoming Matches',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.2,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _pillHeader() {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 16),
+  //     child: Container(
+  //       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+  //       decoration: BoxDecoration(
+  //         color: const Color(0xFF1A1A1A),
+  //         borderRadius: BorderRadius.circular(50),
+  //         border: Border.all(color: Colors.white.withAlpha(18)),
+  //       ),
+  //       child: Row(
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: [
+  //           Container(
+  //             width: 6,
+  //             height: 6,
+  //             decoration: const BoxDecoration(
+  //               color: Color(0xFFCC0000),
+  //               shape: BoxShape.circle,
+  //             ),
+  //           ),
+  //           const SizedBox(width: 7),
+  //           const Text(
+  //             'Upcoming Matches',
+  //             style: TextStyle(
+  //               color: Colors.white,
+  //               fontSize: 12,
+  //               fontWeight: FontWeight.w700,
+  //               letterSpacing: 0.2,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildLoading() {
     return Column(
@@ -251,15 +251,15 @@ class UpcomingSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.only(left: 4, right: 4, bottom: 4),
             itemCount: 3,
-            separatorBuilder: (_, __) => const SizedBox(width: 10),
-            itemBuilder: (_, __) => _skeletonCardH(),
+            separatorBuilder: (_, _) => const SizedBox(width: 10),
+            itemBuilder: (_, _) => _skeletonCardH(),
           ),
         )
             : ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: 4,
-          itemBuilder: (_, __) => _skeletonCardV(),
+          itemBuilder: (_, _) => _skeletonCardV(),
         ),
       ],
     );
