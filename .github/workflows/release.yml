@@ -3,7 +3,7 @@ name: BallByBall — Android Release
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   analyze_and_deploy:
