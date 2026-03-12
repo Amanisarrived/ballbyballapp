@@ -1,0 +1,77 @@
+name: BallByBall — Android Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  analyze_and_deploy:
+    name: Analyze & Deploy to Play Store
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── Step 1: Checkout code ─────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── Step 2: Setup Java ────────────────────────────────
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      # ── Step 3: Setup Flutter ─────────────────────────────
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.0"   # 🔴 Change to your Flutter version
+          channel: stable
+          cache: true
+
+      # ── Step 4: Get dependencies ──────────────────────────
+      - name: Get Flutter packages
+        run: flutter pub get
+
+      # ── Step 5: Flutter Analyze ───────────────────────────
+      - name: Run flutter analyze
+        run: |
+          flutter analyze --no-fatal-infos
+          echo "✅ Code analysis passed"
+
+      # ── Step 6: Decode Keystore ───────────────────────────
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/ballbyball.jks
+          echo "✅ Keystore decoded"
+
+      # ── Step 7: Create key.properties ─────────────────────
+      - name: Create key.properties
+        run: |
+          cat > android/key.properties <<EOF
+          storePassword=${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          storeFile=ballbyball.jks
+          EOF
+          echo "✅ key.properties created"
+
+      # ── Step 8: Build App Bundle ──────────────────────────
+      - name: Build Android App Bundle
+        run: |
+          flutter build appbundle \
+            --release \
+            --build-name=1.0.${{ github.run_number }} \
+            --build-number=${{ github.run_number }}
+          echo "✅ AAB built successfully"
+
+      # ── Step 9: Upload to Play Store ──────────────────────
+      - name: Deploy to Play Store (Internal Track)
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: com.ballbyball.app     # 🔴 Change to your package name
+          releaseFiles: build/app/outputs/bundle/release/*.aab
+          track: internal
+          status: draft

@@ -2,6 +2,7 @@
 import 'package:ballbyball/screens/mainscreens/homescreen/home_screen.dart';
 import 'package:ballbyball/screens/mainscreens/productscreen/prodcut_screen.dart';
 import 'package:ballbyball/screens/mainscreens/settingscreen/setting_screen.dart';
+import 'package:ballbyball/screens/rankingscreen/rankingscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -22,13 +23,17 @@ class _MainNavState extends State<MainNav> with TickerProviderStateMixin {
   final List<_NavItem> _items = const [
     _NavItem(icon: LucideIcons.home,        label: 'Home'),
     _NavItem(icon: LucideIcons.shoppingBag, label: 'Shop'),
+    _NavItem(icon: LucideIcons.trophy, label: "Rankings"),
     _NavItem(icon: LucideIcons.settings,    label: 'Settings'),
+
   ];
 
   final List<Widget> _screens = const [
     HomeScreen(),
     ShopScreen(),
+    RankingsScreen(),
    SettingsScreen(),
+
 
   ];
 
@@ -79,9 +84,7 @@ class _MainNavState extends State<MainNav> with TickerProviderStateMixin {
   }
 }
 
-// ══════════════════════════════════════════════════════════
-//  BOTTOM NAV
-// ══════════════════════════════════════════════════════════
+
 class _BottomNav extends StatelessWidget {
   final List<_NavItem> items;
   final int currentIndex;
@@ -183,6 +186,4 @@ class _NavItem {
   const _NavItem({required this.icon, required this.label});
 }
 
-// ══════════════════════════════════════════════════════════
-//  PLACEHOLDER
-// ══════════════════════════════════════════════════════════
+

@@ -97,7 +97,6 @@ class _NotificationPermissionScreenState
     _fadeController.forward();
     Future.delayed(const Duration(milliseconds: 400), _startBellLoop);
 
-    // ── Analytics: screen view ───────────────────────────
     AppAnalytics.screenView('notification_permission');
   }
 
@@ -113,7 +112,6 @@ class _NotificationPermissionScreenState
     final count = await NotificationPreference.getDeniedCount();
     setState(() => _deniedCount = count);
 
-    // ── Analytics: track which prompt version user sees ──
     AppAnalytics.tapButton(
       'notification_prompt_shown',
       extra: 'attempt_${count + 1}',
@@ -129,7 +127,7 @@ class _NotificationPermissionScreenState
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const SplashScreen(),
+        pageBuilder: (_, _, _) => const SplashScreen(),
         transitionsBuilder: (_, anim, __, child) =>
             FadeTransition(opacity: anim, child: child),
         transitionDuration: const Duration(milliseconds: 400),
@@ -140,7 +138,6 @@ class _NotificationPermissionScreenState
   Future<void> _onAllow() async {
     setState(() => _isLoading = true);
 
-    // ── Analytics: user allowed notifications ────────────
     await AppAnalytics.tapButton(
       'notification_allowed',
       screen: 'notification_permission',
@@ -153,7 +150,6 @@ class _NotificationPermissionScreenState
   }
 
   Future<void> _onNotNow() async {
-    // ── Analytics: user denied notifications ─────────────
     await AppAnalytics.tapButton(
       _deniedCount >= 2 ? 'notification_no_thanks' : 'notification_not_now',
       screen: 'notification_permission',
@@ -181,13 +177,12 @@ class _NotificationPermissionScreenState
       backgroundColor: const Color(0xFF080808),
       body: Stack(
         children: [
-
-          // ── Pitch line background (matches splash) ──────
+          // Background pitch lines
           Positioned.fill(
             child: CustomPaint(painter: _PitchPainter()),
           ),
 
-          // ── Red glow top ────────────────────────────────
+          // Top red glow
           Positioned(
             top: -80,
             left: size.width * 0.5 - 180,
@@ -198,7 +193,7 @@ class _NotificationPermissionScreenState
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    const Color(0xFFCC0000).withOpacity(0.18),
+                    const Color(0xFFCC0000).withAlpha(46),  // 0.18 * 255
                     Colors.transparent,
                   ],
                 ),
@@ -206,7 +201,7 @@ class _NotificationPermissionScreenState
             ),
           ),
 
-          // ── Bottom glow ─────────────────────────────────
+          // Bottom red glow
           Positioned(
             bottom: -60,
             left: size.width * 0.5 - 150,
@@ -217,7 +212,7 @@ class _NotificationPermissionScreenState
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    const Color(0xFFCC0000).withOpacity(0.08),
+                    const Color(0xFFCC0000).withAlpha(20),  // 0.08 * 255
                     Colors.transparent,
                   ],
                 ),
@@ -225,7 +220,7 @@ class _NotificationPermissionScreenState
             ),
           ),
 
-          // ── Main content ─────────────────────────────────
+          // Main content
           SafeArea(
             child: FadeTransition(
               opacity: _fadeAnim,
@@ -237,7 +232,7 @@ class _NotificationPermissionScreenState
                     children: [
                       const Spacer(flex: 2),
 
-                      // ── Animated bell icon ───────────────
+                      // Bell animation
                       AnimatedBuilder(
                         animation:
                         Listenable.merge([_bellSwing, _pulseAnim]),
@@ -256,7 +251,7 @@ class _NotificationPermissionScreenState
                                     shape: BoxShape.circle,
                                     border: Border.all(
                                       color: const Color(0xFFCC0000)
-                                          .withOpacity(0.12),
+                                          .withAlpha(31),  // 0.12 * 255
                                       width: 1,
                                     ),
                                   ),
@@ -271,20 +266,20 @@ class _NotificationPermissionScreenState
                                   color: const Color(0xFF111111),
                                   border: Border.all(
                                     color: const Color(0xFFCC0000)
-                                        .withOpacity(0.35),
+                                        .withAlpha(89),  // 0.35 * 255
                                     width: 1.5,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
                                       color: const Color(0xFFCC0000)
-                                          .withOpacity(0.2),
+                                          .withAlpha(51),  // 0.2 * 255
                                       blurRadius: 30,
                                       spreadRadius: 4,
                                     ),
                                   ],
                                 ),
                               ),
-                              // Bell
+                              // Bell icon
                               const Icon(
                                 Icons.notifications_active_rounded,
                                 size: 52,
@@ -297,7 +292,7 @@ class _NotificationPermissionScreenState
 
                       const SizedBox(height: 36),
 
-                      // ── Title ────────────────────────────
+                      // Title
                       Text(
                         _currentMessage['title']!,
                         style: const TextStyle(
@@ -311,7 +306,7 @@ class _NotificationPermissionScreenState
 
                       const SizedBox(height: 10),
 
-                      // ── Red accent dots ──────────────────
+                      // Dot divider
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -337,11 +332,11 @@ class _NotificationPermissionScreenState
 
                       const SizedBox(height: 12),
 
-                      // ── Subtitle ─────────────────────────
+                      // Subtitle
                       Text(
                         _currentMessage['subtitle']!,
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.45),
+                          color: Colors.white.withAlpha(115),  // 0.45 * 255
                           fontSize: 14,
                           height: 1.6,
                           letterSpacing: 0.3,
@@ -351,7 +346,7 @@ class _NotificationPermissionScreenState
 
                       const SizedBox(height: 28),
 
-                      // ── Feature pills ────────────────────
+                      // Feature pills
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
@@ -371,7 +366,7 @@ class _NotificationPermissionScreenState
 
                       const Spacer(flex: 2),
 
-                      // ── Spinning ball (same as splash) ───
+                      // Spinning cricket ball
                       AnimatedBuilder(
                         animation: _spinAnim,
                         builder: (_, __) => Transform.rotate(
@@ -386,7 +381,7 @@ class _NotificationPermissionScreenState
 
                       const SizedBox(height: 28),
 
-                      // ── Allow button ─────────────────────
+                      // Allow button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -423,7 +418,7 @@ class _NotificationPermissionScreenState
 
                       const SizedBox(height: 10),
 
-                      // ── Not Now button ───────────────────
+                      // Not now button
                       SizedBox(
                         width: double.infinity,
                         child: TextButton(
@@ -431,7 +426,7 @@ class _NotificationPermissionScreenState
                           child: Text(
                             _deniedCount >= 2 ? "No Thanks" : "Not Now",
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.3),
+                              color: Colors.white.withAlpha(77),  // 0.3 * 255
                               fontSize: 14,
                               letterSpacing: 0.3,
                             ),
@@ -452,7 +447,6 @@ class _NotificationPermissionScreenState
   }
 }
 
-// ── Feature pill widget ──────────────────────────────────
 class _FeaturePill extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -464,10 +458,10 @@ class _FeaturePill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.04),
+        color: Colors.white.withAlpha(10),        // 0.04 * 255
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: const Color(0xFFCC0000).withOpacity(0.2),
+          color: const Color(0xFFCC0000).withAlpha(51),  // 0.2 * 255
           width: 1,
         ),
       ),
@@ -479,7 +473,7 @@ class _FeaturePill extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.6),
+              color: Colors.white.withAlpha(153),  // 0.6 * 255
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
@@ -490,12 +484,11 @@ class _FeaturePill extends StatelessWidget {
   }
 }
 
-// ── Cricket pitch painter (same as splash) ───────────────
 class _PitchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.025)
+      ..color = Colors.white.withAlpha(6)         // 0.025 * 255
       ..strokeWidth = 1;
 
     for (int i = 1; i < 8; i++) {
@@ -503,7 +496,7 @@ class _PitchPainter extends CustomPainter {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
     }
 
-    paint.color = Colors.white.withOpacity(0.04);
+    paint.color = Colors.white.withAlpha(10);     // 0.04 * 255
     canvas.drawLine(
       Offset(size.width / 2, 0),
       Offset(size.width / 2, size.height),
@@ -511,7 +504,7 @@ class _PitchPainter extends CustomPainter {
     );
 
     paint
-      ..color = const Color(0xFFCC0000).withOpacity(0.06)
+      ..color = const Color(0xFFCC0000).withAlpha(15)  // 0.06 * 255
       ..strokeWidth = 1.5;
     canvas.drawLine(
       Offset(size.width * 0.15, size.height * 0.72),

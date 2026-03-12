@@ -38,25 +38,25 @@ class _SplashScreenState extends State<SplashScreen>
       context.read<BannerProvider>().loadBanners();
     });
 
-    // Logo controller
+
     _logoController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 900),
     );
 
-    // Content controller
+
     _contentController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 700),
     );
 
-    // Wicket spin
+
     _wicketController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),
     )..repeat();
 
-    // Progress bar
+
     _progressController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2400),
@@ -82,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _progressController, curve: Curves.easeInOut),
     );
 
-    // Sequence
+
     _logoController.forward().then((_) {
       _contentController.forward();
       _progressController.forward();
@@ -121,12 +121,12 @@ class _SplashScreenState extends State<SplashScreen>
       body: Stack(
         children: [
 
-          // ── Pitch lines background ──────────────────────
+
           Positioned.fill(
             child: CustomPaint(painter: _PitchPainter()),
           ),
 
-          // ── Red atmospheric glow top ────────────────────
+
           Positioned(
             top: -80,
             left: size.width * 0.5 - 180,
@@ -145,7 +145,7 @@ class _SplashScreenState extends State<SplashScreen>
             ),
           ),
 
-          // ── Main content ────────────────────────────────
+
           SafeArea(
             child: Column(
               children: [
@@ -171,7 +171,7 @@ class _SplashScreenState extends State<SplashScreen>
                             ),
                           ),
                         ),
-                        // Inner ring
+
                         Container(
                           width: 114,
                           height: 114,
@@ -191,7 +191,7 @@ class _SplashScreenState extends State<SplashScreen>
                             ],
                           ),
                         ),
-                        // Logo
+
                         ClipOval(
                           child: SizedBox(
                             width: 80,
@@ -226,7 +226,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                 const SizedBox(height: 8),
 
-                // Tagline with red accent dots
+
                 FadeTransition(
                   opacity: _contentFade,
                   child: SlideTransition(
@@ -266,7 +266,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                 const Spacer(flex: 2),
 
-                // ── Spinning ball image loader ──────────────
+
                 FadeTransition(
                   opacity: _contentFade,
                   child: AnimatedBuilder(
@@ -284,7 +284,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                 const SizedBox(height: 24),
 
-                // Progress bar
+
                 FadeTransition(
                   opacity: _contentFade,
                   child: Padding(
@@ -312,7 +312,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                 const SizedBox(height: 32),
 
-                // Version
+
                 FadeTransition(
                   opacity: _contentFade,
                   child: Text(
@@ -335,7 +335,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-// ── Cricket pitch line painter ───────────────────────────
+
 class _PitchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -343,13 +343,13 @@ class _PitchPainter extends CustomPainter {
       ..color = Colors.white.withOpacity(0.025)
       ..strokeWidth = 1;
 
-    // Horizontal lines like a pitch
+
     for (int i = 1; i < 8; i++) {
       final y = size.height * i / 8;
       canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
     }
 
-    // Center vertical
+
     paint.color = Colors.white.withOpacity(0.04);
     canvas.drawLine(
       Offset(size.width / 2, 0),
@@ -357,7 +357,7 @@ class _PitchPainter extends CustomPainter {
       paint,
     );
 
-    // Crease lines
+
     paint
       ..color = const Color(0xFFCC0000).withOpacity(0.06)
       ..strokeWidth = 1.5;

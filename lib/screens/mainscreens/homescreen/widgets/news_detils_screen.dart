@@ -216,9 +216,7 @@ class _NoImage extends StatelessWidget {
           size: 48, color: Colors.white.withAlpha(6)));
 }
 
-// ══════════════════════════════════════════════════════════
-//  ARTICLE BODY
-// ══════════════════════════════════════════════════════════
+
 class _ArticleBody extends StatelessWidget {
   final NewsModel news;
   const _ArticleBody({required this.news});
@@ -231,7 +229,7 @@ class _ArticleBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          // ── DATE ────────────────────────────────────
+
           Row(
             children: [
               Icon(LucideIcons.clock,
@@ -246,7 +244,7 @@ class _ArticleBody extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          // ── TITLE ───────────────────────────────────
+
           Text(
             news.title,
             style: const TextStyle(
@@ -492,3 +490,4 @@ Future<void> _launch(String url) async {
     await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   } catch (_) {}
 }
+

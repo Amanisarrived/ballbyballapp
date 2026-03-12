@@ -1,21 +1,9 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 
-// ════════════════════════════════════════════════════════════
-//  BALLBYBALL ANALYTICS SERVICE
-//  Single place for all tracking — easy to manage & extend
-//
-//  Usage:
-//    AppAnalytics.screenView('home');
-//    AppAnalytics.tapButton('shop_banner');
-//    AppAnalytics.predictorVote('India', 'poll_123');
-// ════════════════════════════════════════════════════════════
+
 class AppAnalytics {
   static final _fa = FirebaseAnalytics.instance;
 
-  // ══════════════════════════════════════════════════════════
-  //  SCREEN VIEWS
-  //  Call these in each screen's initState
-  // ══════════════════════════════════════════════════════════
   static Future<void> screenView(String screenName) async {
     await _fa.logScreenView(
       screenName: screenName,
@@ -23,7 +11,7 @@ class AppAnalytics {
     );
   }
 
-  // Predefined screen names — avoids typos
+
   static Future<void> screenHome()       => screenView('home');
   static Future<void> screenNews()       => screenView('news');
   static Future<void> screenHighlights() => screenView('highlights');
@@ -33,16 +21,11 @@ class AppAnalytics {
       screenView('fixture_detail_$matchName');
   static Future<void> screenLiveScore()  => screenView('live_score');
 
-  // ══════════════════════════════════════════════════════════
-  //  APP OPENS  (auto-tracked by Firebase, but log custom too)
-  // ══════════════════════════════════════════════════════════
+
   static Future<void> appOpen() async {
     await _fa.logAppOpen();
   }
 
-  // ══════════════════════════════════════════════════════════
-  //  BUTTON TAPS
-  // ══════════════════════════════════════════════════════════
   static Future<void> tapButton(String buttonName,
       {String? screen, String? extra}) async {
     await _fa.logEvent(
@@ -55,7 +38,7 @@ class AppAnalytics {
     );
   }
 
-  // Common button taps — call directly
+
   static Future<void> tapShopItem(String itemName) =>
       tapButton('shop_item', extra: itemName);
 
@@ -83,9 +66,7 @@ class AppAnalytics {
   static Future<void> tapNotificationBell() =>
       tapButton('notification_bell', screen: 'home');
 
-  // ══════════════════════════════════════════════════════════
-  //  NOTIFICATION CLICKS
-  // ══════════════════════════════════════════════════════════
+
   static Future<void> notificationReceived(String type) async {
     await _fa.logEvent(
       name: 'notification_received',
@@ -119,9 +100,7 @@ class AppAnalytics {
   static Future<void> notificationFestival(String name) =>
       notificationOpened(type: 'festival', title: name);
 
-  // ══════════════════════════════════════════════════════════
-  //  WIN PREDICTOR
-  // ══════════════════════════════════════════════════════════
+
   static Future<void> predictorShown(String pollId) async {
     await _fa.logEvent(
       name: 'predictor_shown',
@@ -151,9 +130,7 @@ class AppAnalytics {
     );
   }
 
-  // ══════════════════════════════════════════════════════════
-  //  SHOP ENGAGEMENT
-  // ══════════════════════════════════════════════════════════
+
   static Future<void> shopItemClicked({
     required String itemName,
     required String category,
@@ -168,7 +145,7 @@ class AppAnalytics {
         ),
       ],
     );
-    // Also log platform
+
     await _fa.logEvent(
       name: 'shop_item_click',
       parameters: {
@@ -179,17 +156,10 @@ class AppAnalytics {
     );
   }
 
-  // ══════════════════════════════════════════════════════════
-  //  SEARCH
-  // ══════════════════════════════════════════════════════════
   static Future<void> search(String query) async {
     await _fa.logSearch(searchTerm: query);
   }
 
-  // ══════════════════════════════════════════════════════════
-  //  USER PROPERTIES  (set once, persists across sessions)
-  //  Call after login or on first open
-  // ══════════════════════════════════════════════════════════
   static Future<void> setUserProperties({
     String? favouriteTeam,
     String? appVersion,
@@ -204,10 +174,6 @@ class AppAnalytics {
     }
   }
 
-  // ══════════════════════════════════════════════════════════
-  //  OBSERVER  — for automatic screen tracking via Navigator
-  //  Add to MaterialApp navigatorObservers
-  // ══════════════════════════════════════════════════════════
   static FirebaseAnalyticsObserver get observer =>
       FirebaseAnalyticsObserver(analytics: _fa);
 }

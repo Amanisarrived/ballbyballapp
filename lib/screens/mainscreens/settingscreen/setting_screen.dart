@@ -42,7 +42,6 @@ class SettingsScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 8),
 
-                  // ── App ──────────────────────────────
                   _Section(
                     label: 'APP',
                     items: [
@@ -73,7 +72,7 @@ class SettingsScreen extends StatelessWidget {
                     ],
                   ),
 
-                  // ── Legal ────────────────────────────
+
                   _Section(
                     label: 'LEGAL',
                     items: [
@@ -96,7 +95,7 @@ class SettingsScreen extends StatelessWidget {
                     ],
                   ),
 
-                  // ── Connect ──────────────────────────
+
                   _Section(
                     label: 'CONNECT',
                     items: [
@@ -119,7 +118,7 @@ class SettingsScreen extends StatelessWidget {
                     ],
                   ),
 
-                  // ── About ────────────────────────────
+
                   _Section(
                     label: 'ABOUT',
                     items: [
@@ -190,7 +189,6 @@ class _ProfileBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // App icon placeholder
           Container(
             width: 56, height: 56,
             decoration: BoxDecoration(
@@ -242,9 +240,7 @@ class _ProfileBanner extends StatelessWidget {
   }
 }
 
-// ══════════════════════════════════════════════════════════
-//  SECTION
-// ══════════════════════════════════════════════════════════
+
 class _Section extends StatelessWidget {
   final String label;
   final List<_Tile> items;
@@ -295,9 +291,7 @@ class _Section extends StatelessWidget {
   }
 }
 
-// ══════════════════════════════════════════════════════════
-//  TILE
-// ══════════════════════════════════════════════════════════
+
 class _Tile extends StatefulWidget {
   final IconData icon;
   final Color iconBg;
@@ -353,7 +347,7 @@ class _TileState extends State<_Tile> {
             ),
             const SizedBox(width: 14),
 
-            // Text
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -382,7 +376,7 @@ class _TileState extends State<_Tile> {
   }
 }
 
-// ── Trailing widgets ──────────────────────────────────────
+
 class _Arrow extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Icon(
@@ -410,9 +404,7 @@ class _VersionBadge extends StatelessWidget {
   );
 }
 
-// ══════════════════════════════════════════════════════════
-//  FOOTER
-// ══════════════════════════════════════════════════════════
+
 class _Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -463,9 +455,7 @@ class _Footer extends StatelessWidget {
   }
 }
 
-// ══════════════════════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════════════════════
+
 Future<void> _launch(String url) async {
   try {
     await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
@@ -473,19 +463,11 @@ Future<void> _launch(String url) async {
 }
 
 Future<void> _openAppSettings() async {
-  // Opens system app settings for notification permissions
   await _launch('app-settings:');
 }
 
 void _shareApp(BuildContext context) {
-  // Using share_plus: Share.share(...)
-  // If you have share_plus installed:
-  // Share.share(
-  //   'Watch live cricket scores, highlights & more on $_appName!\n$_playStoreUrl',
-  //   subject: '$_appName — Live Cricket App',
-  // );
-  //
-  // Fallback — copy to clipboard
+
   Clipboard.setData(const ClipboardData(
       text:
       'Watch live cricket scores, highlights & more on $_appName!\n$_playStoreUrl'));

@@ -4,9 +4,12 @@ import 'package:ballbyball/screens/mainscreens/homescreen/upcoming_screeen.dart'
 import 'package:ballbyball/screens/mainscreens/homescreen/widgets/custom_app_bar.dart';
 import 'package:ballbyball/screens/mainscreens/homescreen/widgets/tabs_chip.dart';
 import 'package:ballbyball/screens/mainscreens/homescreen/widgets/win_predictor_sheet.dart';
-import 'package:ballbyball/screens/pointstabelscreen/pointstabelscreen.dart';
 import 'package:ballbyball/service/app_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
+
+import '../../../widgets/rating_prompt.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -40,6 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ctrl.hasClients && ctrl.offset > 300;
         }
       });
+
+
     }
 
     Future.delayed(const Duration(milliseconds: 1500), () {
@@ -48,6 +53,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     AppAnalytics.appOpen();
     AppAnalytics.screenHome();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final info = await PackageInfo.fromPlatform();
+      if (!mounted) return;
+      await RatingPrompt.checkAndShow(
+        context,
+      );
+    });
   }
 
   @override

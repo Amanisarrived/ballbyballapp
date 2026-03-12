@@ -45,7 +45,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
           children: [
             const SizedBox(width: 14),
 
-            // Search Icon
+
             Icon(
               Icons.search,
               color: _isFocused
@@ -56,7 +56,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
             const SizedBox(width: 12),
 
-            // Text Field
+
             Expanded(
               child: Focus(
                 onFocusChange: (hasFocus) {
@@ -88,7 +88,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               ),
             ),
 
-            // Clear Button
+
             if ((widget.controller?.text.isNotEmpty ?? false) && !widget.readOnly)
               GestureDetector(
                 onTap: () {
@@ -107,7 +107,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 ),
               ),
 
-            // Filter Button
+
             if (widget.showFilterIcon)
               Container(
                 margin: const EdgeInsets.only(right: 8),

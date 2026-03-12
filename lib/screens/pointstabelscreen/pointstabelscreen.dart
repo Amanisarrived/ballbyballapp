@@ -44,9 +44,6 @@ class Pointstabelscreen extends StatelessWidget {
   }
 }
 
-// ════════════════════════════════════════════════════════════
-//  INACTIVE STATE  — tournament exists but is hidden
-// ════════════════════════════════════════════════════════════
 class _InactiveState extends StatelessWidget {
   const _InactiveState();
 
@@ -65,7 +62,7 @@ class _InactiveState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // icon lockup
+
             Stack(
               alignment: Alignment.center,
               children: [
@@ -106,7 +103,7 @@ class _InactiveState extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            // divider with label
+
             Row(
               children: [
                 Expanded(child: Container(height: 1, color: _line)),
@@ -126,7 +123,7 @@ class _InactiveState extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            // upcoming hint pill
+
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
@@ -151,9 +148,7 @@ class _InactiveState extends StatelessWidget {
   }
 }
 
-// ════════════════════════════════════════════════════════════
-//  LOADING STATE
-// ════════════════════════════════════════════════════════════
+
 class _LoadingState extends StatelessWidget {
   const _LoadingState();
 
@@ -189,9 +184,6 @@ class _LoadingState extends StatelessWidget {
   }
 }
 
-// ════════════════════════════════════════════════════════════
-//  TOURNAMENT HEADER
-// ════════════════════════════════════════════════════════════
 class _TournamentHeader extends StatelessWidget {
   final String name;
   const _TournamentHeader({required this.name});
@@ -229,9 +221,6 @@ class _TournamentHeader extends StatelessWidget {
   }
 }
 
-// ════════════════════════════════════════════════════════════
-//  GROUP TABLE
-// ════════════════════════════════════════════════════════════
 class _GroupTable extends StatelessWidget {
   final TableGroup group;
   final bool showGroupName;
@@ -303,9 +292,7 @@ class _GroupTable extends StatelessWidget {
   }
 }
 
-// ════════════════════════════════════════════════════════════
-//  TABLE HEADER
-// ════════════════════════════════════════════════════════════
+
 class _TableHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -353,9 +340,7 @@ class _ColW {
   const _ColW(this.label, this.width);
 }
 
-// ════════════════════════════════════════════════════════════
-//  TEAM ROW
-// ════════════════════════════════════════════════════════════
+
 class _TeamRow extends StatelessWidget {
   final TeamStanding team;
   final int position;
@@ -463,9 +448,7 @@ class _TeamRow extends StatelessWidget {
   }
 }
 
-// ════════════════════════════════════════════════════════════
-//  EMPTY STATE  — no document at all
-// ════════════════════════════════════════════════════════════
+
 class _EmptyState extends StatelessWidget {
   const _EmptyState();
 
@@ -504,7 +487,7 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-// ── Logo fallback ─────────────────────────────────────────
+
 class _LogoFb extends StatelessWidget {
   final String name;
   const _LogoFb({required this.name});

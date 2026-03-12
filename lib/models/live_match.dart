@@ -4,10 +4,10 @@ import 'package:ballbyball/models/target.dart';
 
 class LiveMatch {
   final int innings;
-  final String battingTeam;   // "teamA" or "teamB"
-  final String bowlingTeam;   // "teamA" or "teamB"
-  final String striker;       // player id
-  final String nonStriker;    // player id
+  final String battingTeam;
+  final String bowlingTeam;
+  final String striker;
+  final String nonStriker;
   final String currentBowler;
   final Target? target;
 

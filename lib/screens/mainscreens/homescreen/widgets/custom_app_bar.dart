@@ -17,14 +17,14 @@ class CustomAppBar extends StatelessWidget {
           Row(
             children: [
               Image.asset(
-                'assets/bb51.png', // 👈 Apna logo path yahan dena
+                'assets/bb51.png',
                 height: 36,
                 width: 36,
                 fit: BoxFit.contain,
               ),
               const SizedBox(width: 8),
               const Text(
-                'BallByBall', // 👈 Apna app name yahan dena
+                'BallByBall',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -35,13 +35,10 @@ class CustomAppBar extends StatelessWidget {
             ],
           ),
 
-          // 🔔 Right side icons
           Row(
             children: [
               IconButton(
-                onPressed: () {
-                  // Notification action
-                },
+                onPressed: () {},
                 icon: const Icon(
                   Icons.notifications_outlined,
                   color: Colors.white,
@@ -49,9 +46,7 @@ class CustomAppBar extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {
-                  // Search action
-                },
+                onPressed: () {},
                 icon: const Icon(
                   Icons.search,
                   color: Colors.white,

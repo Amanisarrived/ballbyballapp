@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-// ══════════════════════════════════════════════════════════
-//  MODEL
-// ══════════════════════════════════════════════════════════
 class ShopBanner {
   final String imageUrl;
   final String title;
   final String subtitle;
-  final String badgeText;   // e.g. "Up to 40% off" — empty = hide badge
+  final String badgeText;
   final Color accentColor;
   final bool isActive;
 
@@ -21,9 +18,9 @@ class ShopBanner {
     required this.isActive,
   });
 
-  // Fallback when Firestore has nothing / offline
+
   static const ShopBanner defaultBanner = ShopBanner(
-    imageUrl: '',           // will show local fallback gradient
+    imageUrl: '',
     title: 'Cricket Store',
     subtitle: 'Gear up for the game',
     badgeText: '',
@@ -63,19 +60,15 @@ class ShopBanner {
   }
 }
 
-// ══════════════════════════════════════════════════════════
-//  SERVICE
-// ══════════════════════════════════════════════════════════
+
 class ShopBannerService {
   static final _db = FirebaseFirestore.instance;
 
-  /// Fetch the active banner from Firestore.
-  /// Falls back to [ShopBanner.defaultBanner] on any error.
   static Future<ShopBanner> fetchActiveBanner() async {
     try {
       final doc = await _db
-          .collection('shop_banners')       // Firestore collection name
-          .doc('active')                    // single doc — easy to update
+          .collection('shop_banners')
+          .doc('active')
           .get();
 
       if (!doc.exists || doc.data() == null) {
@@ -87,18 +80,18 @@ class ShopBannerService {
       return banner;
 
     } catch (_) {
-      // Offline or permission error — fall back to date-based local theme
+
       return _localFestivalFallback();
     }
   }
 
-  // ── Local date-based fallback (no network needed) ───────
+
   static ShopBanner _localFestivalFallback() {
     final now = DateTime.now();
-    final md  = now.month * 100 + now.day; // e.g. 1025 = Oct 25
+    final md  = now.month * 100 + now.day;
 
     if (md >= 1015 && md <= 1110) return _diwali;
-    if (md >= 1220 && md <= 105)  return _christmas;  // wraps year
+    if (md >= 1220 && md <= 105)  return _christmas;
     if (md >= 315  && md <= 410)  return _holi;
     if (md >= 401  && md <= 531)  return _ipl;
     if (md >= 815  && md <= 831)  return _independenceDay;
@@ -106,7 +99,7 @@ class ShopBannerService {
     return ShopBanner.defaultBanner;
   }
 
-  // ── Hardcoded local themes ───────────────────────────────
+
   static const _diwali = ShopBanner(
     imageUrl:    '',
     title:       'Diwali Sale 🪔',

@@ -42,7 +42,7 @@ class ApiService {
     }
   }
 
-  /// Fetch all movies
+
   Future<List<MovieModel>> fetchMovies() async {
     try {
       final response = await _dio.get("movies");
@@ -56,7 +56,7 @@ class ApiService {
             moviesList.map((e) => Map<String, dynamic>.from(e)),
           );
 
-          // Convert to MovieModel
+
           return moviesList.map((e) => MovieModel.fromJson(e)).toList();
         } else {
           throw Exception("Invalid data format from server.");
@@ -71,7 +71,7 @@ class ApiService {
     }
   }
 
-  /// ✅ Get movies by category ID (filtered locally)
+
   List<MovieModel> getMoviesByCategoryId(int categoryId) {
     final filtered = _cachedRawMovies.where((movie) {
       final categories = movie['categories'] as List?;

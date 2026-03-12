@@ -1,10 +1,10 @@
+import 'dart:ui';
+
 import 'package:ballbyball/models/current_over.dart';
 import 'package:ballbyball/models/live_score_match.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-// ── MatchHeader is now StatelessWidget ────────────────────────
-// _HeaderData is computed once per call, no didUpdateWidget latency.
 class MatchHeader extends StatelessWidget {
   final FeaturedMatch match;
   const MatchHeader({super.key, required this.match});
@@ -17,46 +17,70 @@ class MatchHeader extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: Stack(children: [
-          // ── Solid dark base ───────────────────────────
           Positioned.fill(child: Container(color: const Color(0xFF050505))),
 
-          // ── Subtle blobs ──────────────────────────────
-          Positioned.fill(
-            child: Row(children: [
-              Expanded(child: Container(
-                decoration: const BoxDecoration(
-                  gradient: RadialGradient(
-                    center: Alignment.centerLeft, radius: 1.2,
-                    colors: [Color(0x06FFFFFF), Colors.transparent],
-                  ),
+
+          Positioned(
+            left: -40, top: -20, bottom: -20,
+            width: 260,
+            child: ImageFiltered(
+              imageFilter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
+              child: Opacity(
+                opacity: 0.13,
+                child: CachedNetworkImage(
+                  imageUrl: match.teamA.logo,
+                  fit: BoxFit.contain,
                 ),
-              )),
-              Expanded(child: Container(
-                decoration: const BoxDecoration(
-                  gradient: RadialGradient(
-                    center: Alignment.centerRight, radius: 1.2,
-                    colors: [Color(0x06FFFFFF), Colors.transparent],
-                  ),
-                ),
-              )),
-            ]),
+              ),
+            ),
           ),
 
-          // ── Red glow center ───────────────────────────
+
+          Positioned(
+            right: -40, top: -20, bottom: -20,
+            width: 260,
+            child: ImageFiltered(
+              imageFilter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
+              child: Opacity(
+                opacity: 0.13,
+                child: CachedNetworkImage(
+                  imageUrl: match.teamB.logo,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+
+
           Positioned.fill(
             child: Center(
               child: Container(
-                width: 250, height: 150,
+                width: 160,
                 decoration: const BoxDecoration(
-                  gradient: RadialGradient(
-                    colors: [Color(0x14CC0000), Colors.transparent],
+                  gradient: LinearGradient(
+                    colors: [Colors.transparent, Color(0xCC050505), Colors.transparent],
+                    stops: [0.0, 0.5, 1.0],
                   ),
                 ),
               ),
             ),
           ),
 
-          // ── Content ───────────────────────────────────
+
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xCC050505), Colors.transparent, Color(0xCC050505)],
+                  stops: [0.0, 0.4, 1.0],
+                ),
+              ),
+            ),
+          ),
+
+
           SafeArea(
             bottom: false,
             child: Column(children: [
@@ -136,9 +160,7 @@ class MatchHeader extends StatelessWidget {
 
               const SizedBox(height: 10),
 
-              // ── Current over strip — scoped repaint ───
-              // Only rebuilds when currentOver list identity changes.
-              // Keys are ball-identity-based so existing dots are reused.
+
               if (d.isLive && match.currentOver.isNotEmpty) ...[
                 RepaintBoundary(
                   child: _CurrentOverStrip(balls: match.currentOver),
@@ -153,7 +175,6 @@ class MatchHeader extends StatelessWidget {
   }
 }
 
-// ── All computed values in one place ──────────────────────────
 class _HeaderData {
   final bool isLive;
   final dynamic teamAScore;
@@ -474,30 +495,54 @@ class _TeamScoreBlock extends StatelessWidget {
     final cross = flipLayout ? CrossAxisAlignment.end : CrossAxisAlignment.start;
 
     return Column(crossAxisAlignment: cross, children: [
-      Hero(
-        tag: 'team_logo_$teamKey',
-        child: Container(
-          width: 60, height: 60,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withAlpha(46), width: 2.5),
-            boxShadow: const [
-              BoxShadow(color: Color(0x80000000), blurRadius: 16,
-                  spreadRadius: 3, offset: Offset(0, 4))
-            ],
-          ),
-          child: ClipOval(
-            child: CachedNetworkImage(
-              imageUrl: logo,
-              fit: BoxFit.cover,
-              placeholder: (_, __) => Container(color: const Color(0xFF1A1A1A)),
-              errorWidget: (_, __, ___) => Container(
-                color: const Color(0xFF1A1A1A),
-                child: const Icon(Icons.sports_cricket_rounded,
-                    color: Color(0xFF444444), size: 24),
+      SizedBox(
+        width: 100,
+        height: 100,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // ── Blurred ghost logo ────────────────────
+            ImageFiltered(
+              imageFilter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+              child: Opacity(
+                opacity: 0.45,
+                child: CachedNetworkImage(
+                  imageUrl: logo,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
+            // ── Actual logo circle ────────────────────
+            Hero(
+              tag: 'team_logo_$teamKey',
+              child: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white.withAlpha(46), width: 2.5),
+                  boxShadow: const [
+                    BoxShadow(color: Color(0x80000000), blurRadius: 16,
+                        spreadRadius: 3, offset: Offset(0, 4)),
+                  ],
+                ),
+                child: ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: logo,
+                    fit: BoxFit.cover,
+                    placeholder: (_, __) => Container(color: const Color(0xFF1A1A1A)),
+                    errorWidget: (_, __, ___) => Container(
+                      color: const Color(0xFF1A1A1A),
+                      child: const Icon(Icons.sports_cricket_rounded,
+                          color: Color(0xFF444444), size: 24),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       const SizedBox(height: 12),
@@ -574,10 +619,6 @@ class _CurrentOverStrip extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // FIX 1: Key is ball-identity-based (label + position), NOT just index.
-              // Flutter reuses existing _BallDot widgets and only animates truly NEW ones.
-              // Previously: ValueKey('ball_${e.key}') caused ALL dots to re-animate
-              // on every stream event because the widget was fully recreated.
               ...balls.asMap().entries.map((e) =>
                   _BallDot(
                     key: ValueKey('ball_${e.key}_${e.value.label}'),
@@ -623,9 +664,6 @@ class _BallDotState extends State<_BallDot> with SingleTickerProviderStateMixin 
     _fade = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(parent: _ctrl, curve: const Interval(0.0, 0.4, curve: Curves.easeOut)));
 
-    // FIX 2: Only the LAST ball (the newly added one) gets a delay.
-    // Old balls already have their animation completed via _ctrl.value = 1.0,
-    // so no staggered re-animation runs for them on rebuild.
     if (_ctrl.value == 0.0) {
       Future.delayed(Duration(milliseconds: widget.index * 25), () {
         if (mounted) _ctrl.forward();

@@ -23,15 +23,14 @@ class BannerContainer extends StatelessWidget {
       child: Container(
         height: height,
         width: double.infinity,
-        color: const Color(0xFF1A1A1A),           // dark placeholder bg
+        color: const Color(0xFF1A1A1A),
         child: Stack(
           fit: StackFit.expand,
           children: [
-            // ── Shimmer skeleton (loading or empty) ──────────
             if (bannerProvider.isLoading || banners.isEmpty)
               _buildSkeleton(),
 
-            // ── Banner image ─────────────────────────────────
+
             if (banners.isNotEmpty)
               CachedNetworkImage(
                 imageUrl: banners.first,
@@ -43,7 +42,7 @@ class BannerContainer extends StatelessWidget {
                 errorWidget: (context, url, error) => _buildErrorState(),
               ),
 
-            // ── Bottom fade overlay ───────────────────────────
+
             Positioned.fill(
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -68,12 +67,12 @@ class BannerContainer extends StatelessWidget {
     );
   }
 
-  // ── Shimmer skeleton ──────────────────────────────────────
+
   Widget _buildSkeleton() {
     return _ShimmerBox();
   }
 
-  // ── Error state ───────────────────────────────────────────
+
   Widget _buildErrorState() {
     return Container(
       color: const Color(0xFF1A1A1A),
@@ -92,7 +91,7 @@ class BannerContainer extends StatelessWidget {
   }
 }
 
-// ── Shimmer animation widget ──────────────────────────────────
+
 class _ShimmerBox extends StatefulWidget {
   @override
   State<_ShimmerBox> createState() => _ShimmerBoxState();

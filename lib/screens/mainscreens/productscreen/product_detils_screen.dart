@@ -21,9 +21,6 @@ const _srcLabel = {
   'myntra': 'Myntra', 'other': 'Store',
 };
 
-// ══════════════════════════════════════════════════════════
-//  SCREEN
-// ══════════════════════════════════════════════════════════
 class ProductDetailScreen extends StatefulWidget {
   final ProductModel product;
   const ProductDetailScreen({super.key, required this.product});
@@ -47,7 +44,7 @@ class _State extends State<ProductDetailScreen> {
   @override
   void dispose() { _scroll.dispose(); super.dispose(); }
 
-  // App bar opacity: fade in after 260px
+
   double get _appBarOpacity => (_scrollOffset - 220).clamp(0, 40) / 40;
 
   @override
@@ -65,7 +62,7 @@ class _State extends State<ProductDetailScreen> {
         body: Stack(
           children: [
 
-            // ── SCROLLABLE CONTENT ───────────────────
+
             SingleChildScrollView(
               controller: _scroll,
               physics: const BouncingScrollPhysics(),
@@ -83,8 +80,6 @@ class _State extends State<ProductDetailScreen> {
               ),
             ),
 
-            // ── APP BAR OVERLAY (fades in on scroll) ──
-            // IgnorePointer = never blocks the back button below
             Positioned(
               top: 0, left: 0, right: 0,
               height: top + 56,
@@ -117,7 +112,7 @@ class _State extends State<ProductDetailScreen> {
               ),
             ),
 
-            // ── BACK BUTTON — last = highest z-order, always tappable ─
+
             Positioned(
               top: top + 10,
               left: 16,
@@ -142,9 +137,7 @@ class _State extends State<ProductDetailScreen> {
   }
 }
 
-// ══════════════════════════════════════════════════════════
-//  BACK BUTTON — single, floating
-// ══════════════════════════════════════════════════════════
+
 class _BackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GestureDetector(
@@ -165,9 +158,6 @@ class _BackButton extends StatelessWidget {
   );
 }
 
-// ══════════════════════════════════════════════════════════
-//  HERO IMAGE
-// ══════════════════════════════════════════════════════════
 class _Hero extends StatelessWidget {
   final ProductModel product;
   final double topPad;
@@ -181,18 +171,17 @@ class _Hero extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // Image
+
           product.image.isNotEmpty
               ? CachedNetworkImage(
             imageUrl: product.image,
             fit: BoxFit.cover,
-            placeholder: (_, __) =>
+            placeholder: (_, _) =>
                 Container(color: const Color(0xFF111111)),
-            errorWidget: (_, __, ___) => _ImgFallback(),
+            errorWidget: (_, _, _) => _ImgFallback(),
           )
               : _ImgFallback(),
 
-          // Gradient: subtle top darkening + strong bottom fade to bg
           DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -209,7 +198,7 @@ class _Hero extends StatelessWidget {
             ),
           ),
 
-          // Bottom badges
+
           Positioned(
             bottom: 20, left: 18,
             child: Wrap(
@@ -234,7 +223,7 @@ class _Hero extends StatelessWidget {
             ),
           ),
 
-          // Category — top right
+
           Positioned(
             top: topPad + 12, right: 16,
             child: Container(
@@ -285,9 +274,7 @@ class _Badge extends StatelessWidget {
               letterSpacing: 0.2)));
 }
 
-// ══════════════════════════════════════════════════════════
-//  ALL INFO
-// ══════════════════════════════════════════════════════════
+
 class _Info extends StatelessWidget {
   final ProductModel product;
   const _Info({required this.product});
@@ -303,7 +290,7 @@ class _Info extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          // ── NAME ─────────────────────────────────────
+
           Text(product.name,
               style: const TextStyle(
                   color: Colors.white,
@@ -314,7 +301,7 @@ class _Info extends StatelessWidget {
 
           const SizedBox(height: 6),
 
-          // Rating row
+
           if (product.rating > 0)
             Row(
               children: [
@@ -344,7 +331,7 @@ class _Info extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          // ── PRICE CARD ───────────────────────────────
+
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
@@ -412,7 +399,7 @@ class _Info extends StatelessWidget {
                   ),
                 ),
 
-                // Source platform
+
                 Container(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 8),
@@ -441,7 +428,7 @@ class _Info extends StatelessWidget {
 
           const SizedBox(height: 14),
 
-          // ── 3 QUICK STAT CHIPS ───────────────────────
+
           Row(
             children: [
               _QuickChip(
@@ -470,7 +457,7 @@ class _Info extends StatelessWidget {
             ],
           ),
 
-          // ── DESCRIPTION ──────────────────────────────
+
           if (product.description.isNotEmpty) ...[
             const SizedBox(height: 28),
             _SectionHead('About this product'),
@@ -482,13 +469,13 @@ class _Info extends StatelessWidget {
                     height: 1.75)),
           ],
 
-          // ── DETAILS TABLE ────────────────────────────
+
           const SizedBox(height: 28),
           _SectionHead('Product Details'),
           const SizedBox(height: 12),
           _DetailsTable(product: product),
 
-          // ── WHY BUY SECTION ──────────────────────────
+
           const SizedBox(height: 28),
           _SectionHead('Why buy from $_appName?'),
           const SizedBox(height: 12),
@@ -499,7 +486,7 @@ class _Info extends StatelessWidget {
   }
 }
 
-// ── Quick chip ────────────────────────────────────────────
+
 class _QuickChip extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -536,7 +523,7 @@ class _QuickChip extends StatelessWidget {
   );
 }
 
-// ── Section head ─────────────────────────────────────────
+
 class _SectionHead extends StatelessWidget {
   final String text;
   const _SectionHead(this.text);
@@ -557,7 +544,7 @@ class _SectionHead extends StatelessWidget {
   );
 }
 
-// ── Details table ─────────────────────────────────────────
+
 class _DetailsTable extends StatelessWidget {
   final ProductModel product;
   const _DetailsTable({required this.product});
@@ -622,7 +609,7 @@ class _DetailsTable extends StatelessWidget {
   }
 }
 
-// ── Why buy ───────────────────────────────────────────────
+
 class _WhyBuy extends StatelessWidget {
   static const _points = [
     (LucideIcons.shieldCheck, 'Verified affiliate links only'),
@@ -668,9 +655,7 @@ class _WhyBuy extends StatelessWidget {
   }
 }
 
-// ══════════════════════════════════════════════════════════
-//  BOTTOM CTA
-// ══════════════════════════════════════════════════════════
+
 class _CTA extends StatefulWidget {
   final Color srcColor;
   final String srcLabel;
@@ -768,9 +753,7 @@ class _CTAState extends State<_CTA> {
   }
 }
 
-// ══════════════════════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════════════════════
+
 const _appName = 'BallByBall';
 
 String _capitalize(String s) =>

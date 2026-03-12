@@ -9,7 +9,7 @@ class ShopProvider with ChangeNotifier {
 
   // Filters
   String _selectedCategory = 'all';
-  String _sortBy = 'newest';        // newest | price_low | price_high | rating | discount
+  String _sortBy = 'newest';
   bool _trendingOnly = false;
 
   StreamSubscription<List<ProductModel>>? _sub;
@@ -48,7 +48,7 @@ class ShopProvider with ChangeNotifier {
       case 'discount':
         list.sort((a, b) => b.discount.compareTo(a.discount));
         break;
-      default: // newest — already ordered by createdAt from Firestore
+      default:
         break;
     }
 
@@ -58,7 +58,7 @@ class ShopProvider with ChangeNotifier {
   List<ProductModel> get trendingProducts =>
       _all.where((p) => p.isTrending).toList();
 
-  // ── Init ─────────────────────────────────────────────────
+
   void init() {
     _isLoading = true;
     notifyListeners();
@@ -79,7 +79,7 @@ class ShopProvider with ChangeNotifier {
     );
   }
 
-  // ── Filter actions ───────────────────────────────────────
+
   void setCategory(String category) {
     if (_selectedCategory == category) return;
     _selectedCategory = category;

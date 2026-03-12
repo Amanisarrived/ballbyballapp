@@ -224,7 +224,7 @@ class _NewsState extends State<News> {
                     ),
                   ),
 
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
