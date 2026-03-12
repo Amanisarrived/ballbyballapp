@@ -413,7 +413,7 @@ class _RateButtonState extends State<_RateButton> {
           boxShadow: widget.enabled
               ? [
             BoxShadow(
-              color: Colors.amber.withOpacity(0.3),
+              color: Colors.amber.withAlpha(30),
               blurRadius: 16,
               offset: const Offset(0, 6),
             ),
