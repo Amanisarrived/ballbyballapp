@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
+import 'dugoutscreen/dogout_screen.dart';
+
 class MainNav extends StatefulWidget {
   const MainNav({super.key});
 
@@ -23,7 +25,7 @@ class _MainNavState extends State<MainNav> with TickerProviderStateMixin {
   final List<_NavItem> _items = const [
     _NavItem(icon: LucideIcons.home,        label: 'Home'),
     _NavItem(icon: LucideIcons.shoppingBag, label: 'Shop'),
-    _NavItem(icon: LucideIcons.trophy, label: "Rankings"),
+    _NavItem(icon: Icons.sports_baseball_rounded, label: "DugOut"),
     _NavItem(icon: LucideIcons.settings,    label: 'Settings'),
 
   ];
@@ -31,7 +33,7 @@ class _MainNavState extends State<MainNav> with TickerProviderStateMixin {
   final List<Widget> _screens = const [
     HomeScreen(),
     ShopScreen(),
-    RankingsScreen(),
+    DugoutScreen(),
    SettingsScreen(),
 
 

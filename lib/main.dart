@@ -1,3 +1,4 @@
+import 'package:ballbyball/providers/auth_provider.dart';
 import 'package:ballbyball/providers/banner_provder.dart';
 import 'package:ballbyball/providers/highlights_provider.dart';
 import 'package:ballbyball/providers/news_provider.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => HighlightsProvider()),
         ChangeNotifierProvider(create: (_) => NewsProvider()),
         ChangeNotifierProvider(create: (_) => ShopProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: MaterialApp(
         navigatorObservers: [AppAnalytics.observer],

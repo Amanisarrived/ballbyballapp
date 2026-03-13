@@ -12,7 +12,28 @@
           "package_name": "com.ballbyball.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "752963174826-haqkd89lflepmuamdb1klb8jjrr5n02c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ballbyball.app",
+            "certificate_hash": "716cf8b8ea23c1e0b022c8b952d48fef7ee3e19a"
+          }
+        },
+        {
+          "client_id": "752963174826-mhta5gqdehsbcacq64j38mdpq9o1nu02.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ballbyball.app",
+            "certificate_hash": "95db5eeb78f101d039f2b2d0f41acb31fe66c342"
+          }
+        },
+        {
+          "client_id": "752963174826-0i2vk9eld24cdujessej78jricjuorit.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDN6k0q1zNuarcOoBnPyJmznIW5oxRZbHk"
@@ -20,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752963174826-0i2vk9eld24cdujessej78jricjuorit.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "752963174826-5in1mui0vgn0n2d06ufkkbpsrur9g849.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ballbyball"
+              }
+            }
+          ]
         }
       }
     },
@@ -31,7 +64,12 @@
           "package_name": "com.example.cricket_admin"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "752963174826-0i2vk9eld24cdujessej78jricjuorit.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDN6k0q1zNuarcOoBnPyJmznIW5oxRZbHk"
@@ -39,7 +77,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752963174826-0i2vk9eld24cdujessej78jricjuorit.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "752963174826-5in1mui0vgn0n2d06ufkkbpsrur9g849.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ballbyball"
+              }
+            }
+          ]
         }
       }
     }

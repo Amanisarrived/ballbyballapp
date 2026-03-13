@@ -57,7 +57,7 @@ class _LiveMatchCardState extends State<LiveMatchCard>
   bool get isLive => normalizedStatus == 'live';
   bool get isUpcoming => normalizedStatus == 'upcoming';
 
-  // Toss — only show in 1st innings
+
   String get tossDisplay {
     if (innings == 2) return '';
     final toss = match.toss;
