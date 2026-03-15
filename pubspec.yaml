@@ -73,3 +73,10 @@ flutter:
   assets:
     - assets/
     - .env
+
+
+dependency_validator:
+  ignore:
+    - flutter_test
+    - flutter_lints
+    - flutter_launcher_icons
