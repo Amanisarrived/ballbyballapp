@@ -7,17 +7,19 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/auth_provider.dart';
 
-// ── Tokens ───────────────────────────────────────────────────
+// ── Tokens ────────────────────────────────────────────────────
 class _C {
-  static const bg = Color(0xFF0A0A0A);
-  static const surface = Color(0xFF111111);
-  static const border = Color(0xFF1C1C1C);
-  static const red = Color(0xFFE53935);
-  static const redFade = Color(0x1AE53935); // red @ 10%
-  static const white = Color(0xFFFFFFFF);
-  static const t1 = Color(0xFFEEEEEE); // primary text
-  static const t2 = Color(0xFF888888); // secondary
-  static const t3 = Color(0xFF444444); // muted
+  static const bg       = Color(0xFF0A0A0A);
+  static const surface  = Color(0xFF111111);
+  static const card     = Color(0xFF161616);
+  static const border   = Color(0xFF222222);
+  static const red      = Color(0xFFE53935);
+  static const redLow   = Color(0x1AE53935);
+  static const redMid   = Color(0x33E53935);
+  static const t1       = Color(0xFFEEEEEE);
+  static const t2       = Color(0xFF777777);
+  static const t3       = Color(0xFF3A3A3A);
+  static const white    = Colors.white;
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -31,13 +33,15 @@ class DugoutScreen extends StatefulWidget {
 
 class _DugoutScreenState extends State<DugoutScreen> {
   final _db = FirebaseFirestore.instance;
-  late final Stream<DocumentSnapshot> _postStream;
-  late final Stream<QuerySnapshot> _commentsStream;
 
   DocumentReference get _postRef =>
       _db.collection('dugout_post').doc('featured');
   CollectionReference get _commentsRef => _postRef.collection('comments');
   CollectionReference get _reactionsRef => _postRef.collection('reactions');
+  CollectionReference get _votesRef => _postRef.collection('votes');
+
+  late final Stream<DocumentSnapshot> _postStream;
+  late final Stream<QuerySnapshot> _commentsStream;
 
   @override
   void initState() {
@@ -47,7 +51,6 @@ class _DugoutScreenState extends State<DugoutScreen> {
         .collection('comments')
         .orderBy('createdAt', descending: true)
         .snapshots();
-    // Show rules popup only on first visit
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowRules());
   }
 
@@ -67,8 +70,8 @@ class _DugoutScreenState extends State<DugoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoggedIn = context.select<AuthProvider, bool>((a) => a.isLoggedIn);
-
+    final isLoggedIn =
+    context.select<AuthProvider, bool>((a) => a.isLoggedIn);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
@@ -77,10 +80,11 @@ class _DugoutScreenState extends State<DugoutScreen> {
           children: [
             _AppBar(isLoggedIn: isLoggedIn, onProfile: _openProfile),
             Expanded(
-              child: _Body(
+              child: _Feed(
                 postStream: _postStream,
                 commentsStream: _commentsStream,
                 reactionsRef: _reactionsRef,
+                votesRef: _votesRef,
                 postRef: _postRef,
                 db: _db,
               ),
@@ -92,16 +96,16 @@ class _DugoutScreenState extends State<DugoutScreen> {
     );
   }
 
-  void _openProfile() {
-    final auth = context.read<AuthProvider>();
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (_) => _ProfileSheet(auth: auth),
-    );
-  }
+  void _openProfile() => showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.transparent,
+    builder: (_) => _ProfileSheet(auth: context.read<AuthProvider>()),
+  );
 }
 
+// ─────────────────────────────────────────────────────────────
+//  App Bar
+// ─────────────────────────────────────────────────────────────
 class _AppBar extends StatelessWidget {
   final bool isLoggedIn;
   final VoidCallback onProfile;
@@ -112,38 +116,39 @@ class _AppBar extends StatelessWidget {
     final top = MediaQuery.of(context).padding.top;
     return Container(
       color: _C.bg,
-      padding: EdgeInsets.fromLTRB(20, top + 12, 16, 12),
+      padding: EdgeInsets.fromLTRB(20, top + 14, 16, 12),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Title
           const Text(
             'Dugout',
             style: TextStyle(
               color: _C.t1,
-              fontSize: 22,
+              fontSize: 20,
               fontWeight: FontWeight.w700,
-              letterSpacing: -0.5,
+              letterSpacing: -0.4,
             ),
           ),
-
-          const SizedBox(width: 6),
+          const SizedBox(width: 5),
+          // red dot
           Container(
-            width: 6,
-            height: 6,
+            width: 5, height: 5,
             decoration: const BoxDecoration(
-              color: _C.red,
-              shape: BoxShape.circle,
-            ),
+                color: _C.red, shape: BoxShape.circle),
           ),
           const Spacer(),
-          if (isLoggedIn) _AvatarBtn(onTap: onProfile),
-          if (!isLoggedIn)
+          if (isLoggedIn)
             GestureDetector(
-              onTap: () => showModalBottomSheet(
-                context: context,
-                backgroundColor: Colors.transparent,
-                builder: (_) => const _SignInSheet(),
-              ),
+              onTap: onProfile,
+              child: Builder(builder: (ctx) {
+                final photo = ctx.select<AuthProvider, String>((a) => a.userPhoto);
+                final name  = ctx.select<AuthProvider, String>((a) => a.userName);
+                return _Av(photo: photo, name: name, r: 15);
+              }),
+            )
+          else
+            GestureDetector(
+              onTap: () => _openSignIn(context),
               child: const Text(
                 'Sign in',
                 style: TextStyle(
@@ -157,34 +162,30 @@ class _AppBar extends StatelessWidget {
       ),
     );
   }
+
+  void _openSignIn(BuildContext context) => showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.transparent,
+    builder: (_) => const _SignInSheet(),
+  );
 }
 
-class _AvatarBtn extends StatelessWidget {
-  final VoidCallback onTap;
-  const _AvatarBtn({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final photo = context.select<AuthProvider, String>((a) => a.userPhoto);
-    final name = context.select<AuthProvider, String>((a) => a.userName);
-    return GestureDetector(
-      onTap: onTap,
-      child: _Avatar(photo: photo, name: name, r: 16),
-    );
-  }
-}
-
-class _Body extends StatelessWidget {
+// ─────────────────────────────────────────────────────────────
+//  Feed
+// ─────────────────────────────────────────────────────────────
+class _Feed extends StatelessWidget {
   final Stream<DocumentSnapshot> postStream;
   final Stream<QuerySnapshot> commentsStream;
   final CollectionReference reactionsRef;
+  final CollectionReference votesRef;
   final DocumentReference postRef;
   final FirebaseFirestore db;
 
-  const _Body({
+  const _Feed({
     required this.postStream,
     required this.commentsStream,
     required this.reactionsRef,
+    required this.votesRef,
     required this.postRef,
     required this.db,
   });
@@ -197,8 +198,7 @@ class _Body extends StatelessWidget {
         if (!snap.hasData) {
           return const Center(
             child: SizedBox(
-              width: 20,
-              height: 20,
+              width: 18, height: 18,
               child: CircularProgressIndicator(color: _C.red, strokeWidth: 1.5),
             ),
           );
@@ -206,26 +206,45 @@ class _Body extends StatelessWidget {
         if (!snap.data!.exists) {
           return const Center(
             child: Text(
-              'Nothing here yet.',
+              'No match today.',
               style: TextStyle(color: _C.t3, fontSize: 14),
             ),
           );
         }
 
-        final d = snap.data!.data() as Map<String, dynamic>;
-        final reactions = Map<String, dynamic>.from(d['reactions'] ?? {});
-        final commentsCount = d['commentsCount'] ?? 0;
-        final imageUrl = d['imageUrl'] ?? '';
-        final postText = d['text'] ?? '';
+        final d           = snap.data!.data() as Map<String, dynamic>;
+        final teamA       = (d['teamA'] as Map<String, dynamic>?) ?? {};
+        final teamB       = (d['teamB'] as Map<String, dynamic>?) ?? {};
+        final reactions   = Map<String, dynamic>.from(d['reactions'] ?? {});
+        final commentsCount = (d['commentsCount'] as num? ?? 0).toInt();
+        final totalVotes  = (d['totalVotes'] as num? ?? 0).toInt();
+        final postText    = d['text'] as String? ?? '';
+        final aVotes      = (teamA['votes'] as num? ?? 0).toInt();
+        final bVotes      = (teamB['votes'] as num? ?? 0).toInt();
+        final aPct = totalVotes > 0 ? (aVotes / totalVotes * 100).round() : 0;
+        final bPct = totalVotes > 0 ? (bVotes / totalVotes * 100).round() : 0;
 
         return CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
-            // Post card
+            // ── Vote card ───────────────────────────────
             SliverToBoxAdapter(
-              child: _PostCard(
-                text: postText,
-                imageUrl: imageUrl,
+              child: _VoteCard(
+                postText: postText,
+                teamA: teamA,
+                teamB: teamB,
+                aPct: aPct,
+                bPct: bPct,
+                totalVotes: totalVotes,
+                votesRef: votesRef,
+                postRef: postRef,
+                db: db,
+              ),
+            ),
+
+            // ── Reactions ───────────────────────────────
+            SliverToBoxAdapter(
+              child: _ReactionsBar(
                 reactions: reactions,
                 commentsCount: commentsCount,
                 reactionsRef: reactionsRef,
@@ -234,18 +253,19 @@ class _Body extends StatelessWidget {
               ),
             ),
 
+            // ── Comments label ──────────────────────────
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 28, 20, 14),
+                padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
                 child: Row(
                   children: [
-                    Text(
+                    const Text(
                       'Comments',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: _C.t2,
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        letterSpacing: 0.5,
+                        letterSpacing: 0.2,
                       ),
                     ),
                     const SizedBox(width: 6),
@@ -258,9 +278,9 @@ class _Body extends StatelessWidget {
               ),
             ),
 
-            // Comments
+            // ── Comments ────────────────────────────────
             _CommentsSliver(stream: commentsStream),
-            const SliverToBoxAdapter(child: SizedBox(height: 20)),
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
           ],
         );
       },
@@ -269,106 +289,434 @@ class _Body extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  Post Card
+//  Vote Card
 // ─────────────────────────────────────────────────────────────
-class _PostCard extends StatelessWidget {
-  final String text, imageUrl;
-  final Map<String, dynamic> reactions;
-  final int commentsCount;
-  final CollectionReference reactionsRef;
+class _VoteCard extends StatefulWidget {
+  final String postText;
+  final Map<String, dynamic> teamA, teamB;
+  final int aPct, bPct, totalVotes;
+  final CollectionReference votesRef;
   final DocumentReference postRef;
   final FirebaseFirestore db;
 
-  const _PostCard({
-    required this.text,
-    required this.imageUrl,
-    required this.reactions,
-    required this.commentsCount,
-    required this.reactionsRef,
+  const _VoteCard({
+    required this.postText,
+    required this.teamA,
+    required this.teamB,
+    required this.aPct,
+    required this.bPct,
+    required this.totalVotes,
+    required this.votesRef,
     required this.postRef,
     required this.db,
   });
 
   @override
+  State<_VoteCard> createState() => _VoteCardState();
+}
+
+class _VoteCardState extends State<_VoteCard>
+    with SingleTickerProviderStateMixin {
+  String? _myVote;
+  bool _pending = false;
+  late AnimationController _barAc;
+  late Animation<double> _barAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _barAc = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _barAnim = Tween<double>(begin: 0, end: widget.aPct / 100)
+        .animate(CurvedAnimation(parent: _barAc, curve: Curves.easeOutCubic));
+    _barAc.forward();
+    _loadMyVote();
+  }
+
+  @override
+  void didUpdateWidget(_VoteCard old) {
+    super.didUpdateWidget(old);
+    final newVal = widget.aPct / 100;
+    if ((_barAnim.value - newVal).abs() > 0.005) {
+      _barAnim = Tween<double>(begin: _barAnim.value, end: newVal)
+          .animate(CurvedAnimation(parent: _barAc, curve: Curves.easeOutCubic));
+      _barAc..reset()..forward();
+    }
+  }
+
+  Future<void> _loadMyVote() async {
+    final auth = context.read<AuthProvider>();
+    if (!auth.isLoggedIn) return;
+    final doc = await widget.votesRef.doc(auth.userId).get();
+    if (!mounted || !doc.exists) return;
+    setState(() =>
+    _myVote = (doc.data() as Map<String, dynamic>)['team'] as String?);
+  }
+
+  Future<void> _castVote(String team) async {
+    final auth = context.read<AuthProvider>();
+    if (!auth.isLoggedIn) {
+      _openSignIn();
+      return;
+    }
+
+    // 🔒 Vote locked — once cast, no changes allowed
+    if (_myVote != null || _pending) return;
+
+    setState(() { _myVote = team; _pending = true; });
+    HapticFeedback.lightImpact();
+
+    try {
+      final voteDoc = widget.votesRef.doc(auth.userId);
+      final batch = widget.db.batch();
+
+      batch.update(widget.postRef, {
+        '$team.votes': FieldValue.increment(1),
+        'totalVotes': FieldValue.increment(1),
+      });
+      batch.set(voteDoc, {
+        'userId': auth.userId,
+        'team': team,
+        'votedAt': FieldValue.serverTimestamp(),
+      });
+
+      await batch.commit();
+    } catch (_) {
+      // Rollback on failure
+      if (mounted) setState(() => _myVote = null);
+    } finally {
+      if (mounted) setState(() => _pending = false);
+    }
+  }
+
+  void _openSignIn() => showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.transparent,
+    builder: (_) => const _SignInSheet(),
+  );
+
+  @override
+  void dispose() {
+    _barAc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final aName    = widget.teamA['name'] as String? ?? 'Team A';
+    final bName    = widget.teamB['name'] as String? ?? 'Team B';
+    final aFlag    = widget.teamA['flagUrl'] as String? ?? '';
+    final bFlag    = widget.teamB['flagUrl'] as String? ?? '';
+    final votedA   = _myVote == 'teamA';
+    final votedB   = _myVote == 'teamB';
+    final hasVoted = _myVote != null;
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image
-          if (imageUrl.isNotEmpty)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                width: double.infinity,
-                height: 190,
-                fit: BoxFit.cover,
-              ),
-            ),
-
-          if (imageUrl.isNotEmpty) const SizedBox(height: 14),
-
-          // Featured label
+          // ── Featured pill ────────────────────────────
           Row(
             children: [
               Container(
-                width: 3,
-                height: 12,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: _C.red,
-                  borderRadius: BorderRadius.circular(2),
+                  color: _C.redLow,
+                  borderRadius: BorderRadius.circular(4),
+                  border:
+                  Border.all(color: _C.redMid, width: 0.5),
+                ),
+                child: const Text(
+                  'FEATURED',
+                  style: TextStyle(
+                    color: _C.red,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.4,
+                  ),
                 ),
               ),
-              const SizedBox(width: 6),
-              const Text(
-                'FEATURED POST',
-                style: TextStyle(
-                  color: _C.red,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.5,
+            ],
+          ),
+          const SizedBox(height: 14),
+
+          // ── Post text ────────────────────────────────
+          if (widget.postText.isNotEmpty) ...[
+            Text(
+              widget.postText,
+              style: const TextStyle(
+                color: _C.t1,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                height: 1.55,
+                letterSpacing: -0.1,
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+
+          // ── Two team cards ────────────────────────────
+          Row(
+            children: [
+              Expanded(
+                child: _TeamCard(
+                  name: aName,
+                  flagUrl: aFlag,
+                  pct: widget.aPct,
+                  voted: votedA,
+                  revealed: hasVoted,
+                  side: 'A',
+                  onTap: () => _castVote('teamA'),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _TeamCard(
+                  name: bName,
+                  flagUrl: bFlag,
+                  pct: widget.bPct,
+                  voted: votedB,
+                  revealed: hasVoted,
+                  side: 'B',
+                  onTap: () => _castVote('teamB'),
                 ),
               ),
             ],
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 14),
 
-          // Post text
-          Text(
-            text,
-            style: const TextStyle(
-              color: _C.t1,
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
-              height: 1.6,
-              letterSpacing: 0.1,
+          // ── Progress bar ─────────────────────────────
+          AnimatedBuilder(
+            animation: _barAnim,
+            builder: (_, _) => _BarRow(
+              aPct: _barAnim.value,
+              aName: aName,
+              bName: bName,
+              totalVotes: widget.totalVotes,
+              revealed: hasVoted,
             ),
           ),
 
-          const SizedBox(height: 16),
-
-          // Reactions
-          _ReactionsBar(
-            reactions: reactions,
-            commentsCount: commentsCount,
-            reactionsRef: reactionsRef,
-            postRef: postRef,
-            db: db,
-          ),
-
           const SizedBox(height: 20),
-          const Divider(color: _C.border, height: 1, thickness: 0.5),
+          Container(height: 0.5, color: _C.border),
         ],
       ),
     );
   }
 }
 
+// ── Team card ─────────────────────────────────────────────────
+class _TeamCard extends StatelessWidget {
+  final String name, flagUrl, side;
+  final int pct;
+  final bool voted, revealed;
+  final VoidCallback onTap;
+
+  const _TeamCard({
+    required this.name,
+    required this.flagUrl,
+    required this.pct,
+    required this.voted,
+    required this.revealed,
+    required this.side,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      // Locked: non-voted card dims, voted card stays vivid
+      onTap: revealed && !voted ? null : onTap,
+      child: AnimatedOpacity(
+        duration: const Duration(milliseconds: 300),
+        opacity: revealed && !voted ? 0.38 : 1.0,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: voted ? _C.redLow : _C.card,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: voted ? _C.red : _C.border,
+              width: voted ? 1.0 : 0.5,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Flag
+              ClipRRect(
+                borderRadius: BorderRadius.circular(7),
+                child: Container(
+                  width: 42,
+                  height: 30,
+                  color: _C.surface,
+                  child: flagUrl.isNotEmpty
+                      ? Image.network(
+                    flagUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, _, _) => Center(
+                      child: Text(
+                        side,
+                        style: const TextStyle(
+                          color: _C.t3,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  )
+                      : Center(
+                    child: Text(
+                      side,
+                      style: TextStyle(
+                        color: voted ? _C.red : _C.t3,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Name
+              Text(
+                name,
+                style: TextStyle(
+                  color: voted ? _C.t1 : _C.t2,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.1,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 6),
+
+              // Pct — only show after voting
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                child: revealed
+                    ? Text(
+                  '$pct%',
+                  key: ValueKey('pct-$side-$pct'),
+                  style: TextStyle(
+                    color: voted ? _C.red : _C.t2,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.5,
+                  ),
+                )
+                    : const Text(
+                  'Vote',
+                  key: ValueKey('vote-cta'),
+                  style: TextStyle(
+                    color: _C.t3,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+
+              if (voted) ...[
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    const Icon(Icons.check_circle,
+                        color: _C.red, size: 11),
+                    const SizedBox(width: 4),
+                    const Text(
+                      'Your vote',
+                      style: TextStyle(
+                        color: _C.red,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ), // AnimatedContainer
+      ), // AnimatedOpacity
+    );
+  }
+}
+
+// ── Bar row ───────────────────────────────────────────────────
+class _BarRow extends StatelessWidget {
+  final double aPct;
+  final String aName, bName;
+  final int totalVotes;
+  final bool revealed;
+
+  const _BarRow({
+    required this.aPct,
+    required this.aName,
+    required this.bName,
+    required this.totalVotes,
+    required this.revealed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Bar
+        LayoutBuilder(builder: (_, c) {
+          final w = c.maxWidth;
+          final aW = (w * aPct).clamp(0.0, w);
+          return Stack(
+            children: [
+              Container(
+                height: 3,
+                width: w,
+                decoration: BoxDecoration(
+                  color: _C.border,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              if (aW > 0)
+                Container(
+                  height: 3,
+                  width: aW,
+                  decoration: BoxDecoration(
+                    color: _C.red,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+            ],
+          );
+        }),
+        const SizedBox(height: 8),
+        // Vote count
+        Center(
+          child: Text(
+            totalVotes == 0
+                ? 'Cast the first vote'
+                : '$totalVotes ${totalVotes == 1 ? 'vote' : 'votes'}',
+            style: const TextStyle(
+              color: _C.t3,
+              fontSize: 11,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 // ─────────────────────────────────────────────────────────────
-//  Reactions Bar — isolated StatefulWidget
+//  Reactions Bar
 // ─────────────────────────────────────────────────────────────
 class _ReactionsBar extends StatefulWidget {
   final Map<String, dynamic> reactions;
@@ -412,9 +760,8 @@ class _ReactionsBarState extends State<_ReactionsBar> {
     if (!auth.isLoggedIn) return;
     final doc = await widget.reactionsRef.doc(auth.userId).get();
     if (!mounted || !doc.exists) return;
-    setState(
-      () => _sel = (doc.data() as Map<String, dynamic>)['reaction'] as String?,
-    );
+    setState(() =>
+    _sel = (doc.data() as Map<String, dynamic>)['reaction'] as String?);
   }
 
   Future<void> _tap(String key) async {
@@ -431,10 +778,8 @@ class _ReactionsBarState extends State<_ReactionsBar> {
 
     final prev = _sel;
     final next = prev == key ? null : key;
-    setState(() {
-      _sel = next;
-      _pending = true;
-    });
+    setState(() { _sel = next; _pending = true; });
+    HapticFeedback.selectionClick();
 
     try {
       final uRef = widget.reactionsRef.doc(auth.userId);
@@ -444,9 +789,8 @@ class _ReactionsBarState extends State<_ReactionsBar> {
         if (uDoc.exists) {
           final ex = uDoc['reaction'] as String?;
           if (ex == key) {
-            tx.update(widget.postRef, {
-              'reactions.$ex': FieldValue.increment(-1),
-            });
+            tx.update(widget.postRef,
+                {'reactions.$ex': FieldValue.increment(-1)});
             tx.delete(uRef);
           } else {
             tx.update(widget.postRef, {
@@ -459,9 +803,8 @@ class _ReactionsBarState extends State<_ReactionsBar> {
             });
           }
         } else {
-          tx.update(widget.postRef, {
-            'reactions.$key': FieldValue.increment(1),
-          });
+          tx.update(widget.postRef,
+              {'reactions.$key': FieldValue.increment(1)});
           tx.set(uRef, {
             'reaction': key,
             'reactedAt': FieldValue.serverTimestamp(),
@@ -477,42 +820,42 @@ class _ReactionsBarState extends State<_ReactionsBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        ..._defs.map((def) {
-          final (emoji, key) = def;
-          final count = (widget.reactions[key] ?? 0) as int;
-          final active = _sel == key;
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: _Pill(
-              emoji: emoji,
-              count: count,
-              active: active,
-              onTap: () => _tap(key),
-            ),
-          );
-        }),
-        const Spacer(),
-        // Comment count
-        Row(
-          children: [
-            const Icon(Icons.mode_comment_outlined, color: _C.t3, size: 14),
-            const SizedBox(width: 4),
-            Text(
-              '${widget.commentsCount}',
-              style: const TextStyle(color: _C.t3, fontSize: 12),
-            ),
-          ],
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+      child: Row(
+        children: [
+          ..._defs.map((def) {
+            final (emoji, key) = def;
+            final count  = (widget.reactions[key] ?? 0) as int;
+            final active = _sel == key;
+            return Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: _Pill(
+                emoji: emoji,
+                count: count,
+                active: active,
+                onTap: () => _tap(key),
+              ),
+            );
+          }),
+          const Spacer(),
+          Row(
+            children: [
+              const Icon(Icons.mode_comment_outlined,
+                  color: _C.t3, size: 13),
+              const SizedBox(width: 4),
+              Text(
+                '${widget.commentsCount}',
+                style: const TextStyle(color: _C.t3, fontSize: 12),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  Pill
-// ─────────────────────────────────────────────────────────────
 class _Pill extends StatelessWidget {
   final String emoji;
   final int count;
@@ -535,7 +878,7 @@ class _Pill extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(999),
-          color: active ? _C.redFade : _C.surface,
+          color: active ? _C.redLow : _C.surface,
           border: Border.all(
             color: active ? _C.red : _C.border,
             width: active ? 1.0 : 0.5,
@@ -581,12 +924,9 @@ class _CommentsSliver extends StatelessWidget {
               padding: EdgeInsets.all(32),
               child: Center(
                 child: SizedBox(
-                  width: 18,
-                  height: 18,
+                  width: 16, height: 16,
                   child: CircularProgressIndicator(
-                    color: _C.red,
-                    strokeWidth: 1.5,
-                  ),
+                      color: _C.red, strokeWidth: 1.5),
                 ),
               ),
             ),
@@ -594,13 +934,12 @@ class _CommentsSliver extends StatelessWidget {
         }
 
         final docs = snap.data?.docs ?? [];
-
         if (docs.isEmpty) {
           return const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.fromLTRB(20, 8, 20, 0),
               child: Text(
-                'No comments yet. Be the first!',
+                'No comments yet. Start the chat!',
                 style: TextStyle(color: _C.t3, fontSize: 13),
               ),
             ),
@@ -611,7 +950,7 @@ class _CommentsSliver extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
-              (ctx, i) => RepaintBoundary(
+                  (ctx, i) => RepaintBoundary(
                 child: _CommentRow(
                   key: ValueKey(docs[i].id),
                   data: docs[i].data() as Map<String, dynamic>,
@@ -627,7 +966,7 @@ class _CommentsSliver extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  Comment Row — ultra minimal
+//  Comment Row
 // ─────────────────────────────────────────────────────────────
 class _CommentRow extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -635,11 +974,7 @@ class _CommentRow extends StatelessWidget {
 
   String _ago(dynamic ts) {
     if (ts == null) return '';
-    final dt = ts is Timestamp
-        ? ts.toDate()
-        : ts is String
-        ? (DateTime.tryParse(ts) ?? DateTime.now())
-        : DateTime.now();
+    final dt = ts is Timestamp ? ts.toDate() : DateTime.now();
     final d = DateTime.now().difference(dt);
     if (d.inMinutes < 1) return 'now';
     if (d.inMinutes < 60) return '${d.inMinutes}m';
@@ -649,18 +984,18 @@ class _CommentRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final photo = data['userPhoto'] ?? '';
-    final raw = data['userName'];
-    final name = (raw is String && raw.trim().isNotEmpty) ? raw.trim() : 'Fan';
-    final text = data['text'] ?? '';
-    final ago = _ago(data['createdAt']);
+    final photo = data['userPhoto'] as String? ?? '';
+    final raw   = data['userName'];
+    final name  = (raw is String && raw.trim().isNotEmpty) ? raw.trim() : 'Fan';
+    final text  = data['text'] as String? ?? '';
+    final ago   = _ago(data['createdAt']);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 18),
+      padding: const EdgeInsets.only(bottom: 20),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Avatar(photo: photo, name: name, r: 14),
+          _Av(photo: photo, name: name, r: 14),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -702,7 +1037,7 @@ class _CommentRow extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  Input Bar — isolated, all state inside
+//  Input Bar
 // ─────────────────────────────────────────────────────────────
 class _InputBar extends StatefulWidget {
   final DocumentReference postRef;
@@ -715,17 +1050,16 @@ class _InputBar extends StatefulWidget {
 
 class _InputBarState extends State<_InputBar> {
   final _ctrl = TextEditingController();
-  bool _posting = false;
-  int _cooldown = 0;
+  bool _posting  = false;
+  int  _cooldown = 0;
   Timer? _timer;
-  bool _hasText = false;
+  bool _hasText  = false;
 
-  // ── Ban state ──────────────────────────────────────────
-  String _banStatus = 'none'; // 'none' | 'banned' | 'timedOut'
+  String    _banStatus = 'none';
   DateTime? _banUntil;
-  static final _bannedRef = FirebaseFirestore.instance.collection(
-    'dugout_banned',
-  );
+
+  static final _bannedRef =
+  FirebaseFirestore.instance.collection('dugout_banned');
 
   @override
   void initState() {
@@ -743,14 +1077,9 @@ class _InputBarState extends State<_InputBar> {
   Future<void> _checkBan(String userId) async {
     final doc = await _bannedRef.doc(userId).get();
     if (!mounted) return;
-    if (!doc.exists) {
-      setState(() => _banStatus = 'none');
-      return;
-    }
-
-    final d = doc.data() as Map<String, dynamic>;
+    if (!doc.exists) { setState(() => _banStatus = 'none'); return; }
+    final d    = doc.data() as Map<String, dynamic>;
     final type = d['type'] as String? ?? 'permanent';
-
     if (type == 'permanent') {
       setState(() => _banStatus = 'banned');
       return;
@@ -761,18 +1090,9 @@ class _InputBarState extends State<_InputBar> {
         await _bannedRef.doc(userId).delete();
         setState(() => _banStatus = 'none');
       } else {
-        setState(() {
-          _banStatus = 'timedOut';
-          _banUntil = until;
-        });
-        // Auto-clear when timeout expires
+        setState(() { _banStatus = 'timedOut'; _banUntil = until; });
         Future.delayed(until.difference(DateTime.now()), () {
-          if (mounted) {
-            setState(() {
-              _banStatus = 'none';
-              _banUntil = null;
-            });
-          }
+          if (mounted) setState(() { _banStatus = 'none'; _banUntil = null; });
         });
       }
     }
@@ -781,30 +1101,23 @@ class _InputBarState extends State<_InputBar> {
   String get _timeoutRemaining {
     if (_banUntil == null) return '';
     final diff = _banUntil!.difference(DateTime.now());
-    if (diff.inMinutes < 1) return 'less than a minute';
+    if (diff.inMinutes < 1) return 'soon';
     if (diff.inHours < 1) return '${diff.inMinutes}m';
-    final m = diff.inMinutes.remainder(60);
-    return m > 0 ? '${diff.inHours}h ${m}m' : '${diff.inHours}h';
+    return '${diff.inHours}h';
   }
 
-  bool get _isBanned => _banStatus == 'banned';
+  bool get _isBanned   => _banStatus == 'banned';
   bool get _isTimedOut => _banStatus == 'timedOut';
-  bool get _busy => _posting || _cooldown > 0 || _isBanned || _isTimedOut;
+  bool get _busy       => _posting || _cooldown > 0 || _isBanned || _isTimedOut;
 
   void _startCooldown() {
     _cooldown = 60;
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (!mounted) {
-        t.cancel();
-        return;
-      }
+      if (!mounted) { t.cancel(); return; }
       setState(() {
         _cooldown--;
-        if (_cooldown <= 0) {
-          _cooldown = 0;
-          t.cancel();
-        }
+        if (_cooldown <= 0) { _cooldown = 0; t.cancel(); }
       });
     });
   }
@@ -812,7 +1125,6 @@ class _InputBarState extends State<_InputBar> {
   Future<void> _send() async {
     final text = _ctrl.text.trim();
     if (text.isEmpty || _busy) return;
-
     final auth = context.read<AuthProvider>();
     if (!auth.isLoggedIn) {
       showModalBottomSheet(
@@ -822,19 +1134,16 @@ class _InputBarState extends State<_InputBar> {
       );
       return;
     }
-
-    // Re-check ban before every post
     await _checkBan(auth.userId);
-    if (!mounted) return; // ← await ke baad
-    if (_isBanned || _isTimedOut) return;
+    if (!mounted || _isBanned || _isTimedOut) return;
 
     setState(() => _posting = true);
     try {
       await widget.commentsRef.add({
-        'userId': auth.userId,
-        'userName': auth.userName,
+        'userId':    auth.userId,
+        'userName':  auth.userName,
         'userPhoto': auth.userPhoto,
-        'text': text,
+        'text':      text,
         'createdAt': FieldValue.serverTimestamp(),
       });
       await widget.postRef.update({'commentsCount': FieldValue.increment(1)});
@@ -844,13 +1153,11 @@ class _InputBarState extends State<_InputBar> {
       _startCooldown();
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to post'),
-            backgroundColor: _C.red,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Failed to post'),
+          backgroundColor: _C.red,
+          behavior: SnackBarBehavior.floating,
+        ));
       }
     } finally {
       if (mounted) setState(() => _posting = false);
@@ -867,78 +1174,59 @@ class _InputBarState extends State<_InputBar> {
   @override
   Widget build(BuildContext context) {
     final isLoggedIn = context.select<AuthProvider, bool>((a) => a.isLoggedIn);
-    final photo = context.select<AuthProvider, String>((a) => a.userPhoto);
-    final name = context.select<AuthProvider, String>((a) => a.userName);
-    final canSend = _hasText && !_busy && isLoggedIn;
+    final photo      = context.select<AuthProvider, String>((a) => a.userPhoto);
+    final name       = context.select<AuthProvider, String>((a) => a.userName);
+    final canSend    = _hasText && !_busy && isLoggedIn;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // ── Ban / timeout banner ─────────────────────────
         if (_isBanned)
-          _BanBanner(
-            icon: Icons.block_rounded,
-            message: 'You\'ve been banned from commenting.',
-          ),
+          _BanBanner(Icons.block_rounded, 'You\'ve been banned from commenting.'),
         if (_isTimedOut)
-          _BanBanner(
-            icon: Icons.timer_outlined,
-            message: 'Timed out for $_timeoutRemaining.',
-          ),
+          _BanBanner(Icons.timer_outlined, 'Timed out — $_timeoutRemaining remaining.'),
 
-        // ── Input row ────────────────────────────────────
         Container(
           decoration: const BoxDecoration(
             color: _C.bg,
             border: Border(top: BorderSide(color: _C.border, width: 0.5)),
           ),
           padding: EdgeInsets.fromLTRB(
-            16,
-            10,
-            16,
-            MediaQuery.of(context).padding.bottom + 10,
-          ),
+              16, 10, 16, MediaQuery.of(context).padding.bottom + 10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _Avatar(photo: isLoggedIn ? photo : '', name: name, r: 15),
+              _Av(photo: isLoggedIn ? photo : '', name: name, r: 14),
               const SizedBox(width: 10),
               Expanded(
                 child: GestureDetector(
-                  onTap: isLoggedIn
-                      ? null
-                      : () => showModalBottomSheet(
-                          context: context,
-                          backgroundColor: Colors.transparent,
-                          builder: (_) => const _SignInSheet(),
-                        ),
+                  onTap: isLoggedIn ? null : () => showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => const _SignInSheet(),
+                  ),
                   child: AbsorbPointer(
                     absorbing: !isLoggedIn || _isBanned || _isTimedOut,
                     child: TextField(
                       controller: _ctrl,
                       maxLines: null,
-                      style: const TextStyle(
-                        color: _C.t1,
-                        fontSize: 14,
-                        height: 1.4,
-                      ),
+                      style: const TextStyle(color: _C.t1, fontSize: 14, height: 1.4),
+                      cursorColor: _C.red,
                       decoration: InputDecoration(
                         isDense: true,
                         hintText: _isBanned
                             ? 'Commenting disabled'
                             : _isTimedOut
-                            ? 'Timed out for $_timeoutRemaining'
+                            ? 'Timed out — $_timeoutRemaining left'
                             : _cooldown > 0
                             ? 'Wait ${_cooldown}s...'
                             : isLoggedIn
-                            ? 'Add a comment...'
+                            ? 'Say something...'
                             : 'Sign in to comment',
                         hintStyle: TextStyle(
                           fontSize: 14,
-                          color: (_isBanned || _isTimedOut)
-                              ? _C.red.withValues(alpha: 0.45)
-                              : _cooldown > 0
-                              ? _C.red.withValues(alpha: 0.45)
+                          color: (_isBanned || _isTimedOut || _cooldown > 0)
+                              ? _C.red.withValues(alpha: 0.4)
                               : _C.t3,
                         ),
                         border: InputBorder.none,
@@ -949,15 +1237,12 @@ class _InputBarState extends State<_InputBar> {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
-
-              // Send button
+              const SizedBox(width: 10),
               GestureDetector(
                 onTap: canSend ? _send : null,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 180),
-                  width: 32,
-                  height: 32,
+                  width: 32, height: 32,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: canSend ? _C.red : Colors.transparent,
@@ -966,7 +1251,7 @@ class _InputBarState extends State<_InputBar> {
                       width: 0.5,
                     ),
                   ),
-                  child: Center(child: _btnChild(canSend)),
+                  child: Center(child: _sendIcon(canSend)),
                 ),
               ),
             ],
@@ -976,11 +1261,10 @@ class _InputBarState extends State<_InputBar> {
     );
   }
 
-  Widget _btnChild(bool active) {
+  Widget _sendIcon(bool active) {
     if (_posting) {
       return const SizedBox(
-        width: 14,
-        height: 14,
+        width: 13, height: 13,
         child: CircularProgressIndicator(strokeWidth: 1.5, color: _C.t3),
       );
     }
@@ -988,10 +1272,7 @@ class _InputBarState extends State<_InputBar> {
       return Text(
         '$_cooldown',
         style: const TextStyle(
-          color: _C.t3,
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-        ),
+            color: _C.t3, fontSize: 10, fontWeight: FontWeight.w700),
       );
     }
     return Icon(
@@ -1003,7 +1284,7 @@ class _InputBarState extends State<_InputBar> {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  Rules Dialog — shown once on first visit
+//  Rules Dialog
 // ─────────────────────────────────────────────────────────────
 class _RulesDialog extends StatelessWidget {
   const _RulesDialog();
@@ -1011,7 +1292,7 @@ class _RulesDialog extends StatelessWidget {
   static const _rules = [
     ('🏏', 'Keep it cricket', 'Talk about the game. Stay on topic.'),
     ('🤝', 'Respect everyone', 'No hate, abuse, or personal attacks.'),
-    ('🚫', 'No spam', 'Don\'t flood the chat or post links.'),
+    ('🚫', 'No spam', "Don't flood the chat or post links."),
     ('⚠️', 'Violations = ban', 'Breaking rules may get you removed.'),
   ];
 
@@ -1030,37 +1311,27 @@ class _RulesDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Icon + title
             Container(
-              width: 48,
-              height: 48,
+              width: 44, height: 44,
               decoration: BoxDecoration(
-                color: _C.redFade,
-                borderRadius: BorderRadius.circular(12),
+                color: _C.redLow,
+                borderRadius: BorderRadius.circular(11),
               ),
               child: const Center(
-                child: Text('📋', style: TextStyle(fontSize: 22)),
-              ),
+                  child: Text('📋', style: TextStyle(fontSize: 20))),
             ),
             const SizedBox(height: 14),
             const Text(
               'Dugout Rules',
               style: TextStyle(
-                color: _C.t1,
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                letterSpacing: -0.3,
-              ),
+                  color: _C.t1, fontSize: 17, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 4),
             const Text(
               'Read before you join the chat',
               style: TextStyle(color: _C.t3, fontSize: 12),
             ),
-
             const SizedBox(height: 22),
-
-            // Rules list
             ..._rules.map((r) {
               final (emoji, title, sub) = r;
               return Padding(
@@ -1068,29 +1339,22 @@ class _RulesDialog extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(emoji, style: const TextStyle(fontSize: 16)),
+                    Text(emoji, style: const TextStyle(fontSize: 15)),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            title,
-                            style: const TextStyle(
-                              color: _C.t1,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 1),
-                          Text(
-                            sub,
-                            style: const TextStyle(
-                              color: _C.t3,
-                              fontSize: 12,
-                              height: 1.4,
-                            ),
-                          ),
+                          Text(title,
+                              style: const TextStyle(
+                                color: _C.t1,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              )),
+                          const SizedBox(height: 2),
+                          Text(sub,
+                              style: const TextStyle(
+                                  color: _C.t3, fontSize: 12, height: 1.4)),
                         ],
                       ),
                     ),
@@ -1098,12 +1362,9 @@ class _RulesDialog extends StatelessWidget {
                 ),
               );
             }),
-
             const SizedBox(height: 8),
             const Divider(color: _C.border, height: 1, thickness: 0.5),
             const SizedBox(height: 14),
-
-            // CTA
             SizedBox(
               width: double.infinity,
               child: TextButton(
@@ -1112,13 +1373,12 @@ class _RulesDialog extends StatelessWidget {
                   backgroundColor: _C.red,
                   padding: const EdgeInsets.symmetric(vertical: 13),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                 ),
                 child: const Text(
-                  'Got it, let\'s go!',
+                  "Got it, let's go!",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: _C.white,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1133,34 +1393,29 @@ class _RulesDialog extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  Ban Banner — shown above input when user is banned/timed out
+//  Ban Banner
 // ─────────────────────────────────────────────────────────────
 class _BanBanner extends StatelessWidget {
   final IconData icon;
   final String message;
-  const _BanBanner({required this.icon, required this.message});
+  const _BanBanner(this.icon, this.message);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: const BoxDecoration(
-        color: Color(0x1AE53935), // red @ 10%
-        border: Border(top: BorderSide(color: Color(0x33E53935), width: 0.5)),
+        color: _C.redLow,
+        border: Border(top: BorderSide(color: _C.redMid, width: 0.5)),
       ),
       child: Row(
         children: [
-          Icon(icon, color: _C.red, size: 13),
+          Icon(icon, color: _C.red, size: 12),
           const SizedBox(width: 7),
-          Text(
-            message,
-            style: const TextStyle(
-              color: _C.red,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          Text(message,
+              style: const TextStyle(
+                  color: _C.red, fontSize: 12, fontWeight: FontWeight.w500)),
         ],
       ),
     );
@@ -1183,58 +1438,31 @@ class _ProfileSheet extends StatelessWidget {
         border: Border(top: BorderSide(color: _C.border, width: 0.5)),
       ),
       padding: EdgeInsets.fromLTRB(
-        24,
-        16,
-        24,
-        MediaQuery.of(context).padding.bottom + 20,
-      ),
+          24, 16, 24, MediaQuery.of(context).padding.bottom + 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Handle
-          Container(
-            width: 32,
-            height: 3,
-            decoration: BoxDecoration(
-              color: _C.border,
-              borderRadius: BorderRadius.circular(99),
-            ),
-          ),
+          _handle(),
           const SizedBox(height: 24),
-          _Avatar(photo: auth.userPhoto, name: auth.userName, r: 28),
+          _Av(photo: auth.userPhoto, name: auth.userName, r: 28),
           const SizedBox(height: 12),
-          Text(
-            auth.userName.isNotEmpty ? auth.userName : 'User',
-            style: const TextStyle(
-              color: _C.t1,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          Text(auth.userName.isNotEmpty ? auth.userName : 'User',
+              style: const TextStyle(
+                  color: _C.t1, fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 2),
-          Text(
-            auth.user?.email ?? '',
-            style: const TextStyle(color: _C.t3, fontSize: 12),
-          ),
+          Text(auth.user?.email ?? '',
+              style: const TextStyle(color: _C.t3, fontSize: 12)),
           const SizedBox(height: 24),
           const Divider(color: _C.border, height: 1, thickness: 0.5),
-          const SizedBox(height: 4),
           ListTile(
             dense: true,
             contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.logout_rounded, color: _C.red, size: 18),
-            title: const Text(
-              'Sign out',
-              style: TextStyle(
-                color: _C.red,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              auth.signOut();
-            },
+            leading:
+            const Icon(Icons.logout_rounded, color: _C.red, size: 18),
+            title: const Text('Sign out',
+                style: TextStyle(
+                    color: _C.red, fontSize: 14, fontWeight: FontWeight.w500)),
+            onTap: () { Navigator.pop(context); auth.signOut(); },
           ),
         ],
       ),
@@ -1258,36 +1486,22 @@ class _SignInSheet extends StatelessWidget {
         border: Border(top: BorderSide(color: _C.border, width: 0.5)),
       ),
       padding: EdgeInsets.fromLTRB(
-        24,
-        16,
-        24,
-        MediaQuery.of(context).padding.bottom + 20,
-      ),
+          24, 16, 24, MediaQuery.of(context).padding.bottom + 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 32,
-            height: 3,
-            decoration: BoxDecoration(
-              color: _C.border,
-              borderRadius: BorderRadius.circular(99),
-            ),
-          ),
+          _handle(),
           const SizedBox(height: 28),
           const Text('🏏', style: TextStyle(fontSize: 36)),
           const SizedBox(height: 14),
           const Text(
             'Join the Dugout',
             style: TextStyle(
-              color: _C.t1,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-            ),
+                color: _C.t1, fontSize: 18, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 6),
           const Text(
-            'Sign in to react and comment',
+            'Sign in to vote, react and comment',
             style: TextStyle(color: _C.t2, fontSize: 13),
           ),
           const SizedBox(height: 28),
@@ -1304,24 +1518,21 @@ class _SignInSheet extends StatelessWidget {
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: 13),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                    borderRadius: BorderRadius.circular(10)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.network(
                     'https://www.google.com/favicon.ico',
-                    width: 16,
-                    height: 16,
+                    width: 16, height: 16,
                     errorBuilder: (_, _, _) =>
-                        const Icon(Icons.login, size: 16),
+                    const Icon(Icons.login, size: 16),
                   ),
                   const SizedBox(width: 8),
-                  const Text(
-                    'Continue with Google',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                  ),
+                  const Text('Continue with Google',
+                      style: TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w600)),
                 ],
               ),
             ),
@@ -1329,10 +1540,8 @@ class _SignInSheet extends StatelessWidget {
           const SizedBox(height: 8),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Maybe later',
-              style: TextStyle(color: _C.t3, fontSize: 13),
-            ),
+            child: const Text('Maybe later',
+                style: TextStyle(color: _C.t3, fontSize: 13)),
           ),
         ],
       ),
@@ -1341,31 +1550,39 @@ class _SignInSheet extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  Avatar
+//  Shared helpers
 // ─────────────────────────────────────────────────────────────
-class _Avatar extends StatelessWidget {
+Widget _handle() => Center(
+  child: Container(
+    width: 32, height: 3,
+    decoration: BoxDecoration(
+        color: _C.border, borderRadius: BorderRadius.circular(99)),
+  ),
+);
+
+class _Av extends StatelessWidget {
   final String photo, name;
   final double r;
-  const _Avatar({required this.photo, required this.name, required this.r});
+  const _Av({required this.photo, required this.name, required this.r});
 
   @override
   Widget build(BuildContext context) {
-    final i = name.trim().isNotEmpty ? name.trim()[0].toUpperCase() : '?';
+    final initial =
+    name.trim().isNotEmpty ? name.trim()[0].toUpperCase() : '?';
     return CircleAvatar(
       radius: r,
-      backgroundColor: _C.redFade,
-      backgroundImage: photo.isNotEmpty
-          ? CachedNetworkImageProvider(photo)
-          : null,
+      backgroundColor: _C.redLow,
+      backgroundImage:
+      photo.isNotEmpty ? CachedNetworkImageProvider(photo) : null,
       child: photo.isEmpty
           ? Text(
-              i,
-              style: TextStyle(
-                fontSize: r * 0.75,
-                color: _C.red,
-                fontWeight: FontWeight.w700,
-              ),
-            )
+        initial,
+        style: TextStyle(
+          fontSize: r * 0.75,
+          color: _C.red,
+          fontWeight: FontWeight.w700,
+        ),
+      )
           : null,
     );
   }
