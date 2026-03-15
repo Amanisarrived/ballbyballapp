@@ -8,7 +8,6 @@ import 'package:ballbyball/service/app_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-
 import '../../../widgets/rating_prompt.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,12 +21,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedTab = 0;
 
   final _scrollControllers = List.generate(4, (_) => ScrollController());
-
-  // FAB visibility per tab
   final _showFab = ValueNotifier(false);
 
-  ScrollController get _activeController =>
-      _scrollControllers[_selectedTab];
+  ScrollController get _activeController => _scrollControllers[_selectedTab];
 
   @override
   void initState() {
@@ -36,12 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
       final ctrl = _scrollControllers[i];
       ctrl.addListener(() {
         if (_selectedTab == i) {
-          _showFab.value =
-              ctrl.hasClients && ctrl.offset > 300;
+          _showFab.value = ctrl.hasClients && ctrl.offset > 300;
         }
       });
-
-
     }
 
     Future.delayed(const Duration(milliseconds: 1500), () {
@@ -54,9 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final _ = await PackageInfo.fromPlatform();
       if (!mounted) return;
-      await RatingPrompt.checkAndShow(
-        context,
-      );
+      await RatingPrompt.checkAndShow(context);
     });
   }
 
@@ -106,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
               border: Border.all(color: Colors.white.withAlpha(20)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
+                  color: Colors.black.withAlpha(102), // 0.4 * 255 ≈ 102
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -127,7 +118,6 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: Column(
                 children: [
-                  // ── Pinned tab chips ─────────────────────
                   Container(
                     color: const Color(0xFF0A0A0A),
                     padding: const EdgeInsets.symmetric(
@@ -135,30 +125,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: TabsChip(
                       onTabChanged: (index) {
                         setState(() => _selectedTab = index);
-                        // Reset FAB when switching tabs
                         _showFab.value = false;
                       },
                     ),
                   ),
-
-                  // ── Tab content ──────────────────────────
                   Expanded(
                     child: IndexedStack(
                       index: _selectedTab,
                       children: [
-                        // Tab 0 — For You
-                        ForYouScreen(
-                          scrollController: _scrollControllers[0],
-                        ),
-                        // Tab 1 — Upcoming
-                        Upcoming(
-                          scrollController: _scrollControllers[1],
-                        ),
-                        // Tab 2 — Points Tabl
-                        // Tab 3 — News
-                        News(
-                          scrollController: _scrollControllers[3],
-                        ),
+                        ForYouScreen(scrollController: _scrollControllers[0]),
+                        Upcoming(scrollController: _scrollControllers[1]),
+                        News(scrollController: _scrollControllers[3]),
                       ],
                     ),
                   ),

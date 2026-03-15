@@ -170,7 +170,7 @@ class _ShimmerCardState extends State<_ShimmerCard>
         height: 90,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
-          color: Colors.grey.withOpacity(_animation.value),
+            color: Colors.grey.withAlpha((_animation.value * 255).round())
         ),
       ),
     );

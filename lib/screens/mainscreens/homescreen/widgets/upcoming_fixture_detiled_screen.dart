@@ -5,9 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 
-// ════════════════════════════════════════════════════════════
-//  DESIGN TOKENS  — premium dark sports broadcast
-// ════════════════════════════════════════════════════════════
 const _bg      = Color(0xFF050505);
 const _glass   = Color(0xFF0E0E0E);
 const _glass2  = Color(0xFF121212);
@@ -17,15 +14,14 @@ const _red     = Color(0xFFCC0000);
 const _redHot  = Color(0xFFFF1A1A);
 const _gold    = Color(0xFFD4A847);
 const _goldFg  = Color(0xFFF0C96B);
+const _green   = Color(0xFF4CAF50);
 
-// ════════════════════════════════════════════════════════════
-//  SCREEN
-// ════════════════════════════════════════════════════════════
 class UpcomingFixtureDetailScreen extends StatelessWidget {
   final UpcomingFixtureModel fixture;
   const UpcomingFixtureDetailScreen({super.key, required this.fixture});
 
   bool get _ended => fixture.winningTeam.isNotEmpty;
+  bool get _ongoing => !_ended && DateTime.now().isAfter(fixture.dateTime);
   bool _won(String t) =>
       _ended && fixture.winningTeam.toLowerCase().startsWith(t.toLowerCase());
 
@@ -36,50 +32,38 @@ class UpcomingFixtureDetailScreen extends StatelessWidget {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
-      child: SafeArea(top: true,
+      child: SafeArea(
+        top: true,
         child: Scaffold(
           backgroundColor: _bg,
           body: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
-              // ── Full-bleed stadium hero ──────────────────
               SliverToBoxAdapter(
                 child: _StadiumHero(
                   fixture: fixture,
                   ended: _ended,
+                  ongoing: _ongoing,
                   t1Won: t1Won,
                   t2Won: t2Won,
                 ),
               ),
-
-              // ── Sticky scoreline chip (if ended) ─────────
               if (_ended)
-                SliverToBoxAdapter(
-                  child: _WinnerChip(fixture: fixture),
-                ),
-
-              // ── Score duel panel ─────────────────────────
+                SliverToBoxAdapter(child: _WinnerChip(fixture: fixture)),
+              if (_ongoing)
+                SliverToBoxAdapter(child: _OngoingChip()),
               if (_ended &&
-                  (fixture.team1Score.isNotEmpty ||
-                      fixture.team2Score.isNotEmpty))
+                  (fixture.team1Score.isNotEmpty || fixture.team2Score.isNotEmpty))
                 SliverToBoxAdapter(
-                  child: _ScoreDuel(
-                      fixture: fixture, t1Won: t1Won, t2Won: t2Won),
+                  child: _ScoreDuel(fixture: fixture, t1Won: t1Won, t2Won: t2Won),
                 ),
-
-              // ── POTM spotlight ───────────────────────────
               if (_ended && fixture.playerOfMatch.isNotEmpty)
                 SliverToBoxAdapter(child: _PotmSpotlight(fixture: fixture)),
-
-              // ── Countdown (upcoming only) ─────────────────
-              if (!_ended)
+              if (!_ended && !_ongoing)
                 SliverToBoxAdapter(
                   child: _LiveCountdown(matchTime: fixture.dateTime),
                 ),
-
-              // ── Info grid ────────────────────────────────
               SliverToBoxAdapter(child: _InfoGrid(fixture: fixture)),
-
               const SliverToBoxAdapter(child: SizedBox(height: 30)),
             ],
           ),
@@ -90,14 +74,127 @@ class UpcomingFixtureDetailScreen extends StatelessWidget {
 }
 
 // ════════════════════════════════════════════════════════════
-//  STADIUM HERO  — full-bleed cinematic top
+//  ONGOING CHIP
+// ════════════════════════════════════════════════════════════
+class _OngoingChip extends StatefulWidget {
+  @override
+  State<_OngoingChip> createState() => _OngoingChipState();
+}
+
+class _OngoingChipState extends State<_OngoingChip>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _pulse;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    );
+    _pulse = Tween<double>(begin: 0.3, end: 1.0).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
+    );
+    _ctrl.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  int _a(double val) => (val * 255).round().clamp(0, 255);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _pulse,
+      builder: (_, _) => Container(
+        margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [_green.withAlpha(31), Colors.transparent],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+              color: _green.withAlpha(_a(_pulse.value * 0.5))),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                color: _green.withAlpha(38),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                    color: _green.withAlpha(_a(_pulse.value * 0.6))),
+              ),
+              child: Icon(Icons.sports_cricket_rounded,
+                  color: _green.withAlpha(_a(_pulse.value)), size: 17),
+            ),
+            const SizedBox(width: 14),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'MATCH IN PROGRESS',
+                  style: TextStyle(
+                    color: _green.withAlpha(_a(_pulse.value)),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Live scoring underway',
+                  style: TextStyle(
+                    color: Colors.white.withAlpha(60),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            const Spacer(),
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _green.withAlpha(_a(_pulse.value)),
+                boxShadow: [
+                  BoxShadow(
+                    color: _green.withAlpha(_a(_pulse.value * 0.6)),
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  STADIUM HERO
 // ════════════════════════════════════════════════════════════
 class _StadiumHero extends StatelessWidget {
   final UpcomingFixtureModel fixture;
-  final bool ended, t1Won, t2Won;
+  final bool ended, ongoing, t1Won, t2Won;
   const _StadiumHero({
     required this.fixture,
     required this.ended,
+    required this.ongoing,
     required this.t1Won,
     required this.t2Won,
   });
@@ -112,17 +209,12 @@ class _StadiumHero extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // ── Radial dark bg ────────────────────────────
           Positioned.fill(
             child: CustomPaint(painter: _HeroPainter(t1Won: t1Won, t2Won: t2Won)),
           ),
-
-          // ── Scan-line texture ─────────────────────────
           Positioned.fill(
             child: CustomPaint(painter: _ScanlinePainter()),
           ),
-
-          // ── Bottom gradient fade ──────────────────────
           Positioned(
             bottom: 0, left: 0, right: 0, height: 140,
             child: DecoratedBox(
@@ -131,18 +223,13 @@ class _StadiumHero extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [Colors.transparent, _bg],
-                  stops: const [0.0, 1.0],
                 ),
               ),
             ),
           ),
-
-          // ── Content ───────────────────────────────────
           Column(
             children: [
               SizedBox(height: top),
-
-              // Nav bar
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
                 child: Row(
@@ -156,26 +243,19 @@ class _StadiumHero extends StatelessWidget {
                           color: Colors.white, size: 15),
                     ),
                     const Spacer(),
-                    _StatusCapsule(ended: ended),
+                    _StatusCapsule(ended: ended, ongoing: ongoing),
                   ],
                 ),
               ),
-
               const SizedBox(height: 20),
-
-              // Tournament label
               _EyebrowLabel(fixture.tournament),
-
               const SizedBox(height: 36),
-
-              // ── TEAMS — the hero moment ───────────────
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: IntrinsicHeight(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Team 1
                       Expanded(
                         child: _HeroTeamBlock(
                           name: fixture.team1,
@@ -184,17 +264,14 @@ class _StadiumHero extends StatelessWidget {
                           isLeft: true,
                         ),
                       ),
-
-                      // ── Center divider ────────────────
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: _VsDivider(
                           dateTime: fixture.dateTime,
                           ended: ended,
+                          ongoing: ongoing,
                         ),
                       ),
-
-                      // Team 2
                       Expanded(
                         child: _HeroTeamBlock(
                           name: fixture.team2,
@@ -215,7 +292,9 @@ class _StadiumHero extends StatelessWidget {
   }
 }
 
-// ── Hero team block ───────────────────────────────────────
+// ════════════════════════════════════════════════════════════
+//  HERO TEAM BLOCK
+// ════════════════════════════════════════════════════════════
 class _HeroTeamBlock extends StatelessWidget {
   final String name, logo;
   final bool isWinner, isLeft;
@@ -228,14 +307,10 @@ class _HeroTeamBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const crossAlign = CrossAxisAlignment.center;
-    const textAlign = TextAlign.center;
-
     return Column(
-      crossAxisAlignment: crossAlign,
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Winner badge
         AnimatedOpacity(
           duration: const Duration(milliseconds: 300),
           opacity: isWinner ? 1.0 : 0.0,
@@ -250,36 +325,24 @@ class _HeroTeamBlock extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.emoji_events_rounded,
-                    color: _goldFg, size: 10),
+                const Icon(Icons.emoji_events_rounded, color: _goldFg, size: 10),
                 const SizedBox(width: 5),
                 const Text('WINNER',
                     style: TextStyle(
-                      color: _goldFg,
-                      fontSize: 8,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 1.5,
-                    )),
+                        color: _goldFg,
+                        fontSize: 8,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.5)),
               ],
             ),
           ),
         ),
-
-        // Logo with glow ring
-        _TeamLogo(
-          logo: logo,
-          name: name,
-          isWinner: isWinner,
-          size: 88,
-        ),
-
+        _TeamLogo(logo: logo, name: name, isWinner: isWinner, size: 88),
         const SizedBox(height: 14),
-
-        // Name
         Text(
           name,
           maxLines: 2,
-          textAlign: textAlign,
+          textAlign: TextAlign.center,
           style: TextStyle(
             color: isWinner ? Colors.white : Colors.white.withAlpha(130),
             fontSize: 16,
@@ -293,7 +356,6 @@ class _HeroTeamBlock extends StatelessWidget {
   }
 }
 
-// ── Team logo with animated ring ─────────────────────────
 class _TeamLogo extends StatelessWidget {
   final String logo, name;
   final bool isWinner;
@@ -319,14 +381,8 @@ class _TeamLogo extends StatelessWidget {
         ),
         boxShadow: isWinner
             ? [
-          BoxShadow(
-              color: _gold.withAlpha(50),
-              blurRadius: 28,
-              spreadRadius: 4),
-          BoxShadow(
-              color: _gold.withAlpha(20),
-              blurRadius: 60,
-              spreadRadius: 10),
+          BoxShadow(color: _gold.withAlpha(50), blurRadius: 28, spreadRadius: 4),
+          BoxShadow(color: _gold.withAlpha(20), blurRadius: 60, spreadRadius: 10),
         ]
             : [],
       ),
@@ -365,43 +421,54 @@ class _Fallback extends StatelessWidget {
   }
 }
 
-// ── VS divider ────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════
+//  VS DIVIDER — ongoing support added
+// ════════════════════════════════════════════════════════════
 class _VsDivider extends StatelessWidget {
   final DateTime dateTime;
-  final bool ended;
-  const _VsDivider({required this.dateTime, required this.ended});
+  final bool ended, ongoing;
+  const _VsDivider({
+    required this.dateTime,
+    required this.ended,
+    required this.ongoing,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Date line
         Container(width: 1, height: 20, color: Colors.white.withAlpha(10)),
         const SizedBox(height: 8),
-
-        // VS circle
         Container(
           width: 50,
           height: 50,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: _glass2,
-            border: Border.all(color: _stroke2),
+            border: Border.all(
+              color: ongoing
+                  ? _green.withAlpha(102)
+                  : Colors.white.withAlpha(15),
+            ),
           ),
-          child: const Center(
-            child: Text('VS',
-                style: TextStyle(
-                    color: Colors.white24,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1)),
+          child: Center(
+            child: Text(
+              ended ? 'FT' : 'VS',
+              style: TextStyle(
+                color: ongoing
+                    ? _green
+                    : ended
+                    ? const Color(0xFF555555)
+                    : Colors.white24,
+                fontSize: ended ? 9 : 11,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1,
+              ),
+            ),
           ),
         ),
-
         const SizedBox(height: 10),
-
-        // Date
         Text(
           DateFormat('d MMM').format(dateTime).toUpperCase(),
           style: TextStyle(
@@ -419,10 +486,143 @@ class _VsDivider extends StatelessWidget {
               fontWeight: FontWeight.w800,
               letterSpacing: -0.5),
         ),
-
         const SizedBox(height: 8),
         Container(width: 1, height: 20, color: Colors.white.withAlpha(10)),
       ],
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  STATUS CAPSULE — ongoing added
+// ════════════════════════════════════════════════════════════
+class _StatusCapsule extends StatefulWidget {
+  final bool ended, ongoing;
+  const _StatusCapsule({required this.ended, required this.ongoing});
+
+  @override
+  State<_StatusCapsule> createState() => _StatusCapsuleState();
+}
+
+class _StatusCapsuleState extends State<_StatusCapsule>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _pulse;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    );
+    _pulse = Tween<double>(begin: 0.4, end: 1.0).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
+    );
+    if (widget.ongoing) _ctrl.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  int _a(double val) => (val * 255).round().clamp(0, 255);
+
+  @override
+  Widget build(BuildContext context) {
+    // ── ENDED ──
+    if (widget.ended) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        decoration: BoxDecoration(
+          color: Colors.white.withAlpha(12),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white.withAlpha(18)),
+        ),
+        child: const Text(
+          'MATCH ENDED',
+          style: TextStyle(
+              color: Colors.white38,
+              fontSize: 9,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.2),
+        ),
+      );
+    }
+
+    // ── ONGOING — green pulsing ──
+    if (widget.ongoing) {
+      return AnimatedBuilder(
+        animation: _pulse,
+        builder: (_, _) => Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+          decoration: BoxDecoration(
+            color: _green.withAlpha(26),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: _green.withAlpha(_a(_pulse.value * 0.6))),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 5,
+                height: 5,
+                margin: const EdgeInsets.only(right: 7),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _green.withAlpha(_a(_pulse.value)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _green.withAlpha(_a(_pulse.value * 0.6)),
+                      blurRadius: 6,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                'ONGOING',
+                style: TextStyle(
+                    color: _green.withAlpha(_a(_pulse.value)),
+                    fontSize: 9,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.2),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // ── UPCOMING ──
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+      decoration: BoxDecoration(
+        color: _red.withAlpha(25),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: _red.withAlpha(70)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 5,
+            height: 5,
+            margin: const EdgeInsets.only(right: 7),
+            decoration: const BoxDecoration(color: _redHot, shape: BoxShape.circle),
+          ),
+          const Text(
+            'UPCOMING',
+            style: TextStyle(
+                color: _redHot,
+                fontSize: 9,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.2),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -451,14 +651,14 @@ class _WinnerChip extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 34, height: 34,
+            width: 34,
+            height: 34,
             decoration: BoxDecoration(
               color: _red.withAlpha(20),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: _red.withAlpha(40)),
             ),
-            child: const Icon(Icons.military_tech_rounded,
-                color: _red, size: 17),
+            child: const Icon(Icons.military_tech_rounded, color: _red, size: 17),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -478,56 +678,46 @@ class _WinnerChip extends StatelessWidget {
 }
 
 // ════════════════════════════════════════════════════════════
-//  SCORE DUEL  — editorial layout
+//  SCORE DUEL
 // ════════════════════════════════════════════════════════════
 class _ScoreDuel extends StatelessWidget {
   final UpcomingFixtureModel fixture;
   final bool t1Won, t2Won;
-  const _ScoreDuel(
-      {required this.fixture, required this.t1Won, required this.t2Won});
+  const _ScoreDuel({required this.fixture, required this.t1Won, required this.t2Won});
 
   @override
   Widget build(BuildContext context) {
     return _Card(
       label: 'SCORECARD',
       icon: Icons.scoreboard_rounded,
-      child: Column(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              // Team 1
-              Expanded(
-                child: _ScoreSide(
-                  team: fixture.team1,
-                  logo: fixture.team1Logo,
-                  score: fixture.team1Score,
-                  isWinner: t1Won,
-                  isLeft: true,
-                ),
-              ),
-
-              // Center divider
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
-                child: Text('·',
-                    style: TextStyle(
-                        color: Colors.white.withAlpha(15),
-                        fontSize: 28,
-                        fontWeight: FontWeight.w900)),
-              ),
-
-              // Team 2
-              Expanded(
-                child: _ScoreSide(
-                  team: fixture.team2,
-                  logo: fixture.team2Logo,
-                  score: fixture.team2Score,
-                  isWinner: t2Won,
-                  isLeft: false,
-                ),
-              ),
-            ],
+          Expanded(
+            child: _ScoreSide(
+              team: fixture.team1,
+              logo: fixture.team1Logo,
+              score: fixture.team1Score,
+              isWinner: t1Won,
+              isLeft: true,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+            child: Text('·',
+                style: TextStyle(
+                    color: Colors.white.withAlpha(15),
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900)),
+          ),
+          Expanded(
+            child: _ScoreSide(
+              team: fixture.team2,
+              logo: fixture.team2Logo,
+              score: fixture.team2Score,
+              isWinner: t2Won,
+              isLeft: false,
+            ),
           ),
         ],
       ),
@@ -548,12 +738,10 @@ class _ScoreSide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cross =
-    isLeft ? CrossAxisAlignment.start : CrossAxisAlignment.end;
+    final cross = isLeft ? CrossAxisAlignment.start : CrossAxisAlignment.end;
     return Column(
       crossAxisAlignment: cross,
       children: [
-        // Small logo + team name
         Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment:
@@ -568,8 +756,7 @@ class _ScoreSide extends StatelessWidget {
                     style: TextStyle(
                         color: Colors.white.withAlpha(40),
                         fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.3)),
+                        fontWeight: FontWeight.w700)),
               ),
               const SizedBox(width: 8),
               _SmallLogo(logo: logo, name: team),
@@ -583,15 +770,12 @@ class _ScoreSide extends StatelessWidget {
                     style: TextStyle(
                         color: Colors.white.withAlpha(40),
                         fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.3)),
+                        fontWeight: FontWeight.w700)),
               ),
             ],
           ],
         ),
         const SizedBox(height: 10),
-
-        // Score — BIG
         Text(
           score.isNotEmpty ? score : '—',
           textAlign: isLeft ? TextAlign.left : TextAlign.right,
@@ -604,9 +788,6 @@ class _ScoreSide extends StatelessWidget {
             fontFeatures: const [FontFeature.tabularFigures()],
           ),
         ),
-
-        // Winner dot
-
       ],
     );
   }
@@ -619,7 +800,8 @@ class _SmallLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 22, height: 22,
+      width: 22,
+      height: 22,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white.withAlpha(8),
@@ -627,8 +809,11 @@ class _SmallLogo extends StatelessWidget {
       ),
       child: ClipOval(
         child: logo.isNotEmpty
-            ? CachedNetworkImage(imageUrl: logo, fit: BoxFit.cover,
-            errorWidget: (_, _, _) => _miniText(name))
+            ? CachedNetworkImage(
+          imageUrl: logo,
+          fit: BoxFit.cover,
+          errorWidget: (_, _, _) => _miniText(name),
+        )
             : _miniText(name),
       ),
     );
@@ -638,15 +823,13 @@ class _SmallLogo extends StatelessWidget {
     child: Text(
       n.isNotEmpty ? n[0] : '?',
       style: const TextStyle(
-          color: Colors.white38,
-          fontSize: 8,
-          fontWeight: FontWeight.w900),
+          color: Colors.white38, fontSize: 8, fontWeight: FontWeight.w900),
     ),
   );
 }
 
 // ════════════════════════════════════════════════════════════
-//  POTM SPOTLIGHT  — full-bleed premium card
+//  POTM SPOTLIGHT
 // ════════════════════════════════════════════════════════════
 class _PotmSpotlight extends StatelessWidget {
   final UpcomingFixtureModel fixture;
@@ -655,7 +838,6 @@ class _PotmSpotlight extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasPhoto = fixture.playerOfMatchPhoto.isNotEmpty;
-
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
       decoration: BoxDecoration(
@@ -664,32 +846,24 @@ class _PotmSpotlight extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            _gold.withAlpha(14),
-            _gold.withAlpha(5),
-            Colors.transparent,
-          ],
+          colors: [_gold.withAlpha(14), _gold.withAlpha(5), Colors.transparent],
         ),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Stack(
           children: [
-            // Subtle gold noise overlay
-            Positioned.fill(
-              child: CustomPaint(painter: _GoldNoisePainter()),
-            ),
-
+            Positioned.fill(child: CustomPaint(painter: _GoldNoisePainter())),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Label
                   Row(
                     children: [
                       Container(
-                          width: 2, height: 10,
+                          width: 2,
+                          height: 10,
                           margin: const EdgeInsets.only(right: 8),
                           decoration: BoxDecoration(
                               color: _gold,
@@ -703,20 +877,15 @@ class _PotmSpotlight extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-
-                  // Content row
                   Row(
                     children: [
-                      // Avatar
                       Container(
-                        width: 72, height: 72,
+                        width: 72,
+                        height: 72,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
-                            colors: [
-                              _gold.withAlpha(180),
-                              _gold.withAlpha(80),
-                            ],
+                            colors: [_gold.withAlpha(180), _gold.withAlpha(80)],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
@@ -730,16 +899,14 @@ class _PotmSpotlight extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(2.5),
                           child: Container(
-                            decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: _glass),
+                            decoration:
+                            const BoxDecoration(shape: BoxShape.circle, color: _glass),
                             child: ClipOval(
                               child: hasPhoto
                                   ? CachedNetworkImage(
-                                imageUrl:
-                                fixture.playerOfMatchPhoto,
+                                imageUrl: fixture.playerOfMatchPhoto,
                                 fit: BoxFit.cover,
-                                errorWidget: (_, _, _) =>
-                                const _PersonIcon(),
+                                errorWidget: (_, _,_) => const _PersonIcon(),
                               )
                                   : const _PersonIcon(),
                             ),
@@ -747,8 +914,6 @@ class _PotmSpotlight extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 18),
-
-                      // Text
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -760,30 +925,25 @@ class _PotmSpotlight extends StatelessWidget {
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0.5)),
                             const SizedBox(height: 6),
-                            Text(
-                              fixture.playerOfMatch,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: -0.5,
-                                  height: 1.1),
-                            ),
+                            Text(fixture.playerOfMatch,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: -0.5,
+                                    height: 1.1)),
                           ],
                         ),
                       ),
-
-                      // Star
                       Container(
-                        width: 40, height: 40,
+                        width: 40,
+                        height: 40,
                         decoration: BoxDecoration(
                           color: _gold.withAlpha(18),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: _gold.withAlpha(50)),
+                          border: Border.all(color: _gold.withAlpha(50)),
                         ),
-                        child: const Icon(Icons.star_rounded,
-                            color: _goldFg, size: 20),
+                        child: const Icon(Icons.star_rounded, color: _goldFg, size: 20),
                       ),
                     ],
                   ),
@@ -803,14 +963,13 @@ class _PersonIcon extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     color: Colors.white.withAlpha(6),
     child: const Center(
-      child: Icon(Icons.person_rounded,
-          color: Colors.white24, size: 30),
+      child: Icon(Icons.person_rounded, color: Colors.white24, size: 30),
     ),
   );
 }
 
 // ════════════════════════════════════════════════════════════
-//  LIVE COUNTDOWN  — big display numerals
+//  LIVE COUNTDOWN
 // ════════════════════════════════════════════════════════════
 class _LiveCountdown extends StatefulWidget {
   final DateTime matchTime;
@@ -870,8 +1029,7 @@ class _DigitBox extends StatelessWidget {
   final int value;
   final String label;
   final bool accent;
-  const _DigitBox(
-      {required this.value, required this.label, this.accent = false});
+  const _DigitBox({required this.value, required this.label, this.accent = false});
 
   @override
   Widget build(BuildContext context) {
@@ -883,8 +1041,7 @@ class _DigitBox extends StatelessWidget {
             decoration: BoxDecoration(
               color: accent ? _red.withAlpha(15) : _glass2,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                  color: accent ? _red.withAlpha(50) : _stroke2),
+              border: Border.all(color: accent ? _red.withAlpha(50) : _stroke2),
             ),
             child: Center(
               child: Text(
@@ -918,14 +1075,12 @@ class _Colon extends StatelessWidget {
     padding: EdgeInsets.fromLTRB(5, 0, 5, 22),
     child: Text(':',
         style: TextStyle(
-            color: Colors.white12,
-            fontSize: 24,
-            fontWeight: FontWeight.w900)),
+            color: Colors.white12, fontSize: 24, fontWeight: FontWeight.w900)),
   );
 }
 
 // ════════════════════════════════════════════════════════════
-//  INFO GRID  — 2-column grid layout
+//  INFO GRID
 // ════════════════════════════════════════════════════════════
 class _InfoGrid extends StatelessWidget {
   final UpcomingFixtureModel fixture;
@@ -939,7 +1094,6 @@ class _InfoGrid extends StatelessWidget {
       icon: Icons.info_outline_rounded,
       child: Column(
         children: [
-          // Top row — 2 cells
           Row(
             children: [
               Expanded(
@@ -962,7 +1116,6 @@ class _InfoGrid extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          // Bottom row — 2 cells
           Row(
             children: [
               Expanded(
@@ -1016,7 +1169,8 @@ class _InfoCell extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 26, height: 26,
+                width: 26,
+                height: 26,
                 decoration: BoxDecoration(
                   color: accent.withAlpha(18),
                   borderRadius: BorderRadius.circular(7),
@@ -1049,9 +1203,8 @@ class _InfoCell extends StatelessWidget {
 }
 
 // ════════════════════════════════════════════════════════════
-//  SHARED COMPONENTS
+//  SHARED
 // ════════════════════════════════════════════════════════════
-// 1. _GlassBtn — remove BackdropFilter entirely
 class _GlassBtn extends StatelessWidget {
   final VoidCallback onTap;
   final Widget child;
@@ -1062,53 +1215,14 @@ class _GlassBtn extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 38, height: 38,
+        width: 38,
+        height: 38,
         decoration: BoxDecoration(
           color: Colors.white.withAlpha(18),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.white.withAlpha(20)),
         ),
         child: child,
-      ),
-    );
-  }
-}
-
-// 2. _StatusCapsule — remove BackdropFilter
-class _StatusCapsule extends StatelessWidget {
-  final bool ended;
-  const _StatusCapsule({required this.ended});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-      decoration: BoxDecoration(
-        color: ended ? Colors.white.withAlpha(12) : _red.withAlpha(25),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: ended ? Colors.white.withAlpha(18) : _red.withAlpha(70),
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (!ended)
-            Container(
-              width: 5, height: 5,
-              margin: const EdgeInsets.only(right: 7),
-              decoration: const BoxDecoration(
-                  color: _redHot, shape: BoxShape.circle),
-            ),
-          Text(
-            ended ? 'MATCH ENDED' : 'UPCOMING',
-            style: TextStyle(
-                color: ended ? Colors.white38 : _redHot,
-                fontSize: 9,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.2),
-          ),
-        ],
       ),
     );
   }
@@ -1141,7 +1255,6 @@ class _EyebrowLabel extends StatelessWidget {
   }
 }
 
-// ── Section card ──────────────────────────────────────────
 class _Card extends StatelessWidget {
   final String label;
   final IconData icon;
@@ -1167,20 +1280,18 @@ class _Card extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
           Padding(
             padding: const EdgeInsets.fromLTRB(18, 16, 18, 14),
             child: Row(
               children: [
                 Container(
-                    width: 2, height: 10,
+                    width: 2,
+                    height: 10,
                     margin: const EdgeInsets.only(right: 10),
                     decoration: BoxDecoration(
                         color: accentColor,
                         borderRadius: BorderRadius.circular(1))),
-                Icon(icon,
-                    size: 12,
-                    color: Colors.white.withAlpha(28)),
+                Icon(icon, size: 12, color: Colors.white.withAlpha(28)),
                 const SizedBox(width: 7),
                 Text(label,
                     style: TextStyle(
@@ -1192,10 +1303,7 @@ class _Card extends StatelessWidget {
             ),
           ),
           Container(height: 1, color: _stroke),
-          Padding(
-            padding: const EdgeInsets.all(18),
-            child: child,
-          ),
+          Padding(padding: const EdgeInsets.all(18), child: child),
         ],
       ),
     );
@@ -1205,58 +1313,41 @@ class _Card extends StatelessWidget {
 // ════════════════════════════════════════════════════════════
 //  PAINTERS
 // ════════════════════════════════════════════════════════════
-
-// Hero bg — radial + diagonal lines
 class _HeroPainter extends CustomPainter {
   final bool t1Won, t2Won;
   const _HeroPainter({required this.t1Won, required this.t2Won});
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Dark base
-    canvas.drawRect(
-        Rect.fromLTWH(0, 0, size.width, size.height),
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height),
         Paint()..color = _bg);
-
-    // Center radial
     final rPaint = Paint()
       ..shader = RadialGradient(
         center: Alignment.center,
         radius: 0.8,
-        colors: [
-          _red.withAlpha(18),
-          Colors.transparent,
-        ],
+        colors: [_red.withAlpha(18), Colors.transparent],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-    canvas.drawRect(
-        Rect.fromLTWH(0, 0, size.width, size.height), rPaint);
-
-    // Subtle team glows
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), rPaint);
     final leftGlow = Paint()
       ..shader = RadialGradient(
         center: const Alignment(-1, 0),
         radius: 1.0,
         colors: [
           (t1Won ? _gold : _red).withAlpha(t1Won ? 30 : 14),
-          Colors.transparent,
+          Colors.transparent
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-    canvas.drawRect(
-        Rect.fromLTWH(0, 0, size.width, size.height), leftGlow);
-
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), leftGlow);
     final rightGlow = Paint()
       ..shader = RadialGradient(
         center: const Alignment(1, 0),
         radius: 1.0,
         colors: [
           (t2Won ? _gold : _red).withAlpha(t2Won ? 30 : 14),
-          Colors.transparent,
+          Colors.transparent
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-    canvas.drawRect(
-        Rect.fromLTWH(0, 0, size.width, size.height), rightGlow);
-
-    // Fine grid
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), rightGlow);
     final gPaint = Paint()
       ..color = Colors.white.withAlpha(3)
       ..strokeWidth = 0.5;
@@ -1266,23 +1357,18 @@ class _HeroPainter extends CustomPainter {
     for (double y = 0; y < size.height; y += 28) {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), gPaint);
     }
-
-    // Diagonal accent
     final dPaint = Paint()
       ..color = _red.withAlpha(5)
       ..strokeWidth = 0.5;
     for (double i = -size.height; i < size.width + size.height; i += 48) {
-      canvas.drawLine(
-          Offset(i, 0), Offset(i + size.height, size.height), dPaint);
+      canvas.drawLine(Offset(i, 0), Offset(i + size.height, size.height), dPaint);
     }
   }
 
   @override
-  bool shouldRepaint(_HeroPainter old) =>
-      old.t1Won != t1Won || old.t2Won != t2Won;
+  bool shouldRepaint(_HeroPainter old) => old.t1Won != t1Won || old.t2Won != t2Won;
 }
 
-// Scan-line texture
 class _ScanlinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -1298,7 +1384,6 @@ class _ScanlinePainter extends CustomPainter {
   bool shouldRepaint(_) => false;
 }
 
-// Gold noise for POTM card
 class _GoldNoisePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {

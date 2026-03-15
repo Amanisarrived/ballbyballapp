@@ -36,8 +36,8 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: _isFocused
-                ? const Color(0xFFFF6B6B).withOpacity(0.5)
-                : Colors.white.withOpacity(0.05),
+                ? const Color(0xFFFF6B6B).withAlpha(128)
+                : Colors.white.withAlpha(128),
             width: 1,
           ),
         ),

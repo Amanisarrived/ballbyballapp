@@ -23,14 +23,13 @@ class AuthService {
 
       // ADD THIS
       if (googleUser == null) {
-        print('>>> Sign in cancelled by user');
         return null;
       }
-      print('>>> Got google user: ${googleUser.email}');
+
 
       final GoogleSignInAuthentication googleAuth =
       await googleUser.authentication;
-      print('>>> Got auth tokens');
+
 
       final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -39,7 +38,7 @@ class AuthService {
 
       final UserCredential userCredential =
       await _auth.signInWithCredential(credential);
-      print('>>> Firebase sign in success: ${userCredential.user?.email}');
+
 
       final User? user = userCredential.user;
       if (user != null) {
@@ -47,9 +46,8 @@ class AuthService {
       }
 
       return user;
-    } catch (e, stack) {
-      print('>>> Google Sign In error: $e');
-      print('>>> Stack: $stack');
+    } catch (e) {
+
       return null;
     }
   }

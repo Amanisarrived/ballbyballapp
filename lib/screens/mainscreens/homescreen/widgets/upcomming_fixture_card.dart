@@ -142,11 +142,11 @@ class UpcomingFixtureCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: isOngoing
-                        ? const Color(0xFF4CAF50).withOpacity(0.08)
+                        ? const Color(0xFF4CAF50).withAlpha(20)
                         : Colors.white.withAlpha(8),
                     border: Border.all(
                         color: isOngoing
-                            ? const Color(0xFF4CAF50).withOpacity(0.3)
+                            ? const Color(0xFF4CAF50).withAlpha(77)
                             : Colors.white.withAlpha(20)),
                   ),
                   child: Center(
@@ -417,15 +417,17 @@ class _PulsingChipState extends State<_PulsingChip>
 
   @override
   Widget build(BuildContext context) {
+    int a(double val) => (val * 255).round().clamp(0, 255);
+
     return AnimatedBuilder(
       animation: _pulse,
       builder: (_, _) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
         decoration: BoxDecoration(
-          color: widget.bgColor.withOpacity(0.08),
+          color: widget.bgColor.withAlpha(20),           // 0.08
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-              color: widget.borderColor.withOpacity(_pulse.value * 0.5)),
+              color: widget.borderColor.withAlpha(a(_pulse.value * 0.5))),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -435,7 +437,7 @@ class _PulsingChipState extends State<_PulsingChip>
               height: 4,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: widget.dotColor.withOpacity(_pulse.value),
+                color: widget.dotColor.withAlpha(a(_pulse.value)),
               ),
             ),
             const SizedBox(width: 4),

@@ -21,7 +21,6 @@ class _NewsState extends State<News> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NewsProvider>().loadNews();
     });
-
     AppAnalytics.screenNews();
   }
 
@@ -65,8 +64,7 @@ class _NewsState extends State<News> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 22, vertical: 11),
                     decoration: BoxDecoration(
-                      border:
-                      Border.all(color: Colors.white.withAlpha(28)),
+                      border: Border.all(color: Colors.white.withAlpha(28)),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Text('Retry',
@@ -235,7 +233,9 @@ class _NewsState extends State<News> {
   }
 }
 
-// ── Shimmer ───────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════
+//  SHIMMER
+// ════════════════════════════════════════════════════════════
 class _NewsShimmer extends StatefulWidget {
   const _NewsShimmer();
   @override
@@ -253,6 +253,7 @@ class _NewsShimmerState extends State<_NewsShimmer>
     _ctrl = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1100))
       ..repeat(reverse: true);
+    // 0.25 → 0.55 range — used to compute alpha below
     _anim = Tween<double>(begin: 0.25, end: 0.55).animate(
         CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
   }
@@ -262,6 +263,9 @@ class _NewsShimmerState extends State<_NewsShimmer>
     _ctrl.dispose();
     super.dispose();
   }
+
+  // Helper: convert animated opacity value → alpha int
+  int _a(double multiplier) => (_anim.value * multiplier * 255).round().clamp(0, 255);
 
   @override
   Widget build(BuildContext context) {
@@ -281,13 +285,13 @@ class _NewsShimmerState extends State<_NewsShimmer>
                 Container(
                     width: 3,
                     height: 16,
-                    color: Colors.white.withOpacity(_anim.value * 0.4)),
+                    color: Colors.white.withAlpha(_a(0.4))),
                 const SizedBox(width: 9),
                 Container(
                     width: 110,
                     height: 16,
                     decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(_anim.value * 0.2),
+                        color: Colors.white.withAlpha(_a(0.2)),
                         borderRadius: BorderRadius.circular(6))),
               ]),
             ),
@@ -298,7 +302,7 @@ class _NewsShimmerState extends State<_NewsShimmer>
               margin: const EdgeInsets.symmetric(horizontal: 16),
               height: 310,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(_anim.value * 0.1),
+                color: Colors.white.withAlpha(_a(0.1)),
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
@@ -311,7 +315,7 @@ class _NewsShimmerState extends State<_NewsShimmer>
                   width: 90,
                   height: 8,
                   decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(_anim.value * 0.12),
+                      color: Colors.white.withAlpha(_a(0.12)),
                       borderRadius: BorderRadius.circular(4))),
             ),
             const SizedBox(height: 8),
@@ -329,8 +333,7 @@ class _NewsShimmerState extends State<_NewsShimmer>
                         width: 88,
                         height: 74,
                         decoration: BoxDecoration(
-                            color: Colors.white
-                                .withOpacity(_anim.value * 0.12),
+                            color: Colors.white.withAlpha(_a(0.12)),
                             borderRadius: BorderRadius.circular(12))),
                     const SizedBox(width: 14),
                     Expanded(
@@ -340,24 +343,21 @@ class _NewsShimmerState extends State<_NewsShimmer>
                           Container(
                               height: 13,
                               decoration: BoxDecoration(
-                                  color: Colors.white
-                                      .withOpacity(_anim.value * 0.15),
+                                  color: Colors.white.withAlpha(_a(0.15)),
                                   borderRadius: BorderRadius.circular(5))),
                           const SizedBox(height: 7),
                           Container(
                               width: 150,
                               height: 13,
                               decoration: BoxDecoration(
-                                  color: Colors.white
-                                      .withOpacity(_anim.value * 0.15),
+                                  color: Colors.white.withAlpha(_a(0.15)),
                                   borderRadius: BorderRadius.circular(5))),
                           const SizedBox(height: 10),
                           Container(
                               width: 80,
                               height: 9,
                               decoration: BoxDecoration(
-                                  color: Colors.white
-                                      .withOpacity(_anim.value * 0.08),
+                                  color: Colors.white.withAlpha(_a(0.08)),
                                   borderRadius: BorderRadius.circular(4))),
                         ],
                       ),
@@ -373,7 +373,9 @@ class _NewsShimmerState extends State<_NewsShimmer>
   }
 }
 
-// ── Fade-in ───────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════
+//  FADE IN
+// ════════════════════════════════════════════════════════════
 class _FadeIn extends StatefulWidget {
   final Widget child;
   final Duration delay;

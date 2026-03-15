@@ -28,7 +28,7 @@ class TrendingCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withAlpha(128), // 0.5
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -50,24 +50,24 @@ class TrendingCard extends StatelessWidget {
                 ),
               ),
 
-              // Gradient — top for chip, bottom for title
+              // Gradient
               DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.black.withOpacity(0.25),
+                      Colors.black.withAlpha(64),  // 0.25
                       Colors.transparent,
                       Colors.transparent,
-                      Colors.black.withOpacity(0.85),
+                      Colors.black.withAlpha(217), // 0.85
                     ],
                     stops: const [0.0, 0.25, 0.5, 1.0],
                   ),
                 ),
               ),
 
-              // Trending animated chip — top left
+              // Trending chip — top left
               const Positioned(
                 top: 12,
                 left: 12,
@@ -90,7 +90,7 @@ class TrendingCard extends StatelessWidget {
                 ),
               ),
 
-              // Title — bottom left
+              // Title — bottom
               Positioned(
                 bottom: 14,
                 left: 14,
@@ -131,22 +131,21 @@ class _YoutubeChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.55),
+        color: Colors.black.withAlpha(140), // 0.55
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
-          color: Colors.white.withOpacity(0.08),
+          color: Colors.white.withAlpha(20), // 0.08
           width: 1,
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // YouTube "play" logo shape
           Container(
             width: 14,
             height: 10,
             decoration: BoxDecoration(
-              color: const Color(0xFFFF0000).withOpacity(0.9),
+              color: const Color(0xFFFF0000).withAlpha(230), // 0.9
               borderRadius: BorderRadius.circular(2),
             ),
             child: const Center(
@@ -161,7 +160,7 @@ class _YoutubeChip extends StatelessWidget {
           Text(
             'YouTube',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.85),
+              color: Colors.white.withAlpha(217), // 0.85
               fontSize: 9,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.3,
@@ -204,6 +203,9 @@ class _AnimatedTrendingChipState extends State<_AnimatedTrendingChip>
     super.dispose();
   }
 
+  // animated value → alpha helper
+  int _a(double val) => (val * 255).round().clamp(0, 255);
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -211,23 +213,22 @@ class _AnimatedTrendingChipState extends State<_AnimatedTrendingChip>
       builder: (_, _) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.55),
+          color: Colors.black.withAlpha(140), // 0.55
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
-            color: const Color(0xFFCC0000).withOpacity(_pulse.value),
+            color: const Color(0xFFCC0000).withAlpha(_a(_pulse.value)),
             width: 1,
           ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Pulsing dot
             Container(
               width: 5,
               height: 5,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFFF3B3B).withOpacity(_pulse.value),
+                color: const Color(0xFFFF3B3B).withAlpha(_a(_pulse.value)),
               ),
             ),
             const SizedBox(width: 5),

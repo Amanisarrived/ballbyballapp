@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 
 class LiveMatchCard extends StatefulWidget {
   final FeaturedMatch match;
-
   const LiveMatchCard({super.key, required this.match});
 
   @override
@@ -57,7 +56,6 @@ class _LiveMatchCardState extends State<LiveMatchCard>
   bool get isLive => normalizedStatus == 'live';
   bool get isUpcoming => normalizedStatus == 'upcoming';
 
-
   String get tossDisplay {
     if (innings == 2) return '';
     final toss = match.toss;
@@ -73,11 +71,6 @@ class _LiveMatchCardState extends State<LiveMatchCard>
     if (totalBalls == 0) return '0.00';
     return (score.runs / totalBalls * 6).toStringAsFixed(2);
   }
-
-  // String _calculateRequiredRR(int runsNeeded, int ballsRemaining) {
-  //   if (ballsRemaining == 0) return '0.00';
-  //   return (runsNeeded / ballsRemaining * 6).toStringAsFixed(2);
-  // }
 
   DateTime? _parseMatchTime() {
     if (matchDate.isEmpty || matchTime.isEmpty) return null;
@@ -115,7 +108,9 @@ class _LiveMatchCardState extends State<LiveMatchCard>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 2))..repeat();
+    _controller =
+    AnimationController(vsync: this, duration: const Duration(seconds: 2))
+      ..repeat();
     if (isUpcoming) _startCountdown();
   }
 
@@ -161,9 +156,15 @@ class _LiveMatchCardState extends State<LiveMatchCard>
             color: const Color(0xFF161616),
             border: Border.all(color: Colors.white.withAlpha(20)),
             boxShadow: [
-              BoxShadow(color: Colors.black.withAlpha(80), blurRadius: 12, offset: const Offset(0, 4)),
+              BoxShadow(
+                  color: Colors.black.withAlpha(80),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4)),
               if (isLive)
-                BoxShadow(color: const Color(0xFFCC0000).withAlpha(25), blurRadius: 20, spreadRadius: 2),
+                BoxShadow(
+                    color: const Color(0xFFCC0000).withAlpha(25),
+                    blurRadius: 20,
+                    spreadRadius: 2),
             ],
           ),
           child: Column(
@@ -203,18 +204,27 @@ class _LiveMatchCardState extends State<LiveMatchCard>
           ),
           if (series.isNotEmpty) ...[
             const SizedBox(height: 7),
-            Text(series, maxLines: 1, overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
+            Text(series,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700)),
           ],
           if (venue.isNotEmpty) ...[
             const SizedBox(height: 3),
             Row(
               children: [
-                const Icon(Icons.location_on_rounded, size: 10, color: Colors.white30),
+                const Icon(Icons.location_on_rounded,
+                    size: 10, color: Colors.white30),
                 const SizedBox(width: 3),
                 Expanded(
-                  child: Text(venue, maxLines: 1, overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.white38, fontSize: 10)),
+                  child: Text(venue,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          color: Colors.white38, fontSize: 10)),
                 ),
               ],
             ),
@@ -231,7 +241,10 @@ class _LiveMatchCardState extends State<LiveMatchCard>
     final diff = parsedTarget.difference(DateTime.now());
 
     if (!diff.isNegative) {
-      if (_remaining == null) { _startCountdown(); return const SizedBox.shrink(); }
+      if (_remaining == null) {
+        _startCountdown();
+        return const SizedBox.shrink();
+      }
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
         decoration: BoxDecoration(
@@ -245,7 +258,10 @@ class _LiveMatchCardState extends State<LiveMatchCard>
             const Icon(Icons.timer_outlined, size: 10, color: Colors.orange),
             const SizedBox(width: 3),
             Text(_formatCountdown(_remaining!),
-                style: const TextStyle(color: Colors.orange, fontSize: 9, fontWeight: FontWeight.w700)),
+                style: const TextStyle(
+                    color: Colors.orange,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w700)),
           ],
         ),
       );
@@ -257,7 +273,10 @@ class _LiveMatchCardState extends State<LiveMatchCard>
         const Icon(Icons.access_time_rounded, size: 10, color: Colors.white38),
         const SizedBox(width: 3),
         Text('${matchDate.split('-').reversed.join('-')} • $matchTime',
-            style: const TextStyle(color: Colors.white38, fontSize: 9, fontWeight: FontWeight.w500)),
+            style: const TextStyle(
+                color: Colors.white38,
+                fontSize: 9,
+                fontWeight: FontWeight.w500)),
       ],
     );
   }
@@ -270,18 +289,28 @@ class _LiveMatchCardState extends State<LiveMatchCard>
         children: [
           Expanded(
             child: _teamColumn(
-              teamKey: 'teamA', name: team1Name, logo: team1Logo,
-              runs: team1Runs, wickets: team1Wickets, oversDisplay: team1OversDisplay,
-              rr: _runRate('teamA'), isLeading: team1Leading && !scoresEqual,
+              teamKey: 'teamA',
+              name: team1Name,
+              logo: team1Logo,
+              runs: team1Runs,
+              wickets: team1Wickets,
+              oversDisplay: team1OversDisplay,
+              rr: _runRate('teamA'),
+              isLeading: team1Leading && !scoresEqual,
               isBatting: battingTeamKey == 'teamA',
             ),
           ),
           _vsColumn(),
           Expanded(
             child: _teamColumn(
-              teamKey: 'teamB', name: team2Name, logo: team2Logo,
-              runs: team2Runs, wickets: team2Wickets, oversDisplay: team2OversDisplay,
-              rr: _runRate('teamB'), isLeading: !team1Leading && !scoresEqual,
+              teamKey: 'teamB',
+              name: team2Name,
+              logo: team2Logo,
+              runs: team2Runs,
+              wickets: team2Wickets,
+              oversDisplay: team2OversDisplay,
+              rr: _runRate('teamB'),
+              isLeading: !team1Leading && !scoresEqual,
               isBatting: battingTeamKey == 'teamB',
             ),
           ),
@@ -291,10 +320,19 @@ class _LiveMatchCardState extends State<LiveMatchCard>
   }
 
   Widget _teamColumn({
-    required String teamKey, required String name, required String logo,
-    required int runs, required int wickets, required String oversDisplay,
-    required String rr, required bool isLeading, required bool isBatting,
+    required String teamKey,
+    required String name,
+    required String logo,
+    required int runs,
+    required int wickets,
+    required String oversDisplay,
+    required String rr,
+    required bool isLeading,
+    required bool isBatting,
   }) {
+    // ── Batting team gets red glow, leading team gets brighter text ──
+    final hasBattingGlow = isBatting && isLive;
+
     return Column(
       children: [
         Stack(
@@ -302,41 +340,62 @@ class _LiveMatchCardState extends State<LiveMatchCard>
           alignment: Alignment.bottomRight,
           children: [
             Container(
-              width: 48, height: 48,
+              width: 48,
+              height: 48,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: const Color(0xFF1C1C1C),
+                // ── Red glow only for batting team ──────────
                 border: Border.all(
-                  color: isLeading ? const Color(0xFFCC0000).withAlpha(140) : Colors.white.withAlpha(18),
-                  width: isLeading ? 2 : 1,
+                  color: hasBattingGlow
+                      ? const Color(0xFFCC0000).withAlpha(140)
+                      : Colors.white.withAlpha(18),
+                  width: hasBattingGlow ? 2 : 1,
                 ),
-                boxShadow: isLeading
-                    ? [BoxShadow(color: const Color(0xFFCC0000).withAlpha(46), blurRadius: 12, spreadRadius: 1)]
+                boxShadow: hasBattingGlow
+                    ? [
+                  BoxShadow(
+                      color: const Color(0xFFCC0000).withAlpha(46),
+                      blurRadius: 12,
+                      spreadRadius: 1)
+                ]
                     : [],
               ),
               child: ClipOval(
                 child: logo.isNotEmpty
                     ? CachedNetworkImage(
-                  imageUrl: logo, fit: BoxFit.cover,
+                  imageUrl: logo,
+                  fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
                     color: const Color(0xFF1C1C1C),
-                    child: const Center(child: SizedBox(width: 16, height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 1.5, color: Color(0xFFCC0000)))),
+                    child: const Center(
+                      child: SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 1.5,
+                            color: Color(0xFFCC0000)),
+                      ),
+                    ),
                   ),
-                  errorWidget: (context, url, error) => _logoFallback(name),
+                  errorWidget: (context, url, error) =>
+                      _logoFallback(name),
                 )
                     : _logoFallback(name),
               ),
             ),
             if (isBatting && isLive)
               Positioned(
-                right: 0, bottom: 0,
+                right: 0,
+                bottom: 0,
                 child: Container(
-                  width: 11, height: 11,
+                  width: 11,
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF66BB6A),
                     shape: BoxShape.circle,
-                    border: Border.all(color: const Color(0xFF161616), width: 2),
+                    border: Border.all(
+                        color: const Color(0xFF161616), width: 2),
                   ),
                 ),
               ),
@@ -345,10 +404,17 @@ class _LiveMatchCardState extends State<LiveMatchCard>
 
         const SizedBox(height: 7),
 
-        Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
+        Text(name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
             style: TextStyle(
-              color: isLeading ? Colors.white.withAlpha(220) : Colors.white.withAlpha(128),
-              fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.4,
+              color: isLeading
+                  ? Colors.white.withAlpha(220)
+                  : Colors.white.withAlpha(128),
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.4,
             )),
 
         const SizedBox(height: 7),
@@ -361,12 +427,17 @@ class _LiveMatchCardState extends State<LiveMatchCard>
             Text('$runs',
                 style: TextStyle(
                   color: isLeading ? Colors.white : Colors.white.withAlpha(166),
-                  fontSize: 26, fontWeight: FontWeight.w900, height: 1, letterSpacing: -1,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w900,
+                  height: 1,
+                  letterSpacing: -1,
                 )),
             Text('/$wickets',
                 style: TextStyle(
                   color: Colors.white.withAlpha(isLeading ? 102 : 64),
-                  fontSize: 14, fontWeight: FontWeight.w600, height: 1,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  height: 1,
                 )),
           ],
         ),
@@ -375,20 +446,29 @@ class _LiveMatchCardState extends State<LiveMatchCard>
 
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-          decoration: BoxDecoration(color: Colors.white.withAlpha(10), borderRadius: BorderRadius.circular(20)),
+          decoration: BoxDecoration(
+            color: Colors.white.withAlpha(10),
+            borderRadius: BorderRadius.circular(20),
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(oversDisplay,
-                  style: TextStyle(color: Colors.white.withAlpha(100), fontSize: 9, fontWeight: FontWeight.w600)),
+                  style: TextStyle(
+                      color: Colors.white.withAlpha(100),
+                      fontSize: 9,
+                      fontWeight: FontWeight.w600)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Container(width: 1, height: 8, color: Colors.white.withAlpha(30)),
+                child: Container(
+                    width: 1, height: 8, color: Colors.white.withAlpha(30)),
               ),
+              // ── RR — neutral color, no red ──────────────
               Text('RR $rr',
                   style: TextStyle(
-                    color: isLeading ? const Color(0xFFCC0000).withAlpha(217) : Colors.white.withAlpha(89),
-                    fontSize: 9, fontWeight: FontWeight.w700,
+                    color: Colors.white.withAlpha(89),
+                    fontSize: 9,
+                    fontWeight: FontWeight.w700,
                   )),
             ],
           ),
@@ -406,7 +486,8 @@ class _LiveMatchCardState extends State<LiveMatchCard>
           Container(width: 1, height: 22, color: Colors.white.withAlpha(18)),
           const SizedBox(height: 6),
           Container(
-            width: 26, height: 26,
+            width: 26,
+            height: 26,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.white.withAlpha(10),
@@ -414,7 +495,11 @@ class _LiveMatchCardState extends State<LiveMatchCard>
             ),
             child: const Center(
               child: Text('VS',
-                  style: TextStyle(color: Colors.white30, fontSize: 8, fontWeight: FontWeight.w900, letterSpacing: 0.5)),
+                  style: TextStyle(
+                      color: Colors.white30,
+                      fontSize: 8,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0.5)),
             ),
           ),
           const SizedBox(height: 6),
@@ -430,16 +515,18 @@ class _LiveMatchCardState extends State<LiveMatchCard>
     final runsNeeded = t.runsNeeded;
     final ballsRemaining = t.ballsRemaining;
 
-    final battingWickets = battingTeamKey == 'teamA' ? team1Wickets : team2Wickets;
+    final battingWickets =
+    battingTeamKey == 'teamA' ? team1Wickets : team2Wickets;
     final wicketsLeft = 10 - battingWickets;
-    final bowlingTeamName = battingTeamKey == 'teamA' ? team2Name : team1Name;
-    final battingTeamName = battingTeamKey == 'teamA' ? team1Name : team2Name;
+    final bowlingTeamName =
+    battingTeamKey == 'teamA' ? team2Name : team1Name;
+    final battingTeamName =
+    battingTeamKey == 'teamA' ? team1Name : team2Name;
 
     final chasingTeamWon = runsNeeded <= 0;
     final allOut = battingWickets >= 10 && runsNeeded > 0;
     final runsByWhichWon = runsNeeded - 1;
 
-    // Colors
     final Color urgency = (chasingTeamWon || allOut)
         ? const Color(0xFF66BB6A)
         : ballsRemaining < 12
@@ -459,15 +546,14 @@ class _LiveMatchCardState extends State<LiveMatchCard>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // icon
           Icon(
-            chasingTeamWon || allOut ? Icons.emoji_events_rounded : Icons.flag_outlined,
+            chasingTeamWon || allOut
+                ? Icons.emoji_events_rounded
+                : Icons.flag_outlined,
             size: 13,
             color: urgency.withAlpha(200),
           ),
           const SizedBox(width: 7),
-
-          // single line text
           Flexible(
             child: RichText(
               maxLines: 1,
@@ -476,30 +562,50 @@ class _LiveMatchCardState extends State<LiveMatchCard>
                 style: TextStyle(fontSize: 12, color: urgency),
                 children: [
                   if (chasingTeamWon) ...[
-                    TextSpan(text: battingTeamName,
+                    TextSpan(
+                        text: battingTeamName,
                         style: const TextStyle(fontWeight: FontWeight.w700)),
-                    const TextSpan(text: ' won by ',
+                    const TextSpan(
+                        text: ' won by ',
                         style: TextStyle(fontWeight: FontWeight.w400)),
-                    TextSpan(text: '$wicketsLeft wickets',
+                    TextSpan(
+                        text: '$wicketsLeft wickets',
                         style: const TextStyle(fontWeight: FontWeight.w800)),
                   ] else if (allOut) ...[
-                    TextSpan(text: bowlingTeamName,
+                    TextSpan(
+                        text: bowlingTeamName,
                         style: const TextStyle(fontWeight: FontWeight.w700)),
-                    const TextSpan(text: ' won by ',
+                    const TextSpan(
+                        text: ' won by ',
                         style: TextStyle(fontWeight: FontWeight.w400)),
-                    TextSpan(text: '$runsByWhichWon runs',
+                    TextSpan(
+                        text: '$runsByWhichWon runs',
                         style: const TextStyle(fontWeight: FontWeight.w800)),
                   ] else ...[
-                    TextSpan(text: battingTeamName,
-                        style: TextStyle(color: Colors.white.withAlpha(180), fontWeight: FontWeight.w600)),
-                    TextSpan(text: ' need ',
-                        style: TextStyle(color: Colors.white.withAlpha(100), fontWeight: FontWeight.w400)),
-                    TextSpan(text: '$runsNeeded runs',
-                        style: TextStyle(color: urgency, fontWeight: FontWeight.w800)),
-                    TextSpan(text: ' in ',
-                        style: TextStyle(color: Colors.white.withAlpha(100), fontWeight: FontWeight.w400)),
-                    TextSpan(text: '$ballsRemaining balls',
-                        style: TextStyle(color: Colors.white.withAlpha(180), fontWeight: FontWeight.w700)),
+                    TextSpan(
+                        text: battingTeamName,
+                        style: TextStyle(
+                            color: Colors.white.withAlpha(180),
+                            fontWeight: FontWeight.w600)),
+                    TextSpan(
+                        text: ' need ',
+                        style: TextStyle(
+                            color: Colors.white.withAlpha(100),
+                            fontWeight: FontWeight.w400)),
+                    TextSpan(
+                        text: '$runsNeeded runs',
+                        style: TextStyle(
+                            color: urgency, fontWeight: FontWeight.w800)),
+                    TextSpan(
+                        text: ' in ',
+                        style: TextStyle(
+                            color: Colors.white.withAlpha(100),
+                            fontWeight: FontWeight.w400)),
+                    TextSpan(
+                        text: '$ballsRemaining balls',
+                        style: TextStyle(
+                            color: Colors.white.withAlpha(180),
+                            fontWeight: FontWeight.w700)),
                   ],
                 ],
               ),
@@ -516,8 +622,10 @@ class _LiveMatchCardState extends State<LiveMatchCard>
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white.withAlpha(6),
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
-        border: Border(top: BorderSide(color: Colors.white.withAlpha(18))),
+        borderRadius:
+        const BorderRadius.vertical(bottom: Radius.circular(16)),
+        border:
+        Border(top: BorderSide(color: Colors.white.withAlpha(18))),
       ),
       child: Row(
         children: [
@@ -527,12 +635,19 @@ class _LiveMatchCardState extends State<LiveMatchCard>
               color: const Color(0xFFCC0000).withAlpha(25),
               borderRadius: BorderRadius.circular(5),
             ),
-            child: Icon(Icons.toll_rounded, size: 11, color: const Color(0xFFCC0000).withAlpha(191)),
+            child: Icon(Icons.toll_rounded,
+                size: 11,
+                color: const Color(0xFFCC0000).withAlpha(191)),
           ),
           const SizedBox(width: 7),
           Expanded(
-            child: Text(tossDisplay, maxLines: 1, overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Colors.white60, fontSize: 10, fontWeight: FontWeight.w500)),
+            child: Text(tossDisplay,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    color: Colors.white60,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500)),
           ),
         ],
       ),
@@ -541,21 +656,33 @@ class _LiveMatchCardState extends State<LiveMatchCard>
 
   Widget _statusChip() {
     switch (normalizedStatus) {
-      case 'live': return _liveChip();
-      case 'upcoming': return _pill('UPCOMING', const Color(0xFF1565C0));
-      case 'completed': return _pill('ENDED', const Color(0xFF37474F));
-      case 'cancelled': return _pill('CANCELLED', Colors.red.shade700);
-      case 'delayed': return _pill('DELAYED', Colors.orange.shade700);
-      default: return _pill(normalizedStatus.toUpperCase(), Colors.grey.shade800);
+      case 'live':
+        return _liveChip();
+      case 'upcoming':
+        return _pill('UPCOMING', const Color(0xFF1565C0));
+      case 'completed':
+        return _pill('ENDED', const Color(0xFF37474F));
+      case 'cancelled':
+        return _pill('CANCELLED', Colors.red.shade700);
+      case 'delayed':
+        return _pill('DELAYED', Colors.orange.shade700);
+      default:
+        return _pill(
+            normalizedStatus.toUpperCase(), Colors.grey.shade800);
     }
   }
 
   Widget _pill(String label, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(
+          color: color, borderRadius: BorderRadius.circular(20)),
       child: Text(label,
-          style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.w800, letterSpacing: 0.5)),
+          style: const TextStyle(
+              color: Colors.white,
+              fontSize: 8,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.5)),
     );
   }
 
@@ -565,10 +692,15 @@ class _LiveMatchCardState extends State<LiveMatchCard>
       decoration: BoxDecoration(
         color: const Color(0xFFFFB300).withAlpha(38),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFFFB300).withAlpha(76)),
+        border:
+        Border.all(color: const Color(0xFFFFB300).withAlpha(76)),
       ),
       child: Text(format.toUpperCase(),
-          style: const TextStyle(color: Color(0xFFFFD54F), fontSize: 8, fontWeight: FontWeight.w800, letterSpacing: 0.5)),
+          style: const TextStyle(
+              color: Color(0xFFFFD54F),
+              fontSize: 8,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.5)),
     );
   }
 
@@ -583,22 +715,31 @@ class _LiveMatchCardState extends State<LiveMatchCard>
             color: const Color(0xFFCC0000),
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
-              BoxShadow(color: const Color(0xFFCC0000).withAlpha((127 * pulse).toInt()), blurRadius: 8),
+              BoxShadow(
+                  color: const Color(0xFFCC0000)
+                      .withAlpha((127 * pulse).toInt()),
+                  blurRadius: 8),
             ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 5, height: 5,
+                width: 5,
+                height: 5,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withAlpha((140 + (115 * pulse)).toInt()),
+                  color: Colors.white
+                      .withAlpha((140 + (115 * pulse)).toInt()),
                 ),
               ),
               const SizedBox(width: 4),
               const Text('LIVE',
-                  style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.w800, letterSpacing: 0.7)),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 8,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.7)),
             ],
           ),
         );
@@ -612,7 +753,10 @@ class _LiveMatchCardState extends State<LiveMatchCard>
       child: Center(
         child: Text(
           name.length >= 2 ? name.substring(0, 2).toUpperCase() : name,
-          style: const TextStyle(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.w800),
+          style: const TextStyle(
+              color: Colors.white54,
+              fontSize: 12,
+              fontWeight: FontWeight.w800),
         ),
       ),
     );

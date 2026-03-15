@@ -161,13 +161,13 @@ class _ReactionButtonState extends State<_ReactionButton>
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
             color: widget.isSelected
-                ? widget.reaction.color.withOpacity(0.15)
-                : Colors.white.withOpacity(0.04),
+                ? widget.reaction.color.withAlpha(38)
+                : Colors.white.withAlpha(10),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: widget.isSelected
-                  ? widget.reaction.color.withOpacity(0.4)
-                  : Colors.white.withOpacity(0.06),
+                  ? widget.reaction.color.withAlpha(102)
+                  : Colors.white.withAlpha(15),
             ),
           ),
           child: Row(
@@ -182,7 +182,7 @@ class _ReactionButtonState extends State<_ReactionButton>
                 style: TextStyle(
                   color: widget.isSelected
                       ? widget.reaction.color
-                      : Colors.white.withOpacity(0.5),
+                      : Colors.white.withAlpha(128),
                   fontSize: 11,
                   fontWeight: widget.isSelected
                       ? FontWeight.w700

@@ -2,7 +2,6 @@
 import 'package:ballbyball/screens/mainscreens/homescreen/home_screen.dart';
 import 'package:ballbyball/screens/mainscreens/productscreen/prodcut_screen.dart';
 import 'package:ballbyball/screens/mainscreens/settingscreen/setting_screen.dart';
-import 'package:ballbyball/screens/rankingscreen/rankingscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';

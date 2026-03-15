@@ -2,6 +2,8 @@ import 'package:ballbyball/models/live_score_match.dart';
 import 'package:ballbyball/models/player_model.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../models/team_model.dart';
+
 class SquadsScreen extends StatelessWidget {
   final FeaturedMatch match;
   const SquadsScreen({super.key, required this.match});
@@ -56,7 +58,7 @@ class SquadsScreen extends StatelessWidget {
 
 // ── Team header ───────────────────────────────────────────
 class _TeamHeader extends StatelessWidget {
-  final team;
+  final Team  team;
   final CrossAxisAlignment align;
   const _TeamHeader({required this.team, required this.align});
 

@@ -49,9 +49,10 @@ class _DugoutScreenState extends State<DugoutScreen> {
 
   Future<void> _maybeShowRules() async {
     final prefs = await SharedPreferences.getInstance();
-    final seen  = prefs.getBool('dugout_rules_seen') ?? false;
+    final seen = prefs.getBool('dugout_rules_seen') ?? false;
     if (seen || !mounted) return;
     await prefs.setBool('dugout_rules_seen', true);
+    if (!mounted) return;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -97,9 +98,7 @@ class _DugoutScreenState extends State<DugoutScreen> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  App Bar  — minimal: title left, avatar right
-// ─────────────────────────────────────────────────────────────
+
 class _AppBar extends StatelessWidget {
   final bool isLoggedIn;
   final VoidCallback onProfile;
@@ -123,7 +122,7 @@ class _AppBar extends StatelessWidget {
               letterSpacing: -0.5,
             ),
           ),
-          // Red dot — always visible, signals live
+
           const SizedBox(width: 6),
           Container(
             width: 6, height: 6,
@@ -171,9 +170,7 @@ class _AvatarBtn extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  Body
-// ─────────────────────────────────────────────────────────────
+
 class _Body extends StatelessWidget {
   final Stream<DocumentSnapshot> postStream;
   final Stream<QuerySnapshot>    commentsStream;
@@ -233,7 +230,7 @@ class _Body extends StatelessWidget {
               ),
             ),
 
-            // Divider + label
+
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 28, 20, 14),
@@ -779,8 +776,9 @@ class _InputBarState extends State<_InputBar> {
       return;
     }
 
-    // Re-check ban before every post (in case status changed)
+    // Re-check ban before every post
     await _checkBan(auth.userId);
+    if (!mounted) return; // ← await ke baad
     if (_isBanned || _isTimedOut) return;
 
     setState(() => _posting = true);
@@ -793,6 +791,7 @@ class _InputBarState extends State<_InputBar> {
         'createdAt': FieldValue.serverTimestamp(),
       });
       await widget.postRef.update({'commentsCount': FieldValue.increment(1)});
+      if (!mounted) return;
       _ctrl.clear();
       FocusScope.of(context).unfocus();
       _startCooldown();
@@ -1212,7 +1211,7 @@ class _SignInSheet extends StatelessWidget {
                   Image.network(
                     'https://www.google.com/favicon.ico',
                     width: 16, height: 16,
-                    errorBuilder: (_, __, ___) =>
+                    errorBuilder: (_, _, _) =>
                     const Icon(Icons.login, size: 16),
                   ),
                   const SizedBox(width: 8),

@@ -38,24 +38,20 @@ class _SplashScreenState extends State<SplashScreen>
       context.read<BannerProvider>().loadBanners();
     });
 
-
     _logoController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 900),
     );
-
 
     _contentController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 700),
     );
 
-
     _wicketController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),
     )..repeat();
-
 
     _progressController = AnimationController(
       vsync: this,
@@ -81,7 +77,6 @@ class _SplashScreenState extends State<SplashScreen>
     _progressAnim = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _progressController, curve: Curves.easeInOut),
     );
-
 
     _logoController.forward().then((_) {
       _contentController.forward();
@@ -120,12 +115,9 @@ class _SplashScreenState extends State<SplashScreen>
       backgroundColor: const Color(0xFF080808),
       body: Stack(
         children: [
-
-
           Positioned.fill(
             child: CustomPaint(painter: _PitchPainter()),
           ),
-
 
           Positioned(
             top: -80,
@@ -137,7 +129,7 @@ class _SplashScreenState extends State<SplashScreen>
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    const Color(0xFFCC0000).withOpacity(0.18),
+                    const Color(0xFFCC0000).withAlpha(46), // 0.18
                     Colors.transparent,
                   ],
                 ),
@@ -145,13 +137,12 @@ class _SplashScreenState extends State<SplashScreen>
             ),
           ),
 
-
           SafeArea(
             child: Column(
               children: [
                 const Spacer(flex: 3),
 
-                // Logo
+                // ── Logo ────────────────────────────────
                 FadeTransition(
                   opacity: _logoFade,
                   child: ScaleTransition(
@@ -166,7 +157,7 @@ class _SplashScreenState extends State<SplashScreen>
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: const Color(0xFFCC0000).withOpacity(0.15),
+                              color: const Color(0xFFCC0000).withAlpha(38), // 0.15
                               width: 1,
                             ),
                           ),
@@ -179,12 +170,12 @@ class _SplashScreenState extends State<SplashScreen>
                             shape: BoxShape.circle,
                             color: const Color(0xFF111111),
                             border: Border.all(
-                              color: const Color(0xFFCC0000).withOpacity(0.3),
+                              color: const Color(0xFFCC0000).withAlpha(77), // 0.3
                               width: 1.5,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFCC0000).withOpacity(0.2),
+                                color: const Color(0xFFCC0000).withAlpha(51), // 0.2
                                 blurRadius: 30,
                                 spreadRadius: 4,
                               ),
@@ -208,6 +199,7 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
 
                 const SizedBox(height: 32),
+
                 FadeTransition(
                   opacity: _contentFade,
                   child: SlideTransition(
@@ -225,7 +217,6 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
 
                 const SizedBox(height: 8),
-
 
                 FadeTransition(
                   opacity: _contentFade,
@@ -245,7 +236,7 @@ class _SplashScreenState extends State<SplashScreen>
                         Text(
                           'Live Scores  •  Highlights  •  News',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.45),
+                            color: Colors.white.withAlpha(115), // 0.45
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             letterSpacing: 0.5,
@@ -266,7 +257,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                 const Spacer(flex: 2),
 
-
+                // ── Spinning wicket ──────────────────────
                 FadeTransition(
                   opacity: _contentFade,
                   child: AnimatedBuilder(
@@ -284,27 +275,23 @@ class _SplashScreenState extends State<SplashScreen>
 
                 const SizedBox(height: 24),
 
-
+                // ── Progress bar ─────────────────────────
                 FadeTransition(
                   opacity: _contentFade,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 48),
                     child: AnimatedBuilder(
                       animation: _progressAnim,
-                      builder: (_, _) => Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(2),
-                            child: LinearProgressIndicator(
-                              value: _progressAnim.value,
-                              backgroundColor: Colors.white.withOpacity(0.06),
-                              valueColor: const AlwaysStoppedAnimation<Color>(
-                                Color(0xFFCC0000),
-                              ),
-                              minHeight: 2,
-                            ),
+                      builder: (_, _) => ClipRRect(
+                        borderRadius: BorderRadius.circular(2),
+                        child: LinearProgressIndicator(
+                          value: _progressAnim.value,
+                          backgroundColor: Colors.white.withAlpha(15), // 0.06
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            Color(0xFFCC0000),
                           ),
-                        ],
+                          minHeight: 2,
+                        ),
                       ),
                     ),
                   ),
@@ -312,13 +299,12 @@ class _SplashScreenState extends State<SplashScreen>
 
                 const SizedBox(height: 32),
 
-
                 FadeTransition(
                   opacity: _contentFade,
                   child: Text(
                     'v1.0.0',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withAlpha(51), // 0.2
                       fontSize: 10,
                       letterSpacing: 0.5,
                     ),
@@ -335,31 +321,27 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-
 class _PitchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.025)
+      ..color = Colors.white.withAlpha(6)   // 0.025
       ..strokeWidth = 1;
-
 
     for (int i = 1; i < 8; i++) {
       final y = size.height * i / 8;
       canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
     }
 
-
-    paint.color = Colors.white.withOpacity(0.04);
+    paint.color = Colors.white.withAlpha(10); // 0.04
     canvas.drawLine(
       Offset(size.width / 2, 0),
       Offset(size.width / 2, size.height),
       paint,
     );
 
-
     paint
-      ..color = const Color(0xFFCC0000).withOpacity(0.06)
+      ..color = const Color(0xFFCC0000).withAlpha(15) // 0.06
       ..strokeWidth = 1.5;
     canvas.drawLine(
       Offset(size.width * 0.15, size.height * 0.72),
