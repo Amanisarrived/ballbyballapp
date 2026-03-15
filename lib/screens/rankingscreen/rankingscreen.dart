@@ -217,8 +217,9 @@ class _TournamentList extends StatelessWidget {
     return StreamBuilder<List<RankedPlayer>>(
       stream: RankingsService.streamTournamentRankings(tournament.id, category),
       builder: (_, snap) {
-        if (snap.connectionState == ConnectionState.waiting)
+        if (snap.connectionState == ConnectionState.waiting) {
           return const _Loader();
+        }
         final players = snap.data ?? [];
         if (players.isEmpty) return _Empty(label: '${category.label} rankings');
         return _PlayerList(

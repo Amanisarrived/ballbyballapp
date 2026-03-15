@@ -98,8 +98,9 @@ class _LiveMatchCardState extends State<LiveMatchCard>
     if (t == null) return;
     void tick() {
       final diff = t.difference(DateTime.now());
-      if (mounted)
+      if (mounted) {
         setState(() => _remaining = diff.isNegative ? Duration.zero : diff);
+      }
       if (diff.isNegative) _countdownTimer?.cancel();
     }
 

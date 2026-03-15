@@ -71,8 +71,9 @@ class ShopBannerService {
       }
 
       final banner = ShopBanner.fromFirestore(doc.data()!);
-      if (!banner.isActive)
+      if (!banner.isActive) {
         return ShopBanner.defaultBanner.copyWith(isActive: false);
+      }
       return banner;
     } catch (_) {
       return _localFestivalFallback();
