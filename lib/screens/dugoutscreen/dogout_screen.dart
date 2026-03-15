@@ -171,7 +171,6 @@ class _AppBar extends StatelessWidget {
   );
 }
 
-
 class _Feed extends StatelessWidget {
   final Stream<DocumentSnapshot> postStream;
   final Stream<QuerySnapshot> commentsStream;
@@ -241,7 +240,6 @@ class _Feed extends StatelessWidget {
               ),
             ),
 
-
             SliverToBoxAdapter(
               child: _ReactionsBar(
                 reactions: reactions,
@@ -251,7 +249,6 @@ class _Feed extends StatelessWidget {
                 db: db,
               ),
             ),
-
 
             SliverToBoxAdapter(
               child: Padding(
@@ -277,7 +274,6 @@ class _Feed extends StatelessWidget {
               ),
             ),
 
-
             _CommentsSliver(stream: commentsStream),
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
           ],
@@ -286,7 +282,6 @@ class _Feed extends StatelessWidget {
     );
   }
 }
-
 
 class _VoteCard extends StatefulWidget {
   final String postText;
@@ -1337,7 +1332,6 @@ class _InputBarState extends State<_InputBar> {
     );
   }
 }
-
 
 class _RulesDialog extends StatelessWidget {
   const _RulesDialog();
