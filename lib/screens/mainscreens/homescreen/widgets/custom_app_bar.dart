@@ -8,9 +8,7 @@ class CustomAppBar extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-      decoration: const BoxDecoration(
-        color: Color(0xFF0A0A0A),
-      ),
+      decoration: const BoxDecoration(color: Color(0xFF0A0A0A)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -47,11 +45,7 @@ class CustomAppBar extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {},
-                icon: const Icon(
-                  Icons.search,
-                  color: Colors.white,
-                  size: 24,
-                ),
+                icon: const Icon(Icons.search, color: Colors.white, size: 24),
               ),
             ],
           ),

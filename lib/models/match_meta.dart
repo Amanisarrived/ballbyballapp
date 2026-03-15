@@ -1,5 +1,3 @@
-
-
 class MatchMeta {
   final String title;
   final String status;
@@ -31,10 +29,7 @@ class MatchMeta {
     );
   }
 
-  Map<String, dynamic> toMap() => {
-    'title': title,
-    'status': status,
-  };
+  Map<String, dynamic> toMap() => {'title': title, 'status': status};
 
   @override
   String toString() => 'MatchMeta(title: $title, status: $status)';

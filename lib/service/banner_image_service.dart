@@ -9,7 +9,6 @@ class BannerService {
   static const String _document = 'bannerImages';
   static const String _field = 'url';
 
-
   static Future<List<String>> fetchBanners() async {
     try {
       final doc = await _firestore.collection(_collection).doc(_document).get();
@@ -24,8 +23,7 @@ class BannerService {
     } catch (e) {
       return [];
     }
-  }   
-
+  }
 
   static Stream<List<String>> streamBanners() {
     return _firestore.collection(_collection).doc(_document).snapshots().map((

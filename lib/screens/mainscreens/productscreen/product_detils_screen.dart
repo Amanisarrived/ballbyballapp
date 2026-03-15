@@ -5,26 +5,29 @@ import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const _bg      = Color(0xFF060606);
+const _bg = Color(0xFF060606);
 const _surface = Color(0xFF0D0D0D);
-const _line    = Color(0xFF1C1C1C);
-const _red     = Color(0xFFCC0000);
+const _line = Color(0xFF1C1C1C);
+const _red = Color(0xFFCC0000);
 
 const _srcColor = {
-  'amazon':   Color(0xFFFF9900),
+  'amazon': Color(0xFFFF9900),
   'flipkart': Color(0xFF4285F4),
-  'myntra':   Color(0xFFFF3F6C),
-  'other':    Color(0xFF888888),
+  'myntra': Color(0xFFFF3F6C),
+  'other': Color(0xFF888888),
 };
 const _srcLabel = {
-  'amazon': 'Amazon', 'flipkart': 'Flipkart',
-  'myntra': 'Myntra', 'other': 'Store',
+  'amazon': 'Amazon',
+  'flipkart': 'Flipkart',
+  'myntra': 'Myntra',
+  'other': 'Store',
 };
 
 class ProductDetailScreen extends StatefulWidget {
   final ProductModel product;
   const ProductDetailScreen({super.key, required this.product});
-  @override State<ProductDetailScreen> createState() => _State();
+  @override
+  State<ProductDetailScreen> createState() => _State();
 }
 
 class _State extends State<ProductDetailScreen> {
@@ -42,18 +45,20 @@ class _State extends State<ProductDetailScreen> {
   }
 
   @override
-  void dispose() { _scroll.dispose(); super.dispose(); }
-
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
 
   double get _appBarOpacity => (_scrollOffset - 220).clamp(0, 40) / 40;
 
   @override
   Widget build(BuildContext context) {
-    final bottom   = MediaQuery.of(context).padding.bottom;
-    final top      = MediaQuery.of(context).padding.top;
+    final bottom = MediaQuery.of(context).padding.bottom;
+    final top = MediaQuery.of(context).padding.top;
     final srcColor = _srcColor[p.source] ?? const Color(0xFF888888);
     final srcLabel = _srcLabel[p.source] ?? 'Store';
-    final canBuy   = p.inStock && p.affiliateUrl.isNotEmpty;
+    final canBuy = p.inStock && p.affiliateUrl.isNotEmpty;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
@@ -61,8 +66,6 @@ class _State extends State<ProductDetailScreen> {
         backgroundColor: _bg,
         body: Stack(
           children: [
-
-
             SingleChildScrollView(
               controller: _scroll,
               physics: const BouncingScrollPhysics(),
@@ -81,7 +84,9 @@ class _State extends State<ProductDetailScreen> {
             ),
 
             Positioned(
-              top: 0, left: 0, right: 0,
+              top: 0,
+              left: 0,
+              right: 0,
               height: top + 56,
               child: IgnorePointer(
                 child: Opacity(
@@ -92,19 +97,25 @@ class _State extends State<ProductDetailScreen> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: Text(p.name,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700)),
-                        ),
-                        Text('₹${p.price.toStringAsFixed(0)}',
+                          child: Text(
+                            p.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                                color: _red,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w800)),
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          '₹${p.price.toStringAsFixed(0)}',
+                          style: const TextStyle(
+                            color: _red,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -112,16 +123,13 @@ class _State extends State<ProductDetailScreen> {
               ),
             ),
 
-
-            Positioned(
-              top: top + 10,
-              left: 16,
-              child: _BackButton(),
-            ),
+            Positioned(top: top + 10, left: 16, child: _BackButton()),
 
             // ── BOTTOM CTA ───────────────────────────
             Positioned(
-              bottom: 0, left: 0, right: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
               child: _CTA(
                 srcColor: srcColor,
                 srcLabel: srcLabel,
@@ -137,7 +145,6 @@ class _State extends State<ProductDetailScreen> {
   }
 }
 
-
 class _BackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GestureDetector(
@@ -146,14 +153,14 @@ class _BackButton extends StatelessWidget {
       Navigator.pop(context);
     },
     child: Container(
-      width: 38, height: 38,
+      width: 38,
+      height: 38,
       decoration: BoxDecoration(
         color: Colors.black.withAlpha(160),
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white.withAlpha(18)),
       ),
-      child: const Icon(LucideIcons.arrowLeft,
-          color: Colors.white, size: 17),
+      child: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 17),
     ),
   );
 }
@@ -171,15 +178,14 @@ class _Hero extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-
           product.image.isNotEmpty
               ? CachedNetworkImage(
-            imageUrl: product.image,
-            fit: BoxFit.cover,
-            placeholder: (_, _) =>
-                Container(color: const Color(0xFF111111)),
-            errorWidget: (_, _, _) => _ImgFallback(),
-          )
+                  imageUrl: product.image,
+                  fit: BoxFit.cover,
+                  placeholder: (_, _) =>
+                      Container(color: const Color(0xFF111111)),
+                  errorWidget: (_, _, _) => _ImgFallback(),
+                )
               : _ImgFallback(),
 
           DecoratedBox(
@@ -198,49 +204,54 @@ class _Hero extends StatelessWidget {
             ),
           ),
 
-
           Positioned(
-            bottom: 20, left: 18,
+            bottom: 20,
+            left: 18,
             child: Wrap(
-              spacing: 7, runSpacing: 7,
+              spacing: 7,
+              runSpacing: 7,
               children: [
                 if (product.discount > 0)
                   _Badge(
-                      text: '${product.discount}% OFF',
-                      bg: _red,
-                      fg: Colors.white),
+                    text: '${product.discount}% OFF',
+                    bg: _red,
+                    fg: Colors.white,
+                  ),
                 if (product.isTrending)
                   _Badge(
-                      text: '🔥 Trending',
-                      bg: Colors.orange.withAlpha(230),
-                      fg: Colors.white),
+                    text: '🔥 Trending',
+                    bg: Colors.orange.withAlpha(230),
+                    fg: Colors.white,
+                  ),
                 if (!product.inStock)
                   _Badge(
-                      text: 'Out of Stock',
-                      bg: const Color(0xFF1E1E1E),
-                      fg: const Color(0xFF777777)),
+                    text: 'Out of Stock',
+                    bg: const Color(0xFF1E1E1E),
+                    fg: const Color(0xFF777777),
+                  ),
               ],
             ),
           ),
 
-
           Positioned(
-            top: topPad + 12, right: 16,
+            top: topPad + 12,
+            right: 16,
             child: Container(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
                 color: Colors.black.withAlpha(130),
                 borderRadius: BorderRadius.circular(8),
-                border:
-                Border.all(color: Colors.white.withAlpha(12)),
+                border: Border.all(color: Colors.white.withAlpha(12)),
               ),
-              child: Text(_capitalize(product.category),
-                  style: TextStyle(
-                      color: Colors.white.withAlpha(160),
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.4)),
+              child: Text(
+                _capitalize(product.category),
+                style: TextStyle(
+                  color: Colors.white.withAlpha(160),
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.4,
+                ),
+              ),
             ),
           ),
         ],
@@ -252,9 +263,13 @@ class _Hero extends StatelessWidget {
 class _ImgFallback extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
-      color: const Color(0xFF111111),
-      child: Icon(LucideIcons.shoppingBag,
-          size: 64, color: Colors.white.withAlpha(8)));
+    color: const Color(0xFF111111),
+    child: Icon(
+      LucideIcons.shoppingBag,
+      size: 64,
+      color: Colors.white.withAlpha(8),
+    ),
+  );
 }
 
 class _Badge extends StatelessWidget {
@@ -263,17 +278,22 @@ class _Badge extends StatelessWidget {
   const _Badge({required this.text, required this.bg, required this.fg});
   @override
   Widget build(BuildContext context) => Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration:
-      BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-      child: Text(text,
-          style: TextStyle(
-              color: fg,
-              fontSize: 10,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.2)));
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    decoration: BoxDecoration(
+      color: bg,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Text(
+      text,
+      style: TextStyle(
+        color: fg,
+        fontSize: 10,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 0.2,
+      ),
+    ),
+  );
 }
-
 
 class _Info extends StatelessWidget {
   final ProductModel product;
@@ -289,18 +309,18 @@ class _Info extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-
-          Text(product.name,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  height: 1.25,
-                  letterSpacing: -0.5)),
+          Text(
+            product.name,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              height: 1.25,
+              letterSpacing: -0.5,
+            ),
+          ),
 
           const SizedBox(height: 6),
-
 
           if (product.rating > 0)
             Row(
@@ -316,21 +336,26 @@ class _Info extends StatelessWidget {
                   );
                 }),
                 const SizedBox(width: 6),
-                Text(product.rating.toStringAsFixed(1),
-                    style: const TextStyle(
-                        color: Color(0xFFFFB800),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700)),
+                Text(
+                  product.rating.toStringAsFixed(1),
+                  style: const TextStyle(
+                    color: Color(0xFFFFB800),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
                 const SizedBox(width: 4),
-                Text('/ 5',
-                    style: TextStyle(
-                        color: Colors.white.withAlpha(30),
-                        fontSize: 11)),
+                Text(
+                  '/ 5',
+                  style: TextStyle(
+                    color: Colors.white.withAlpha(30),
+                    fontSize: 11,
+                  ),
+                ),
               ],
             ),
 
           const SizedBox(height: 20),
-
 
           Container(
             padding: const EdgeInsets.all(18),
@@ -347,20 +372,26 @@ class _Info extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('PRICE',
-                          style: TextStyle(
-                              color: Colors.white.withAlpha(30),
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 1.5)),
+                      Text(
+                        'PRICE',
+                        style: TextStyle(
+                          color: Colors.white.withAlpha(30),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
                       const SizedBox(height: 6),
-                      Text('₹${product.price.toStringAsFixed(0)}',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 32,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -1.2,
-                              height: 1.0)),
+                      Text(
+                        '₹${product.price.toStringAsFixed(0)}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -1.2,
+                          height: 1.0,
+                        ),
+                      ),
                       if (product.originalPrice > product.price) ...[
                         const SizedBox(height: 6),
                         Row(
@@ -368,28 +399,32 @@ class _Info extends StatelessWidget {
                             Text(
                               '₹${product.originalPrice.toStringAsFixed(0)}',
                               style: const TextStyle(
-                                  color: Color(0xFF3A3A3A),
-                                  fontSize: 13,
-                                  decoration: TextDecoration.lineThrough,
-                                  decorationColor: Color(0xFF3A3A3A)),
+                                color: Color(0xFF3A3A3A),
+                                fontSize: 13,
+                                decoration: TextDecoration.lineThrough,
+                                decorationColor: Color(0xFF3A3A3A),
+                              ),
                             ),
                             const SizedBox(width: 8),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 7, vertical: 3),
+                                horizontal: 7,
+                                vertical: 3,
+                              ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFF4CAF50).withAlpha(18),
                                 borderRadius: BorderRadius.circular(6),
                                 border: Border.all(
-                                    color: const Color(0xFF4CAF50)
-                                        .withAlpha(45)),
+                                  color: const Color(0xFF4CAF50).withAlpha(45),
+                                ),
                               ),
                               child: Text(
                                 'Save ₹${(product.originalPrice - product.price).toStringAsFixed(0)}',
                                 style: const TextStyle(
-                                    color: Color(0xFF4CAF50),
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w700),
+                                  color: Color(0xFF4CAF50),
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ),
                           ],
@@ -399,10 +434,11 @@ class _Info extends StatelessWidget {
                   ),
                 ),
 
-
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 8),
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: srcColor.withAlpha(18),
                     borderRadius: BorderRadius.circular(12),
@@ -411,14 +447,16 @@ class _Info extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(LucideIcons.store,
-                          size: 16, color: srcColor),
+                      Icon(LucideIcons.store, size: 16, color: srcColor),
                       const SizedBox(height: 5),
-                      Text(srcLabel,
-                          style: TextStyle(
-                              color: srcColor,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w800)),
+                      Text(
+                        srcLabel,
+                        style: TextStyle(
+                          color: srcColor,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -427,7 +465,6 @@ class _Info extends StatelessWidget {
           ),
 
           const SizedBox(height: 14),
-
 
           Row(
             children: [
@@ -457,24 +494,24 @@ class _Info extends StatelessWidget {
             ],
           ),
 
-
           if (product.description.isNotEmpty) ...[
             const SizedBox(height: 28),
             _SectionHead('About this product'),
             const SizedBox(height: 12),
-            Text(product.description,
-                style: TextStyle(
-                    color: Colors.white.withAlpha(130),
-                    fontSize: 14,
-                    height: 1.75)),
+            Text(
+              product.description,
+              style: TextStyle(
+                color: Colors.white.withAlpha(130),
+                fontSize: 14,
+                height: 1.75,
+              ),
+            ),
           ],
-
 
           const SizedBox(height: 28),
           _SectionHead('Product Details'),
           const SizedBox(height: 12),
           _DetailsTable(product: product),
-
 
           const SizedBox(height: 28),
           _SectionHead('Why buy from $_appName?'),
@@ -486,19 +523,20 @@ class _Info extends StatelessWidget {
   }
 }
 
-
 class _QuickChip extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color color;
-  const _QuickChip(
-      {required this.icon, required this.label, required this.color});
+  const _QuickChip({
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) => Expanded(
     child: Container(
-      padding:
-      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
         color: _surface,
         borderRadius: BorderRadius.circular(12),
@@ -510,19 +548,21 @@ class _QuickChip extends StatelessWidget {
         children: [
           Icon(icon, size: 14, color: color),
           const SizedBox(height: 5),
-          Text(label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: color,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700)),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: color,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ],
       ),
     ),
   );
 }
-
 
 class _SectionHead extends StatelessWidget {
   final String text;
@@ -531,19 +571,22 @@ class _SectionHead extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     children: [
       Container(
-          width: 2,
-          height: 14,
-          color: _red,
-          margin: const EdgeInsets.only(right: 8)),
-      Text(text,
-          style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w700)),
+        width: 2,
+        height: 14,
+        color: _red,
+        margin: const EdgeInsets.only(right: 8),
+      ),
+      Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
     ],
   );
 }
-
 
 class _DetailsTable extends StatelessWidget {
   final ProductModel product;
@@ -553,13 +596,15 @@ class _DetailsTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final srcColor = _srcColor[product.source] ?? const Color(0xFF888888);
     final rows = [
-      ('Category',     _capitalize(product.category), null),
-      ('Sold on',      _srcLabel[product.source] ?? 'Store', srcColor),
-      ('Currency',     product.currency, null),
-      if (product.discount > 0)
-        ('Discount',   '${product.discount}% off', _red),
-      ('Availability', product.inStock ? 'In Stock' : 'Out of Stock',
-      product.inStock ? const Color(0xFF4CAF50) : const Color(0xFF666666)),
+      ('Category', _capitalize(product.category), null),
+      ('Sold on', _srcLabel[product.source] ?? 'Store', srcColor),
+      ('Currency', product.currency, null),
+      if (product.discount > 0) ('Discount', '${product.discount}% off', _red),
+      (
+        'Availability',
+        product.inStock ? 'In Stock' : 'Out of Stock',
+        product.inStock ? const Color(0xFF4CAF50) : const Color(0xFF666666),
+      ),
     ];
 
     return Container(
@@ -576,31 +621,37 @@ class _DetailsTable extends StatelessWidget {
             for (int i = 0; i < rows.length; i++) ...[
               Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 13),
+                  horizontal: 16,
+                  vertical: 13,
+                ),
                 child: Row(
                   children: [
                     SizedBox(
                       width: 100,
-                      child: Text(rows[i].$1,
-                          style: TextStyle(
-                              color: Colors.white.withAlpha(35),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500)),
+                      child: Text(
+                        rows[i].$1,
+                        style: TextStyle(
+                          color: Colors.white.withAlpha(35),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                     Expanded(
-                      child: Text(rows[i].$2,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              color: rows[i].$3 ??
-                                  Colors.white.withAlpha(180),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600)),
+                      child: Text(
+                        rows[i].$2,
+                        textAlign: TextAlign.right,
+                        style: TextStyle(
+                          color: rows[i].$3 ?? Colors.white.withAlpha(180),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-              if (i < rows.length - 1)
-                Container(height: 1, color: _line),
+              if (i < rows.length - 1) Container(height: 1, color: _line),
             ],
           ],
         ),
@@ -609,13 +660,12 @@ class _DetailsTable extends StatelessWidget {
   }
 }
 
-
 class _WhyBuy extends StatelessWidget {
   static const _points = [
     (LucideIcons.shieldCheck, 'Verified affiliate links only'),
-    (LucideIcons.truck,        'Delivered by trusted platforms'),
-    (LucideIcons.refreshCcw,   'Easy returns via the seller'),
-    (LucideIcons.lock,         'Secure checkout on partner site'),
+    (LucideIcons.truck, 'Delivered by trusted platforms'),
+    (LucideIcons.refreshCcw, 'Easy returns via the seller'),
+    (LucideIcons.lock, 'Secure checkout on partner site'),
   ];
 
   @override
@@ -629,32 +679,39 @@ class _WhyBuy extends StatelessWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: _points.map((pt) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 7),
-          child: Row(
-            children: [
-              Container(
-                width: 32, height: 32,
-                decoration: BoxDecoration(
-                  color: _red.withAlpha(14),
-                  borderRadius: BorderRadius.circular(9),
+        children: _points
+            .map(
+              (pt) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 7),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: _red.withAlpha(14),
+                        borderRadius: BorderRadius.circular(9),
+                      ),
+                      child: Icon(pt.$1, size: 14, color: _red),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      pt.$2,
+                      style: TextStyle(
+                        color: Colors.white.withAlpha(160),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
-                child: Icon(pt.$1, size: 14, color: _red),
               ),
-              const SizedBox(width: 12),
-              Text(pt.$2,
-                  style: TextStyle(
-                      color: Colors.white.withAlpha(160),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500)),
-            ],
-          ),
-        )).toList(),
+            )
+            .toList(),
       ),
     );
   }
 }
-
 
 class _CTA extends StatefulWidget {
   final Color srcColor;
@@ -669,7 +726,8 @@ class _CTA extends StatefulWidget {
     required this.onTap,
     required this.bottom,
   });
-  @override State<_CTA> createState() => _CTAState();
+  @override
+  State<_CTA> createState() => _CTAState();
 }
 
 class _CTAState extends State<_CTA> {
@@ -699,17 +757,16 @@ class _CTAState extends State<_CTA> {
             duration: const Duration(milliseconds: 120),
             height: 56,
             decoration: BoxDecoration(
-              color: widget.canBuy
-                  ? widget.srcColor
-                  : const Color(0xFF141414),
+              color: widget.canBuy ? widget.srcColor : const Color(0xFF141414),
               borderRadius: BorderRadius.circular(16),
               boxShadow: widget.canBuy && !_pressed
                   ? [
-                BoxShadow(
-                    color: widget.srcColor.withAlpha(70),
-                    blurRadius: 20,
-                    offset: const Offset(0, 5))
-              ]
+                      BoxShadow(
+                        color: widget.srcColor.withAlpha(70),
+                        blurRadius: 20,
+                        offset: const Offset(0, 5),
+                      ),
+                    ]
                   : null,
             ),
             child: Row(
@@ -720,9 +777,7 @@ class _CTAState extends State<_CTA> {
                       ? LucideIcons.externalLink
                       : LucideIcons.xCircle,
                   size: 18,
-                  color: widget.canBuy
-                      ? Colors.white
-                      : const Color(0xFF3A3A3A),
+                  color: widget.canBuy ? Colors.white : const Color(0xFF3A3A3A),
                 ),
                 const SizedBox(width: 10),
                 Text(
@@ -740,9 +795,11 @@ class _CTAState extends State<_CTA> {
                 ),
                 if (widget.canBuy) ...[
                   const SizedBox(width: 8),
-                  Icon(LucideIcons.arrowRight,
-                      size: 16,
-                      color: Colors.white.withAlpha(180)),
+                  Icon(
+                    LucideIcons.arrowRight,
+                    size: 16,
+                    color: Colors.white.withAlpha(180),
+                  ),
                 ],
               ],
             ),
@@ -752,7 +809,6 @@ class _CTAState extends State<_CTA> {
     );
   }
 }
-
 
 const _appName = 'BallByBall';
 

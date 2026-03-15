@@ -6,23 +6,18 @@ class LiveMatchService {
   static final LiveMatchService instance = LiveMatchService._();
 
   static const _collection = 'featured_match';
-  static const _docId      = 'admin_current';
+  static const _docId = 'admin_current';
 
   late final _docRef = FirebaseFirestore.instance
       .collection(_collection)
       .doc(_docId);
 
-
   FeaturedMatch? _cached;
-  int?           _cachedHash;
-
+  int? _cachedHash;
 
   Stream<FeaturedMatch?> streamFeaturedMatch() {
-    return _docRef
-        .snapshots()
-        .map(_parseSnapshotSync);
+    return _docRef.snapshots().map(_parseSnapshotSync);
   }
-
 
   Future<FeaturedMatch?> fetchMatch() async {
     final doc = await _docRef.get();
@@ -30,19 +25,17 @@ class LiveMatchService {
     return _parseSnapshotSync(doc);
   }
 
-
   FeaturedMatch? _parseSnapshotSync(DocumentSnapshot doc) {
     if (!doc.exists || doc.data() == null) return null;
 
     final raw = doc.data() as Map<String, dynamic>;
-
 
     final hash = raw.hashCode;
     if (hash == _cachedHash && _cached != null) return _cached;
 
     final match = FeaturedMatch.fromMap(raw);
 
-    _cached     = match;
+    _cached = match;
     _cachedHash = hash;
     return match;
   }

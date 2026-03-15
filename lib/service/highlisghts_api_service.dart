@@ -1,10 +1,8 @@
-
 import 'package:ballbyball/models/highlights_model.dart';
 import 'package:ballbyball/models/news_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:uuid/uuid.dart';
-
 
 class ApiService {
   final Dio _dio = Dio(
@@ -42,7 +40,6 @@ class ApiService {
     }
   }
 
-
   Future<List<MovieModel>> fetchMovies() async {
     try {
       final response = await _dio.get("movies");
@@ -55,7 +52,6 @@ class ApiService {
           _cachedRawMovies = List<Map<String, dynamic>>.from(
             moviesList.map((e) => Map<String, dynamic>.from(e)),
           );
-
 
           return moviesList.map((e) => MovieModel.fromJson(e)).toList();
         } else {
@@ -70,7 +66,6 @@ class ApiService {
       throw Exception("Something went wrong: \${e.toString()}");
     }
   }
-
 
   List<MovieModel> getMoviesByCategoryId(int categoryId) {
     final filtered = _cachedRawMovies.where((movie) {
@@ -96,7 +91,6 @@ class ApiService {
     }
   }
 
-
   Future<List<NewsModel>> fetchNews() async {
     try {
       final response = await _dio.get("news");
@@ -109,10 +103,7 @@ class ApiService {
       final List newsList = data?['news'] ?? [];
 
       return newsList.map((json) {
-        return NewsModel.fromJson(
-          json,
-          id: _uuid.v4(),
-        );
+        return NewsModel.fromJson(json, id: _uuid.v4());
       }).toList();
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
@@ -120,7 +111,4 @@ class ApiService {
       throw Exception("Unexpected error: $e");
     }
   }
-
-
-
 }

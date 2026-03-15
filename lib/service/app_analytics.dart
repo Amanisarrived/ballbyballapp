@@ -1,33 +1,30 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 
-
 class AppAnalytics {
   static final _fa = FirebaseAnalytics.instance;
 
   static Future<void> screenView(String screenName) async {
-    await _fa.logScreenView(
-      screenName: screenName,
-      screenClass: screenName,
-    );
+    await _fa.logScreenView(screenName: screenName, screenClass: screenName);
   }
 
-
-  static Future<void> screenHome()       => screenView('home');
-  static Future<void> screenNews()       => screenView('news');
+  static Future<void> screenHome() => screenView('home');
+  static Future<void> screenNews() => screenView('news');
   static Future<void> screenHighlights() => screenView('highlights');
-  static Future<void> screenShop()       => screenView('shop');
-  static Future<void> screenFixtures()   => screenView('fixtures');
+  static Future<void> screenShop() => screenView('shop');
+  static Future<void> screenFixtures() => screenView('fixtures');
   static Future<void> screenFixtureDetail(String matchName) =>
       screenView('fixture_detail_$matchName');
-  static Future<void> screenLiveScore()  => screenView('live_score');
-
+  static Future<void> screenLiveScore() => screenView('live_score');
 
   static Future<void> appOpen() async {
     await _fa.logAppOpen();
   }
 
-  static Future<void> tapButton(String buttonName,
-      {String? screen, String? extra}) async {
+  static Future<void> tapButton(
+    String buttonName, {
+    String? screen,
+    String? extra,
+  }) async {
     await _fa.logEvent(
       name: 'button_tap',
       parameters: {
@@ -37,7 +34,6 @@ class AppAnalytics {
       },
     );
   }
-
 
   static Future<void> tapShopItem(String itemName) =>
       tapButton('shop_item', extra: itemName);
@@ -60,12 +56,10 @@ class AppAnalytics {
   static Future<void> tapFixtureCard(String matchName) =>
       tapButton('fixture_card', extra: matchName);
 
-  static Future<void> tapShareApp() =>
-      tapButton('share_app');
+  static Future<void> tapShareApp() => tapButton('share_app');
 
   static Future<void> tapNotificationBell() =>
       tapButton('notification_bell', screen: 'home');
-
 
   static Future<void> notificationReceived(String type) async {
     await _fa.logEvent(
@@ -80,10 +74,7 @@ class AppAnalytics {
   }) async {
     await _fa.logEvent(
       name: 'notification_opened',
-      parameters: {
-        'notification_type': type,
-        'title': ?title,
-      },
+      parameters: {'notification_type': type, 'title': ?title},
     );
   }
 
@@ -94,12 +85,10 @@ class AppAnalytics {
   static Future<void> notificationBreakingNews(String title) =>
       notificationOpened(type: 'breaking_news', title: title);
 
-  static Future<void> notificationSale() =>
-      notificationOpened(type: 'sale');
+  static Future<void> notificationSale() => notificationOpened(type: 'sale');
 
   static Future<void> notificationFestival(String name) =>
       notificationOpened(type: 'festival', title: name);
-
 
   static Future<void> predictorShown(String pollId) async {
     await _fa.logEvent(
@@ -116,9 +105,9 @@ class AppAnalytics {
     await _fa.logEvent(
       name: 'predictor_vote',
       parameters: {
-        'team_voted':  teamVoted,
-        'poll_id':     pollId,
-        'opponent':    opponent,
+        'team_voted': teamVoted,
+        'poll_id': pollId,
+        'opponent': opponent,
       },
     );
   }
@@ -130,7 +119,6 @@ class AppAnalytics {
     );
   }
 
-
   static Future<void> shopItemClicked({
     required String itemName,
     required String category,
@@ -138,20 +126,15 @@ class AppAnalytics {
   }) async {
     await _fa.logSelectItem(
       itemListName: category,
-      items: [
-        AnalyticsEventItem(
-          itemName: itemName,
-          itemCategory: category,
-        ),
-      ],
+      items: [AnalyticsEventItem(itemName: itemName, itemCategory: category)],
     );
 
     await _fa.logEvent(
       name: 'shop_item_click',
       parameters: {
         'item_name': itemName,
-        'category':  category,
-        'platform':  platform,
+        'category': category,
+        'platform': platform,
       },
     );
   }
@@ -165,12 +148,10 @@ class AppAnalytics {
     String? appVersion,
   }) async {
     if (favouriteTeam != null) {
-      await _fa.setUserProperty(
-          name: 'favourite_team', value: favouriteTeam);
+      await _fa.setUserProperty(name: 'favourite_team', value: favouriteTeam);
     }
     if (appVersion != null) {
-      await _fa.setUserProperty(
-          name: 'app_version', value: appVersion);
+      await _fa.setUserProperty(name: 'app_version', value: appVersion);
     }
   }
 

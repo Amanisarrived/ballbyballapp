@@ -5,12 +5,10 @@ class NotificationPreference {
   static const String _deniedCountKey = 'notification_denied_count';
   static const int maxDeniedCount = 3;
 
-
   static Future<void> saveGranted() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_statusKey, 'granted');
   }
-
 
   static Future<void> saveDenied() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,18 +17,15 @@ class NotificationPreference {
     await prefs.setInt(_deniedCountKey, count + 1);
   }
 
-
   static Future<bool> isGranted() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_statusKey) == 'granted';
   }
 
-
   static Future<int> getDeniedCount() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt(_deniedCountKey) ?? 0;
   }
-
 
   static Future<bool> shouldShowPermissionScreen() async {
     final prefs = await SharedPreferences.getInstance();

@@ -35,7 +35,7 @@ class _UpcomingState extends State<Upcoming> {
           // ── keeps both alive, collapses hidden one to zero height ──
           Visibility(
             visible: _selected == 0,
-            maintainState: true,  // keeps stream + scroll alive
+            maintainState: true, // keeps stream + scroll alive
             child: const UpcomingSection(previewMode: false),
           ),
           Visibility(
@@ -83,7 +83,9 @@ class _SegmentBar extends StatelessWidget {
                   curve: Curves.easeOut,
                   margin: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: active ? const Color(0xFF242424) : Colors.transparent,
+                    color: active
+                        ? const Color(0xFF242424)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(6),
                     border: active
                         ? Border.all(color: Colors.white.withAlpha(14))
@@ -93,7 +95,9 @@ class _SegmentBar extends StatelessWidget {
                     child: AnimatedDefaultTextStyle(
                       duration: const Duration(milliseconds: 200),
                       style: TextStyle(
-                        color: active ? Colors.white : Colors.white.withAlpha(55),
+                        color: active
+                            ? Colors.white
+                            : Colors.white.withAlpha(55),
                         fontSize: 12,
                         fontWeight: active ? FontWeight.w700 : FontWeight.w500,
                         letterSpacing: 0.1,

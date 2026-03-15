@@ -7,11 +7,7 @@ class BannerContainer extends StatelessWidget {
   final double height;
   final VoidCallback? onSearchTap;
 
-  const BannerContainer({
-    super.key,
-    this.height = 200,
-    this.onSearchTap,
-  });
+  const BannerContainer({super.key, this.height = 200, this.onSearchTap});
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +23,7 @@ class BannerContainer extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            if (bannerProvider.isLoading || banners.isEmpty)
-              _buildSkeleton(),
-
+            if (bannerProvider.isLoading || banners.isEmpty) _buildSkeleton(),
 
             if (banners.isNotEmpty)
               CachedNetworkImage(
@@ -41,7 +35,6 @@ class BannerContainer extends StatelessWidget {
                 placeholder: (context, url) => _buildSkeleton(),
                 errorWidget: (context, url, error) => _buildErrorState(),
               ),
-
 
             Positioned.fill(
               child: DecoratedBox(
@@ -67,11 +60,9 @@ class BannerContainer extends StatelessWidget {
     );
   }
 
-
   Widget _buildSkeleton() {
     return _ShimmerBox();
   }
-
 
   Widget _buildErrorState() {
     return Container(
@@ -79,7 +70,11 @@ class BannerContainer extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.sports_cricket, size: 32, color: const Color(0xFFCC0000).withAlpha(120)),
+          Icon(
+            Icons.sports_cricket,
+            size: 32,
+            color: const Color(0xFFCC0000).withAlpha(120),
+          ),
           const SizedBox(height: 6),
           Text(
             'Banner unavailable',
@@ -90,7 +85,6 @@ class BannerContainer extends StatelessWidget {
     );
   }
 }
-
 
 class _ShimmerBox extends StatefulWidget {
   @override
@@ -109,9 +103,10 @@ class _ShimmerBoxState extends State<_ShimmerBox>
       vsync: this,
       duration: const Duration(milliseconds: 1400),
     )..repeat();
-    _animation = Tween<double>(begin: -1.5, end: 1.5).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: -1.5,
+      end: 1.5,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

@@ -22,26 +22,20 @@ class AppReactionService {
     });
   }
 
-
   static Future<void> react(String type) async {
-    await _doc.update({
-      'reactions.$type': FieldValue.increment(1),
-    });
+    await _doc.update({'reactions.$type': FieldValue.increment(1)});
   }
-
 
   static Future<bool> hasReacted() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('reacted_current_match') ?? false;
   }
 
-
   static Future<void> saveReaction(String type) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('reacted_current_match', true);
     await prefs.setString('reaction_type_current_match', type);
   }
-
 
   static Future<String?> getUserReaction() async {
     final prefs = await SharedPreferences.getInstance();

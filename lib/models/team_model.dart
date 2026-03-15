@@ -1,6 +1,5 @@
 import 'package:ballbyball/models/player_model.dart';
 
-
 class Team {
   final String teamId;
   final String name;
@@ -34,5 +33,6 @@ class Team {
   };
 
   @override
-  String toString() => 'Team(teamId: $teamId, name: $name, players: ${players.length})';
+  String toString() =>
+      'Team(teamId: $teamId, name: $name, players: ${players.length})';
 }

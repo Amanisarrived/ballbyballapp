@@ -58,13 +58,12 @@ class ShopProvider with ChangeNotifier {
   List<ProductModel> get trendingProducts =>
       _all.where((p) => p.isTrending).toList();
 
-
   void init() {
     _isLoading = true;
     notifyListeners();
 
     _sub = ShopService.streamAll().listen(
-          (list) {
+      (list) {
         _all = list;
         _isLoading = false;
         _error = null;
@@ -78,7 +77,6 @@ class ShopProvider with ChangeNotifier {
       },
     );
   }
-
 
   void setCategory(String category) {
     if (_selectedCategory == category) return;

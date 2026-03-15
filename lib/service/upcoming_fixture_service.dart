@@ -5,15 +5,18 @@ class UpcomingFixtureService {
   UpcomingFixtureService._();
   static final UpcomingFixtureService instance = UpcomingFixtureService._();
 
-
-  late final _collection = FirebaseFirestore.instance.collection('upcoming_fixtures');
+  late final _collection = FirebaseFirestore.instance.collection(
+    'upcoming_fixtures',
+  );
 
   Stream<List<UpcomingFixtureModel>> streamUpcomingFixtures() {
     return _collection
         .orderBy('time')
         .snapshots()
-        .map((snapshot) => snapshot.docs
-        .map((doc) => UpcomingFixtureModel.fromDoc(doc))
-        .toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => UpcomingFixtureModel.fromDoc(doc))
+              .toList(),
+        );
   }
 }

@@ -18,10 +18,7 @@ class NewsModel {
   });
 
   // API → Model
-  factory NewsModel.fromJson(
-      Map<String, dynamic> json, {
-        required String id,
-      }) {
+  factory NewsModel.fromJson(Map<String, dynamic> json, {required String id}) {
     return NewsModel(
       id: id,
       title: json['title'] ?? '',
@@ -34,7 +31,6 @@ class NewsModel {
           : DateTime.now(), // safety fallback
     );
   }
-
 
   Map<String, dynamic> toJson() {
     return {

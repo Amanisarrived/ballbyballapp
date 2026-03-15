@@ -121,7 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                     color: const Color(0xFF0A0A0A),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
                     child: TabsChip(
                       onTabChanged: (index) {
                         setState(() => _selectedTab = index);

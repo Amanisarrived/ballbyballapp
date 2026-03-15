@@ -16,160 +16,177 @@ class MatchHeader extends StatelessWidget {
     return RepaintBoundary(
       child: SizedBox(
         width: double.infinity,
-        child: Stack(children: [
-          Positioned.fill(child: Container(color: const Color(0xFF050505))),
+        child: Stack(
+          children: [
+            Positioned.fill(child: Container(color: const Color(0xFF050505))),
 
-
-          Positioned(
-            left: -40, top: -20, bottom: -20,
-            width: 260,
-            child: ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
-              child: Opacity(
-                opacity: 0.13,
-                child: CachedNetworkImage(
-                  imageUrl: match.teamA.logo,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          ),
-
-
-          Positioned(
-            right: -40, top: -20, bottom: -20,
-            width: 260,
-            child: ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
-              child: Opacity(
-                opacity: 0.13,
-                child: CachedNetworkImage(
-                  imageUrl: match.teamB.logo,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          ),
-
-
-          Positioned.fill(
-            child: Center(
-              child: Container(
-                width: 160,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.transparent, Color(0xCC050505), Colors.transparent],
-                    stops: [0.0, 0.5, 1.0],
+            Positioned(
+              left: -40,
+              top: -20,
+              bottom: -20,
+              width: 260,
+              child: ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
+                child: Opacity(
+                  opacity: 0.13,
+                  child: CachedNetworkImage(
+                    imageUrl: match.teamA.logo,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
             ),
-          ),
 
-
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xCC050505), Colors.transparent, Color(0xCC050505)],
-                  stops: [0.0, 0.4, 1.0],
+            Positioned(
+              right: -40,
+              top: -20,
+              bottom: -20,
+              width: 260,
+              child: ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
+                child: Opacity(
+                  opacity: 0.13,
+                  child: CachedNetworkImage(
+                    imageUrl: match.teamB.logo,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),
-          ),
 
-
-          SafeArea(
-            bottom: false,
-            child: Column(children: [
-              // Nav row
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-                child: Row(children: [
-                  _NavIcon(onTap: () => Navigator.pop(context)),
-                  const Spacer(),
-                  _StatusPill(isLive: d.isLive, status: match.meta.status),
-                ]),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Score row
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _TeamScoreBlock(
-                        logo: match.teamA.logo,
-                        name: match.teamA.name,
-                        runs: d.teamAScore?.runs ?? 0,
-                        wickets: d.teamAScore?.wickets ?? 0,
-                        overs: d.teamAScore?.overs ?? 0,
-                        balls: d.teamAScore?.balls ?? 0,
-                        flipLayout: false,
-                        teamKey: 'teamA',
-                      ),
+            Positioned.fill(
+              child: Center(
+                child: Container(
+                  width: 160,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        Color(0xCC050505),
+                        Colors.transparent,
+                      ],
+                      stops: [0.0, 0.5, 1.0],
                     ),
-                    const _VsDivider(),
-                    Expanded(
-                      child: _TeamScoreBlock(
-                        logo: match.teamB.logo,
-                        name: match.teamB.name,
-                        runs: d.teamBScore?.runs ?? 0,
-                        wickets: d.teamBScore?.wickets ?? 0,
-                        overs: d.teamBScore?.overs ?? 0,
-                        balls: d.teamBScore?.balls ?? 0,
-                        flipLayout: true,
-                        teamKey: 'teamB',
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
+            ),
 
-              const SizedBox(height: 12),
-
-              // Info strip
-              if (d.showInfoStrip)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(children: [
-                    if (d.showTarget)
-                      _TargetBar(
-                        chasingWon: d.chasingWon,
-                        allOut: d.allOut,
-                        runsNeeded: d.runsNeeded,
-                        oversLeft: d.oversLeft,
-                        ballsLeft: d.ballsLeft,
-                        rrr: d.rrr,
-                        wicketsLeft: d.wicketsLeft,
-                        battingTeamName: d.battingTeamName,
-                        bowlingTeamName: d.bowlingTeamName,
-                        runsByWhichWon: d.runsNeeded - 1,
-                      ),
-                    if (d.tossText.isNotEmpty) ...[
-                      if (d.showTarget) const SizedBox(height: 6),
-                      _TossStrip(text: d.tossText),
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xCC050505),
+                      Colors.transparent,
+                      Color(0xCC050505),
                     ],
-                  ]),
+                    stops: [0.0, 0.4, 1.0],
+                  ),
                 ),
+              ),
+            ),
 
-              const SizedBox(height: 10),
+            SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  // Nav row
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+                    child: Row(
+                      children: [
+                        _NavIcon(onTap: () => Navigator.pop(context)),
+                        const Spacer(),
+                        _StatusPill(
+                          isLive: d.isLive,
+                          status: match.meta.status,
+                        ),
+                      ],
+                    ),
+                  ),
 
+                  const SizedBox(height: 24),
 
-              if (d.isLive && match.currentOver.isNotEmpty) ...[
-                RepaintBoundary(
-                  child: _CurrentOverStrip(balls: match.currentOver),
-                ),
-                const SizedBox(height: 10),
-              ],
-            ]),
-          ),
-        ]),
+                  // Score row
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: _TeamScoreBlock(
+                            logo: match.teamA.logo,
+                            name: match.teamA.name,
+                            runs: d.teamAScore?.runs ?? 0,
+                            wickets: d.teamAScore?.wickets ?? 0,
+                            overs: d.teamAScore?.overs ?? 0,
+                            balls: d.teamAScore?.balls ?? 0,
+                            flipLayout: false,
+                            teamKey: 'teamA',
+                          ),
+                        ),
+                        const _VsDivider(),
+                        Expanded(
+                          child: _TeamScoreBlock(
+                            logo: match.teamB.logo,
+                            name: match.teamB.name,
+                            runs: d.teamBScore?.runs ?? 0,
+                            wickets: d.teamBScore?.wickets ?? 0,
+                            overs: d.teamBScore?.overs ?? 0,
+                            balls: d.teamBScore?.balls ?? 0,
+                            flipLayout: true,
+                            teamKey: 'teamB',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // Info strip
+                  if (d.showInfoStrip)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          if (d.showTarget)
+                            _TargetBar(
+                              chasingWon: d.chasingWon,
+                              allOut: d.allOut,
+                              runsNeeded: d.runsNeeded,
+                              oversLeft: d.oversLeft,
+                              ballsLeft: d.ballsLeft,
+                              rrr: d.rrr,
+                              wicketsLeft: d.wicketsLeft,
+                              battingTeamName: d.battingTeamName,
+                              bowlingTeamName: d.bowlingTeamName,
+                              runsByWhichWon: d.runsNeeded - 1,
+                            ),
+                          if (d.tossText.isNotEmpty) ...[
+                            if (d.showTarget) const SizedBox(height: 6),
+                            _TossStrip(text: d.tossText),
+                          ],
+                        ],
+                      ),
+                    ),
+
+                  const SizedBox(height: 10),
+
+                  if (d.isLive && match.currentOver.isNotEmpty) ...[
+                    RepaintBoundary(
+                      child: _CurrentOverStrip(balls: match.currentOver),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -220,8 +237,10 @@ class _HeaderData {
     final toss = match.toss;
 
     String tossText = '';
-    if (innings == 1 && toss != null &&
-        toss.wonBy.isNotEmpty && toss.decision.isNotEmpty) {
+    if (innings == 1 &&
+        toss != null &&
+        toss.wonBy.isNotEmpty &&
+        toss.decision.isNotEmpty) {
       final wonTeam = toss.wonBy == 'teamA' ? match.teamA : match.teamB;
       tossText = '${wonTeam.name} won toss · elected to ${toss.decision}';
     }
@@ -232,10 +251,12 @@ class _HeaderData {
     final oversLeft = ballsRemaining ~/ 6;
     final ballsLeft = ballsRemaining % 6;
     final rrr = ballsRemaining > 0 ? (runsNeeded / ballsRemaining * 6) : 0.0;
-    final battingTeamName =
-    battingTeamKey == 'teamA' ? match.teamA.name : match.teamB.name;
-    final bowlingTeamName =
-    battingTeamKey == 'teamA' ? match.teamB.name : match.teamA.name;
+    final battingTeamName = battingTeamKey == 'teamA'
+        ? match.teamA.name
+        : match.teamB.name;
+    final bowlingTeamName = battingTeamKey == 'teamA'
+        ? match.teamB.name
+        : match.teamA.name;
     final battingWickets = battingTeamKey == 'teamA'
         ? (teamAScore?.wickets ?? 0)
         : (teamBScore?.wickets ?? 0);
@@ -276,13 +297,18 @@ class _TossStrip extends StatelessWidget {
         const Icon(Icons.toll_rounded, size: 10, color: Color(0x8CCC0000)),
         const SizedBox(width: 6),
         Flexible(
-          child: Text(text,
-              maxLines: 1, overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Color(0x50FFFFFF),
-                fontSize: 10, fontWeight: FontWeight.w500, letterSpacing: 0.2,
-              )),
+          child: Text(
+            text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Color(0x50FFFFFF),
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.2,
+            ),
+          ),
         ),
       ],
     );
@@ -297,18 +323,25 @@ class _TargetBar extends StatelessWidget {
   final String battingTeamName, bowlingTeamName;
 
   const _TargetBar({
-    required this.chasingWon, required this.allOut,
-    required this.runsNeeded, required this.oversLeft,
-    required this.ballsLeft, required this.rrr,
-    required this.wicketsLeft, required this.battingTeamName,
-    required this.bowlingTeamName, required this.runsByWhichWon,
+    required this.chasingWon,
+    required this.allOut,
+    required this.runsNeeded,
+    required this.oversLeft,
+    required this.ballsLeft,
+    required this.rrr,
+    required this.wicketsLeft,
+    required this.battingTeamName,
+    required this.bowlingTeamName,
+    required this.runsByWhichWon,
   });
 
   @override
   Widget build(BuildContext context) {
     if (chasingWon || allOut) {
       final winner = chasingWon ? battingTeamName : bowlingTeamName;
-      final margin = chasingWon ? '$wicketsLeft wickets' : '$runsByWhichWon runs';
+      final margin = chasingWon
+          ? '$wicketsLeft wickets'
+          : '$runsByWhichWon runs';
       return Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
@@ -320,13 +353,23 @@ class _TargetBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.emoji_events_rounded, size: 14, color: Color(0xFF66BB6A)),
+            const Icon(
+              Icons.emoji_events_rounded,
+              size: 14,
+              color: Color(0xFF66BB6A),
+            ),
             const SizedBox(width: 8),
             Flexible(
-              child: Text('$winner won by $margin',
-                  maxLines: 1, overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      color: Color(0xFF66BB6A), fontSize: 13, fontWeight: FontWeight.w700)),
+              child: Text(
+                '$winner won by $margin',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Color(0xFF66BB6A),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           ],
         ),
@@ -349,19 +392,53 @@ class _TargetBar extends StatelessWidget {
         border: Border.all(color: Colors.white.withAlpha(18)),
       ),
       child: RichText(
-        maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
-        text: TextSpan(children: [
-          TextSpan(text: battingTeamName,
-              style: TextStyle(color: Colors.white.withAlpha(160), fontSize: 12, fontWeight: FontWeight.w600)),
-          TextSpan(text: ' need ',
-              style: TextStyle(color: Colors.white.withAlpha(80), fontSize: 12, fontWeight: FontWeight.w400)),
-          TextSpan(text: '$runsNeeded runs',
-              style: TextStyle(color: urgency, fontSize: 12, fontWeight: FontWeight.w800)),
-          TextSpan(text: ' in ',
-              style: TextStyle(color: Colors.white.withAlpha(80), fontSize: 12, fontWeight: FontWeight.w400)),
-          TextSpan(text: '$totalBalls balls',
-              style: TextStyle(color: Colors.white.withAlpha(160), fontSize: 12, fontWeight: FontWeight.w700)),
-        ]),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: battingTeamName,
+              style: TextStyle(
+                color: Colors.white.withAlpha(160),
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            TextSpan(
+              text: ' need ',
+              style: TextStyle(
+                color: Colors.white.withAlpha(80),
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            TextSpan(
+              text: '$runsNeeded runs',
+              style: TextStyle(
+                color: urgency,
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            TextSpan(
+              text: ' in ',
+              style: TextStyle(
+                color: Colors.white.withAlpha(80),
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            TextSpan(
+              text: '$totalBalls balls',
+              style: TextStyle(
+                color: Colors.white.withAlpha(160),
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -377,14 +454,18 @@ class _NavIcon extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 38, height: 38,
+        width: 38,
+        height: 38,
         decoration: BoxDecoration(
           color: Colors.white.withAlpha(20),
           shape: BoxShape.circle,
           border: Border.all(color: Colors.white.withAlpha(31)),
         ),
-        child: const Icon(Icons.arrow_back_ios_new_rounded,
-            color: Color(0xFFDDDDDD), size: 16),
+        child: const Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: Color(0xFFDDDDDD),
+          size: 16,
+        ),
       ),
     );
   }
@@ -407,19 +488,21 @@ class _StatusPill extends StatelessWidget {
           color: isLive ? const Color(0x66CC0000) : Colors.white.withAlpha(26),
         ),
       ),
-      child: Row(mainAxisSize: MainAxisSize.min, children: [
-        if (isLive) ...[
-          const _PulseDot(),
-          const SizedBox(width: 6),
-        ],
-        Text(
-          isLive ? 'LIVE' : status.toUpperCase(),
-          style: TextStyle(
-            color: isLive ? const Color(0xFFFF5252) : const Color(0xFF999999),
-            fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 1.2,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (isLive) ...[const _PulseDot(), const SizedBox(width: 6)],
+          Text(
+            isLive ? 'LIVE' : status.toUpperCase(),
+            style: TextStyle(
+              color: isLive ? const Color(0xFFFF5252) : const Color(0xFF999999),
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 1.2,
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }
@@ -429,9 +512,12 @@ class _PulseDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 6, height: 6,
+      width: 6,
+      height: 6,
       decoration: const BoxDecoration(
-          color: Color(0xFFFF5252), shape: BoxShape.circle),
+        color: Color(0xFFFF5252),
+        shape: BoxShape.circle,
+      ),
     );
   }
 }
@@ -444,32 +530,41 @@ class _VsDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Column(children: [
-        _gradientLine(),
-        const SizedBox(height: 10),
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white.withAlpha(8),
-            border: Border.all(color: Colors.white.withAlpha(20)),
-          ),
-          child: const Text('VS',
+      child: Column(
+        children: [
+          _gradientLine(),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withAlpha(8),
+              border: Border.all(color: Colors.white.withAlpha(20)),
+            ),
+            child: const Text(
+              'VS',
               style: TextStyle(
-                  color: Color(0xFF666666), fontSize: 10,
-                  fontWeight: FontWeight.w900, letterSpacing: 1.5)),
-        ),
-        const SizedBox(height: 10),
-        _gradientLine(),
-      ]),
+                color: Color(0xFF666666),
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.5,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          _gradientLine(),
+        ],
+      ),
     );
   }
 
   Widget _gradientLine() => Container(
-    width: 1, height: 30,
+    width: 1,
+    height: 30,
     decoration: const BoxDecoration(
       gradient: LinearGradient(
-        begin: Alignment.topCenter, end: Alignment.bottomCenter,
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
         colors: [Colors.transparent, Color(0x26FFFFFF), Colors.transparent],
       ),
     ),
@@ -484,104 +579,146 @@ class _TeamScoreBlock extends StatelessWidget {
   final String teamKey;
 
   const _TeamScoreBlock({
-    required this.logo, required this.name,
-    required this.runs, required this.wickets,
-    required this.overs, required this.balls,
-    required this.flipLayout, required this.teamKey,
+    required this.logo,
+    required this.name,
+    required this.runs,
+    required this.wickets,
+    required this.overs,
+    required this.balls,
+    required this.flipLayout,
+    required this.teamKey,
   });
 
   @override
   Widget build(BuildContext context) {
-    final cross = flipLayout ? CrossAxisAlignment.end : CrossAxisAlignment.start;
+    final cross = flipLayout
+        ? CrossAxisAlignment.end
+        : CrossAxisAlignment.start;
 
-    return Column(crossAxisAlignment: cross, children: [
-      SizedBox(
-        width: 100,
-        height: 100,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // ── Blurred ghost logo ────────────────────
-            ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-              child: Opacity(
-                opacity: 0.45,
-                child: CachedNetworkImage(
-                  imageUrl: logo,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            // ── Actual logo circle ────────────────────
-            Hero(
-              tag: 'team_logo_$teamKey',
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white.withAlpha(46), width: 2.5),
-                  boxShadow: const [
-                    BoxShadow(color: Color(0x80000000), blurRadius: 16,
-                        spreadRadius: 3, offset: Offset(0, 4)),
-                  ],
-                ),
-                child: ClipOval(
+    return Column(
+      crossAxisAlignment: cross,
+      children: [
+        SizedBox(
+          width: 100,
+          height: 100,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // ── Blurred ghost logo ────────────────────
+              ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                child: Opacity(
+                  opacity: 0.45,
                   child: CachedNetworkImage(
                     imageUrl: logo,
+                    width: 100,
+                    height: 100,
                     fit: BoxFit.cover,
-                    placeholder: (_, _) => Container(color: const Color(0xFF1A1A1A)),
-                    errorWidget: (_, _, _) => Container(
-                      color: const Color(0xFF1A1A1A),
-                      child: const Icon(Icons.sports_cricket_rounded,
-                          color: Color(0xFF444444), size: 24),
+                  ),
+                ),
+              ),
+              // ── Actual logo circle ────────────────────
+              Hero(
+                tag: 'team_logo_$teamKey',
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white.withAlpha(46),
+                      width: 2.5,
+                    ),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x80000000),
+                        blurRadius: 16,
+                        spreadRadius: 3,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: logo,
+                      fit: BoxFit.cover,
+                      placeholder: (_, _) =>
+                          Container(color: const Color(0xFF1A1A1A)),
+                      errorWidget: (_, _, _) => Container(
+                        color: const Color(0xFF1A1A1A),
+                        child: const Icon(
+                          Icons.sports_cricket_rounded,
+                          color: Color(0xFF444444),
+                          size: 24,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: flipLayout ? TextAlign.end : TextAlign.start,
+          style: const TextStyle(
+            color: Color(0xFFAAAAAA),
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.3,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Text(
+              '$runs',
+              style: const TextStyle(
+                color: Color(0xFFFAFAFA),
+                fontSize: 32,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -1.5,
+                height: 1.0,
+              ),
+            ),
+            Text(
+              '/$wickets',
+              style: const TextStyle(
+                color: Color(0xFF999999),
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                height: 1.0,
+              ),
             ),
           ],
         ),
-      ),
-      const SizedBox(height: 12),
-      Text(name,
-          maxLines: 1, overflow: TextOverflow.ellipsis,
-          textAlign: flipLayout ? TextAlign.end : TextAlign.start,
-          style: const TextStyle(
-              color: Color(0xFFAAAAAA), fontSize: 13,
-              fontWeight: FontWeight.w700, letterSpacing: 0.3)),
-      const SizedBox(height: 8),
-      Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
-        children: [
-          Text('$runs',
-              style: const TextStyle(
-                  color: Color(0xFFFAFAFA), fontSize: 32,
-                  fontWeight: FontWeight.w900, letterSpacing: -1.5, height: 1.0)),
-          Text('/$wickets',
-              style: const TextStyle(
-                  color: Color(0xFF999999), fontSize: 20,
-                  fontWeight: FontWeight.w700, height: 1.0)),
-        ],
-      ),
-      const SizedBox(height: 8),
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.white.withAlpha(15),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.white.withAlpha(26)),
-        ),
-        child: Text('$overs.$balls overs',
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white.withAlpha(15),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Colors.white.withAlpha(26)),
+          ),
+          child: Text(
+            '$overs.$balls overs',
             style: const TextStyle(
-                color: Color(0xFF888888), fontSize: 11,
-                fontWeight: FontWeight.w600, letterSpacing: 0.3)),
-      ),
-    ]);
+              color: Color(0xFF888888),
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.3,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -596,46 +733,63 @@ class _CurrentOverStrip extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(children: [
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const Text('THIS OVER',
-              style: TextStyle(color: Color(0xFF777777), fontSize: 9,
-                  fontWeight: FontWeight.w700, letterSpacing: 1.3)),
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: const Color(0x1ACC0000),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text('$legalCount/6',
-                style: const TextStyle(color: Color(0xFFFF5252),
-                    fontSize: 9, fontWeight: FontWeight.w800)),
-          ),
-        ]),
-        const SizedBox(height: 8),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
+      child: Column(
+        children: [
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ...balls.asMap().entries.map((e) =>
-                  _BallDot(
-                    key: ValueKey('ball_${e.key}_${e.value.label}'),
-                    ball: e.value,
-                    index: e.key,
-                  )),
-              ...List.generate(
-                (6 - legalCount).clamp(0, 6),
-                    (i) => _EmptyBallDot(
-                  key: ValueKey('empty_${balls.length + i}'),
-                  index: balls.length + i,
+              const Text(
+                'THIS OVER',
+                style: TextStyle(
+                  color: Color(0xFF777777),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.3,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0x1ACC0000),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '$legalCount/6',
+                  style: const TextStyle(
+                    color: Color(0xFFFF5252),
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
             ],
           ),
-        ),
-      ]),
+          const SizedBox(height: 8),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ...balls.asMap().entries.map(
+                  (e) => _BallDot(
+                    key: ValueKey('ball_${e.key}_${e.value.label}'),
+                    ball: e.value,
+                    index: e.key,
+                  ),
+                ),
+                ...List.generate(
+                  (6 - legalCount).clamp(0, 6),
+                  (i) => _EmptyBallDot(
+                    key: ValueKey('empty_${balls.length + i}'),
+                    index: balls.length + i,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -650,7 +804,8 @@ class _BallDot extends StatefulWidget {
   State<_BallDot> createState() => _BallDotState();
 }
 
-class _BallDotState extends State<_BallDot> with SingleTickerProviderStateMixin {
+class _BallDotState extends State<_BallDot>
+    with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
   late Animation<double> _scale, _fade;
 
@@ -658,11 +813,19 @@ class _BallDotState extends State<_BallDot> with SingleTickerProviderStateMixin 
   void initState() {
     super.initState();
     _ctrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 350));
-    _scale = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: _ctrl, curve: Curves.elasticOut));
+      vsync: this,
+      duration: const Duration(milliseconds: 350),
+    );
+    _scale = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.elasticOut));
     _fade = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: _ctrl, curve: const Interval(0.0, 0.4, curve: Curves.easeOut)));
+      CurvedAnimation(
+        parent: _ctrl,
+        curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
+      ),
+    );
 
     if (_ctrl.value == 0.0) {
       Future.delayed(Duration(milliseconds: widget.index * 25), () {
@@ -672,12 +835,15 @@ class _BallDotState extends State<_BallDot> with SingleTickerProviderStateMixin 
   }
 
   @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   Color get _bg {
-    if (widget.ball.isWicket)  return const Color(0x33CC0000);
-    if (widget.ball.isWide)    return const Color(0x331565C0);
-    if (widget.ball.isNoBall)  return const Color(0x33E65100);
+    if (widget.ball.isWicket) return const Color(0x33CC0000);
+    if (widget.ball.isWide) return const Color(0x331565C0);
+    if (widget.ball.isNoBall) return const Color(0x33E65100);
     if (widget.ball.value == 4) return const Color(0x330288D1);
     if (widget.ball.value == 6) return const Color(0x332E7D32);
     if (widget.ball.value == 0) return const Color(0x08FFFFFF);
@@ -685,18 +851,18 @@ class _BallDotState extends State<_BallDot> with SingleTickerProviderStateMixin 
   }
 
   Color get _border {
-    if (widget.ball.isWicket)  return const Color(0xB3CC0000);
-    if (widget.ball.isWide)    return const Color(0x991565C0);
-    if (widget.ball.isNoBall)  return const Color(0x99E65100);
+    if (widget.ball.isWicket) return const Color(0xB3CC0000);
+    if (widget.ball.isWide) return const Color(0x991565C0);
+    if (widget.ball.isNoBall) return const Color(0x99E65100);
     if (widget.ball.value == 4) return const Color(0x990288D1);
     if (widget.ball.value == 6) return const Color(0x992E7D32);
     return const Color(0x26FFFFFF);
   }
 
   Color get _text {
-    if (widget.ball.isWicket)  return const Color(0xFFFF5252);
-    if (widget.ball.isWide)    return const Color(0xFF42A5F5);
-    if (widget.ball.isNoBall)  return const Color(0xFFFF7043);
+    if (widget.ball.isWicket) return const Color(0xFFFF5252);
+    if (widget.ball.isWide) return const Color(0xFF42A5F5);
+    if (widget.ball.isNoBall) return const Color(0xFFFF7043);
     if (widget.ball.value == 4) return const Color(0xFF4FC3F7);
     if (widget.ball.value == 6) return const Color(0xFF66BB6A);
     if (widget.ball.value == 0) return const Color(0xFF666666);
@@ -712,21 +878,32 @@ class _BallDotState extends State<_BallDot> with SingleTickerProviderStateMixin 
         child: ScaleTransition(
           scale: _scale,
           child: Container(
-            width: 28, height: 28,
+            width: 28,
+            height: 28,
             decoration: BoxDecoration(
-              color: _bg, shape: BoxShape.circle,
+              color: _bg,
+              shape: BoxShape.circle,
               border: Border.all(color: _border, width: 1.5),
               boxShadow: widget.ball.isWicket || widget.ball.value >= 4
-                  ? [BoxShadow(color: _border.withAlpha(102), blurRadius: 8, spreadRadius: 1)]
+                  ? [
+                      BoxShadow(
+                        color: _border.withAlpha(102),
+                        blurRadius: 8,
+                        spreadRadius: 1,
+                      ),
+                    ]
                   : null,
             ),
             child: Center(
-              child: Text(widget.ball.label,
-                  style: TextStyle(
-                    color: _text,
-                    fontSize: widget.ball.isWide || widget.ball.isNoBall ? 8 : 10,
-                    fontWeight: FontWeight.w900, letterSpacing: -0.3,
-                  )),
+              child: Text(
+                widget.ball.label,
+                style: TextStyle(
+                  color: _text,
+                  fontSize: widget.ball.isWide || widget.ball.isNoBall ? 8 : 10,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.3,
+                ),
+              ),
             ),
           ),
         ),
@@ -752,16 +929,23 @@ class _EmptyBallDotState extends State<_EmptyBallDot>
   void initState() {
     super.initState();
     _ctrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 250));
-    _fade = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+    _fade = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
     Future.delayed(Duration(milliseconds: widget.index * 30), () {
       if (mounted) _ctrl.forward();
     });
   }
 
   @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -770,9 +954,11 @@ class _EmptyBallDotState extends State<_EmptyBallDot>
       child: FadeTransition(
         opacity: _fade,
         child: Container(
-          width: 28, height: 28,
+          width: 28,
+          height: 28,
           decoration: BoxDecoration(
-            color: Colors.transparent, shape: BoxShape.circle,
+            color: Colors.transparent,
+            shape: BoxShape.circle,
             border: Border.all(color: Colors.white.withAlpha(26), width: 1.5),
           ),
         ),

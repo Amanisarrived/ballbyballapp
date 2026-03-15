@@ -24,7 +24,7 @@ class _ScoreCardScreenState extends State<ScoreCardScreen> {
   // its own. This means a new ball only repaints the over strip, NOT the
   // entire header tree (logos, score, target bar, etc.).
   final _matchNotifier = ValueNotifier<FeaturedMatch?>(null);
-  final _overNotifier  = ValueNotifier<List<CurrentOver>>([]);
+  final _overNotifier = ValueNotifier<List<CurrentOver>>([]);
 
   @override
   void initState() {
@@ -69,7 +69,9 @@ class _ScoreCardScreenState extends State<ScoreCardScreen> {
         backgroundColor: Colors.black,
         body: Center(
           child: CircularProgressIndicator(
-              color: Color(0xFFCC0000), strokeWidth: 1.5),
+            color: Color(0xFFCC0000),
+            strokeWidth: 1.5,
+          ),
         ),
       );
     }
@@ -78,20 +80,22 @@ class _ScoreCardScreenState extends State<ScoreCardScreen> {
       backgroundColor: Colors.black,
       body: SafeArea(
         bottom: true,
-        child: Column(children: [
-          // Header listens to matchNotifier — repaints on score/wicket/target changes
-          _LiveMatchHeader(matchNotifier: _matchNotifier),
-          _buildTabs(),
-          Expanded(
-            child: IndexedStack(
-              index: _selectedTab,
-              children: [
-                _LiveScoresScreen(notifier: _matchNotifier),
-                _LiveSquadsScreen(notifier: _matchNotifier),
-              ],
+        child: Column(
+          children: [
+            // Header listens to matchNotifier — repaints on score/wicket/target changes
+            _LiveMatchHeader(matchNotifier: _matchNotifier),
+            _buildTabs(),
+            Expanded(
+              child: IndexedStack(
+                index: _selectedTab,
+                children: [
+                  _LiveScoresScreen(notifier: _matchNotifier),
+                  _LiveSquadsScreen(notifier: _matchNotifier),
+                ],
+              ),
             ),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }
@@ -158,9 +162,7 @@ class _LiveMatchHeader extends StatelessWidget {
       valueListenable: matchNotifier,
       builder: (_, match, _) {
         if (match == null) return const SizedBox.shrink();
-        return RepaintBoundary(
-          child: MatchHeader(match: match),
-        );
+        return RepaintBoundary(child: MatchHeader(match: match));
       },
     );
   }
@@ -176,9 +178,7 @@ class _LiveScoresScreen extends StatelessWidget {
       valueListenable: notifier,
       builder: (_, match, _) {
         if (match == null) return const SizedBox.shrink();
-        return RepaintBoundary(
-          child: ScoresScreen(match: match),
-        );
+        return RepaintBoundary(child: ScoresScreen(match: match));
       },
     );
   }
@@ -194,9 +194,7 @@ class _LiveSquadsScreen extends StatelessWidget {
       valueListenable: notifier,
       builder: (_, match, _) {
         if (match == null) return const SizedBox.shrink();
-        return RepaintBoundary(
-          child: SquadsScreen(match: match),
-        );
+        return RepaintBoundary(child: SquadsScreen(match: match));
       },
     );
   }

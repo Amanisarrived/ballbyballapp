@@ -2,8 +2,6 @@ import 'package:ballbyball/models/rank_caegory.dart';
 import 'package:ballbyball/models/ranked_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
-
 class TournamentConfig {
   final String id;
   final String name;
@@ -14,7 +12,7 @@ class TournamentConfig {
   const TournamentConfig({
     required this.id,
     required this.name,
-    this.logoUrl  = '',
+    this.logoUrl = '',
     required this.isActive,
     this.categories = const [RankCategory.batsmen, RankCategory.bowlers],
   });
@@ -23,22 +21,22 @@ class TournamentConfig {
     final rawCats = m['categories'] as List<dynamic>?;
     final cats = rawCats != null
         ? rawCats
-        .map((e) {
-      try {
-        return RankCategory.values.firstWhere((c) => c.key == e);
-      } catch (_) {
-        return null;
-      }
-    })
-        .whereType<RankCategory>()
-        .toList()
+              .map((e) {
+                try {
+                  return RankCategory.values.firstWhere((c) => c.key == e);
+                } catch (_) {
+                  return null;
+                }
+              })
+              .whereType<RankCategory>()
+              .toList()
         : [RankCategory.batsmen, RankCategory.bowlers];
 
     return TournamentConfig(
-      id:         m['id']       as String? ?? '',
-      name:       m['name']     as String? ?? '',
-      logoUrl:    m['logoUrl']  as String? ?? '',
-      isActive:   m['isActive'] as bool?   ?? false,
+      id: m['id'] as String? ?? '',
+      name: m['name'] as String? ?? '',
+      logoUrl: m['logoUrl'] as String? ?? '',
+      isActive: m['isActive'] as bool? ?? false,
       categories: cats.isEmpty
           ? [RankCategory.batsmen, RankCategory.bowlers]
           : cats,
@@ -46,30 +44,29 @@ class TournamentConfig {
   }
 }
 
-
-
 class RankingsService {
-  static final _col       = FirebaseFirestore.instance.collection('rankings');
-  static final _configDoc =
-  FirebaseFirestore.instance.collection('config').doc('tournaments');
-
+  static final _col = FirebaseFirestore.instance.collection('rankings');
+  static final _configDoc = FirebaseFirestore.instance
+      .collection('config')
+      .doc('tournaments');
 
   static String _iccId(RankFormat f, RankCategory c) => '${f.key}_${c.key}';
   static String _tId(String tournamentId, RankCategory c) =>
       '${tournamentId}_${c.key}';
 
-
   static Stream<List<RankedPlayer>> streamRankings(
-      RankFormat format, RankCategory category) {
+    RankFormat format,
+    RankCategory category,
+  ) {
     return _col.doc(_iccId(format, category)).snapshots().map(_parse);
   }
 
-
   static Stream<List<RankedPlayer>> streamTournamentRankings(
-      String tournamentId, RankCategory category) {
+    String tournamentId,
+    RankCategory category,
+  ) {
     return _col.doc(_tId(tournamentId, category)).snapshots().map(_parse);
   }
-
 
   static Stream<TournamentConfig?> streamCurrentTournament() {
     return _configDoc.snapshots().map((snap) {
@@ -87,7 +84,6 @@ class RankingsService {
     });
   }
 
-
   static Stream<List<TournamentConfig>> streamActiveTournaments() {
     return _configDoc.snapshots().map((snap) {
       if (!snap.exists) return <TournamentConfig>[];
@@ -98,7 +94,6 @@ class RankingsService {
           .toList();
     });
   }
-
 
   static List<RankedPlayer> _parse(DocumentSnapshot snap) {
     if (!snap.exists) return [];

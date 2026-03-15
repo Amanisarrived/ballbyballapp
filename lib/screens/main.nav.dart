@@ -1,4 +1,3 @@
-
 import 'package:ballbyball/screens/mainscreens/homescreen/home_screen.dart';
 import 'package:ballbyball/screens/mainscreens/productscreen/prodcut_screen.dart';
 import 'package:ballbyball/screens/mainscreens/settingscreen/setting_screen.dart';
@@ -22,31 +21,36 @@ class _MainNavState extends State<MainNav> with TickerProviderStateMixin {
   late final List<Animation<double>> _scaleAnims;
 
   final List<_NavItem> _items = const [
-    _NavItem(icon: LucideIcons.home,        label: 'Home'),
+    _NavItem(icon: LucideIcons.home, label: 'Home'),
     _NavItem(icon: LucideIcons.shoppingBag, label: 'Shop'),
     _NavItem(icon: Icons.sports_baseball_rounded, label: "DugOut"),
-    _NavItem(icon: LucideIcons.settings,    label: 'Settings'),
-
+    _NavItem(icon: LucideIcons.settings, label: 'Settings'),
   ];
 
   final List<Widget> _screens = const [
     HomeScreen(),
     ShopScreen(),
     DugoutScreen(),
-   SettingsScreen(),
-
-
+    SettingsScreen(),
   ];
 
   @override
   void initState() {
     super.initState();
-    _controllers = List.generate(_items.length, (i) =>
-        AnimationController(
-            vsync: this, duration: const Duration(milliseconds: 250)));
-    _scaleAnims = _controllers.map((c) =>
-        Tween<double>(begin: 1.0, end: 1.1)
-            .animate(CurvedAnimation(parent: c, curve: Curves.easeOutBack)))
+    _controllers = List.generate(
+      _items.length,
+      (i) => AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 250),
+      ),
+    );
+    _scaleAnims = _controllers
+        .map(
+          (c) => Tween<double>(
+            begin: 1.0,
+            end: 1.1,
+          ).animate(CurvedAnimation(parent: c, curve: Curves.easeOutBack)),
+        )
         .toList();
     _controllers[0].forward();
   }
@@ -71,10 +75,7 @@ class _MainNavState extends State<MainNav> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF080808),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: _BottomNav(
         items: _items,
         currentIndex: _currentIndex,
@@ -84,7 +85,6 @@ class _MainNavState extends State<MainNav> with TickerProviderStateMixin {
     );
   }
 }
-
 
 class _BottomNav extends StatelessWidget {
   final List<_NavItem> items;
@@ -104,9 +104,7 @@ class _BottomNav extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         color: Color(0xFF0E0E0E),
-        border: Border(
-          top: BorderSide(color: Color(0xFF1C1C1C), width: 1),
-        ),
+        border: Border(top: BorderSide(color: Color(0xFF1C1C1C), width: 1)),
       ),
       child: SafeArea(
         top: false,
@@ -115,7 +113,7 @@ class _BottomNav extends StatelessWidget {
           child: Row(
             children: List.generate(
               items.length,
-                  (i) => Expanded(
+              (i) => Expanded(
                 child: _NavTab(
                   item: items[i],
                   selected: i == currentIndex,
@@ -186,5 +184,3 @@ class _NavItem {
   final String label;
   const _NavItem({required this.icon, required this.label});
 }
-
-

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-
   static const Color background = Color(0xFF0F0F0F);
   static const Color surface = Color(0xFF181818);
   static const Color border = Color(0xFF262626);
@@ -26,9 +25,7 @@ class AppTheme {
         fontWeight: FontWeight.w600,
         color: textPrimary,
       ),
-      iconTheme: IconThemeData(
-        color: textPrimary,
-      ),
+      iconTheme: IconThemeData(color: textPrimary),
     ),
 
     dividerColor: border,

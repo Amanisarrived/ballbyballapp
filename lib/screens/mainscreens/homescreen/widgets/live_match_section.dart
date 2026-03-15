@@ -11,8 +11,8 @@ class LiveMatchSection extends StatefulWidget {
 }
 
 class _LiveMatchSectionState extends State<LiveMatchSection> {
-  late final Stream<FeaturedMatch?> _stream =
-  LiveMatchService.instance.streamFeaturedMatch();
+  late final Stream<FeaturedMatch?> _stream = LiveMatchService.instance
+      .streamFeaturedMatch();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,10 @@ class _LiveMatchSectionState extends State<LiveMatchSection> {
           return const SizedBox.shrink();
         }
 
-        return LiveMatchCard(key: const ValueKey('live_match_card'), match: snapshot.data!,);
+        return LiveMatchCard(
+          key: const ValueKey('live_match_card'),
+          match: snapshot.data!,
+        );
       },
     );
   }

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-
 import '../../../../service/reaction_service.dart';
 
 // ── Usage ─────────────────────────────────────────────────
 // ReactionBar(matchId: match.id)
 
 class ReactionBar extends StatefulWidget {
-
-  const ReactionBar({super.key, });
+  const ReactionBar({super.key});
 
   @override
   State<ReactionBar> createState() => _ReactionBarState();
@@ -121,9 +119,10 @@ class _ReactionButtonState extends State<_ReactionButton>
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
-    _scale = Tween<double>(begin: 1.0, end: 1.3).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeOutBack),
-    );
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: 1.3,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutBack));
   }
 
   @override
@@ -152,10 +151,8 @@ class _ReactionButtonState extends State<_ReactionButton>
       onTap: widget.onTap,
       child: AnimatedBuilder(
         animation: _scale,
-        builder: (_, child) => Transform.scale(
-          scale: _scale.value,
-          child: child,
-        ),
+        builder: (_, child) =>
+            Transform.scale(scale: _scale.value, child: child),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -173,9 +170,10 @@ class _ReactionButtonState extends State<_ReactionButton>
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(widget.reaction.emoji,
-                  style: TextStyle(
-                      fontSize: widget.isSelected ? 15 : 13)),
+              Text(
+                widget.reaction.emoji,
+                style: TextStyle(fontSize: widget.isSelected ? 15 : 13),
+              ),
               const SizedBox(width: 5),
               AnimatedDefaultTextStyle(
                 duration: const Duration(milliseconds: 200),

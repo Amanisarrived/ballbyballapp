@@ -6,7 +6,6 @@ import 'dart:math' as math;
 
 import '../../providers/banner_provder.dart';
 
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -16,7 +15,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
-
   late AnimationController _logoController;
   late AnimationController _contentController;
   late AnimationController _wicketController;
@@ -59,7 +57,10 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _logoFade = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _logoController, curve: const Interval(0, 0.6, curve: Curves.easeOut)),
+      CurvedAnimation(
+        parent: _logoController,
+        curve: const Interval(0, 0.6, curve: Curves.easeOut),
+      ),
     );
     _logoScale = Tween<double>(begin: 0.7, end: 1).animate(
       CurvedAnimation(parent: _logoController, curve: Curves.easeOutBack),
@@ -67,13 +68,24 @@ class _SplashScreenState extends State<SplashScreen>
     _contentFade = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _contentController, curve: Curves.easeOut),
     );
-    _titleSlide = Tween<Offset>(begin: const Offset(0, 0.4), end: Offset.zero).animate(
-      CurvedAnimation(parent: _contentController, curve: Curves.easeOutCubic),
-    );
-    _taglineSlide = Tween<Offset>(begin: const Offset(0, 0.6), end: Offset.zero).animate(
-      CurvedAnimation(parent: _contentController, curve: Curves.easeOutCubic),
-    );
-    _wicketRotate = Tween<double>(begin: 0, end: 2 * math.pi).animate(_wicketController);
+    _titleSlide = Tween<Offset>(begin: const Offset(0, 0.4), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _contentController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
+    _taglineSlide = Tween<Offset>(begin: const Offset(0, 0.6), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _contentController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
+    _wicketRotate = Tween<double>(
+      begin: 0,
+      end: 2 * math.pi,
+    ).animate(_wicketController);
     _progressAnim = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _progressController, curve: Curves.easeInOut),
     );
@@ -115,9 +127,7 @@ class _SplashScreenState extends State<SplashScreen>
       backgroundColor: const Color(0xFF080808),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: CustomPaint(painter: _PitchPainter()),
-          ),
+          Positioned.fill(child: CustomPaint(painter: _PitchPainter())),
 
           Positioned(
             top: -80,
@@ -157,7 +167,9 @@ class _SplashScreenState extends State<SplashScreen>
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: const Color(0xFFCC0000).withAlpha(38), // 0.15
+                              color: const Color(
+                                0xFFCC0000,
+                              ).withAlpha(38), // 0.15
                               width: 1,
                             ),
                           ),
@@ -170,12 +182,16 @@ class _SplashScreenState extends State<SplashScreen>
                             shape: BoxShape.circle,
                             color: const Color(0xFF111111),
                             border: Border.all(
-                              color: const Color(0xFFCC0000).withAlpha(77), // 0.3
+                              color: const Color(
+                                0xFFCC0000,
+                              ).withAlpha(77), // 0.3
                               width: 1.5,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFCC0000).withAlpha(51), // 0.2
+                                color: const Color(
+                                  0xFFCC0000,
+                                ).withAlpha(51), // 0.2
                                 blurRadius: 30,
                                 spreadRadius: 4,
                               ),
@@ -226,7 +242,8 @@ class _SplashScreenState extends State<SplashScreen>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          width: 4, height: 4,
+                          width: 4,
+                          height: 4,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: Color(0xFFCC0000),
@@ -244,7 +261,8 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                         const SizedBox(width: 8),
                         Container(
-                          width: 4, height: 4,
+                          width: 4,
+                          height: 4,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: Color(0xFFCC0000),
@@ -325,7 +343,8 @@ class _PitchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withAlpha(6)   // 0.025
+      ..color = Colors.white
+          .withAlpha(6) // 0.025
       ..strokeWidth = 1;
 
     for (int i = 1; i < 8; i++) {
@@ -341,7 +360,8 @@ class _PitchPainter extends CustomPainter {
     );
 
     paint
-      ..color = const Color(0xFFCC0000).withAlpha(15) // 0.06
+      ..color = const Color(0xFFCC0000)
+          .withAlpha(15) // 0.06
       ..strokeWidth = 1.5;
     canvas.drawLine(
       Offset(size.width * 0.15, size.height * 0.72),

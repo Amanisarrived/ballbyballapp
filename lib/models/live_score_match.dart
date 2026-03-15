@@ -8,7 +8,6 @@ import 'package:ballbyball/models/team_score.dart';
 import 'package:ballbyball/models/toss_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class FeaturedMatch {
   final MatchMeta meta;
   final Team teamA;
@@ -35,21 +34,17 @@ class FeaturedMatch {
   TeamScore? get battingScore =>
       liveMatch != null ? scores[liveMatch!.battingTeam] : null;
 
-  Team get battingTeam =>
-      liveMatch?.battingTeam == 'teamA' ? teamA : teamB;
+  Team get battingTeam => liveMatch?.battingTeam == 'teamA' ? teamA : teamB;
 
-  Team get bowlingTeam =>
-      liveMatch?.bowlingTeam == 'teamA' ? teamA : teamB;
+  Team get bowlingTeam => liveMatch?.bowlingTeam == 'teamA' ? teamA : teamB;
 
-  int get legalBallsThisOver =>
-      currentOver.where((b) => b.isLegal).length;
+  int get legalBallsThisOver => currentOver.where((b) => b.isLegal).length;
 
   bool get isOverComplete => legalBallsThisOver >= 6;
 
   Player? findPlayer(String id) {
     try {
-      return [...teamA.players, ...teamB.players]
-          .firstWhere((p) => p.id == id);
+      return [...teamA.players, ...teamB.players].firstWhere((p) => p.id == id);
     } catch (_) {
       return null;
     }
@@ -85,7 +80,7 @@ class FeaturedMatch {
 
     final scoresRaw = data['scores'] as Map<String, dynamic>? ?? {};
     final scores = scoresRaw.map(
-          (key, value) => MapEntry(
+      (key, value) => MapEntry(
         key,
         TeamScore.fromMap(Map<String, dynamic>.from(value as Map? ?? {})),
       ),
@@ -93,7 +88,7 @@ class FeaturedMatch {
 
     final statsRaw = data['playerStats'] as Map<String, dynamic>? ?? {};
     final playerStats = statsRaw.map(
-          (key, value) => MapEntry(
+      (key, value) => MapEntry(
         key,
         PlayerStat.fromMap(Map<String, dynamic>.from(value as Map? ?? {})),
       ),
@@ -101,9 +96,10 @@ class FeaturedMatch {
 
     final overRaw = data['currentOver'] as List<dynamic>? ?? [];
     final currentOver = overRaw
-        .map((b) => CurrentOver.fromMap(
-      Map<String, dynamic>.from(b as Map? ?? {}),
-    ))
+        .map(
+          (b) =>
+              CurrentOver.fromMap(Map<String, dynamic>.from(b as Map? ?? {})),
+        )
         .toList();
 
     return FeaturedMatch(

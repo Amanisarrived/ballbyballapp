@@ -15,7 +15,8 @@ class NotificationPermissionScreen extends StatefulWidget {
 }
 
 class _NotificationPermissionScreenState
-    extends State<NotificationPermissionScreen> with TickerProviderStateMixin {
+    extends State<NotificationPermissionScreen>
+    with TickerProviderStateMixin {
   int _deniedCount = 0;
   bool _isLoading = false;
 
@@ -34,17 +35,17 @@ class _NotificationPermissionScreenState
     {
       'title': 'Stay Updated!',
       'subtitle':
-      'Get live cricket scores, match alerts & breaking news instantly.',
+          'Get live cricket scores, match alerts & breaking news instantly.',
     },
     {
       'title': "You're Missing Out!",
       'subtitle':
-      'Live match alerts, wickets & boundaries — all in real time. Don\'t miss a ball!',
+          'Live match alerts, wickets & boundaries — all in real time. Don\'t miss a ball!',
     },
     {
       'title': 'Last Chance!',
       'subtitle':
-      'Enable notifications to never miss a match moment. We promise not to spam!',
+          'Enable notifications to never miss a match moment. We promise not to spam!',
     },
   ];
 
@@ -73,12 +74,13 @@ class _NotificationPermissionScreenState
       duration: const Duration(milliseconds: 2000),
     )..repeat();
 
-    _fadeAnim = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
-    );
+    _fadeAnim = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeOut));
 
-    _slideAnim =
-        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero)
+        .animate(
           CurvedAnimation(parent: _fadeController, curve: Curves.easeOutCubic),
         );
 
@@ -90,9 +92,10 @@ class _NotificationPermissionScreenState
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
 
-    _spinAnim = Tween<double>(begin: 0, end: 2 * math.pi).animate(
-      _spinController,
-    );
+    _spinAnim = Tween<double>(
+      begin: 0,
+      end: 2 * math.pi,
+    ).animate(_spinController);
 
     _fadeController.forward();
     Future.delayed(const Duration(milliseconds: 400), _startBellLoop);
@@ -178,9 +181,7 @@ class _NotificationPermissionScreenState
       body: Stack(
         children: [
           // Background pitch lines
-          Positioned.fill(
-            child: CustomPaint(painter: _PitchPainter()),
-          ),
+          Positioned.fill(child: CustomPaint(painter: _PitchPainter())),
 
           // Top red glow
           Positioned(
@@ -193,7 +194,7 @@ class _NotificationPermissionScreenState
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    const Color(0xFFCC0000).withAlpha(46),  // 0.18 * 255
+                    const Color(0xFFCC0000).withAlpha(46), // 0.18 * 255
                     Colors.transparent,
                   ],
                 ),
@@ -212,7 +213,7 @@ class _NotificationPermissionScreenState
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    const Color(0xFFCC0000).withAlpha(20),  // 0.08 * 255
+                    const Color(0xFFCC0000).withAlpha(20), // 0.08 * 255
                     Colors.transparent,
                   ],
                 ),
@@ -234,8 +235,7 @@ class _NotificationPermissionScreenState
 
                       // Bell animation
                       AnimatedBuilder(
-                        animation:
-                        Listenable.merge([_bellSwing, _pulseAnim]),
+                        animation: Listenable.merge([_bellSwing, _pulseAnim]),
                         builder: (_, _) => Transform.rotate(
                           angle: _bellSwing.value,
                           child: Stack(
@@ -250,8 +250,9 @@ class _NotificationPermissionScreenState
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: const Color(0xFFCC0000)
-                                          .withAlpha(31),  // 0.12 * 255
+                                      color: const Color(
+                                        0xFFCC0000,
+                                      ).withAlpha(31), // 0.12 * 255
                                       width: 1,
                                     ),
                                   ),
@@ -265,14 +266,16 @@ class _NotificationPermissionScreenState
                                   shape: BoxShape.circle,
                                   color: const Color(0xFF111111),
                                   border: Border.all(
-                                    color: const Color(0xFFCC0000)
-                                        .withAlpha(89),  // 0.35 * 255
+                                    color: const Color(
+                                      0xFFCC0000,
+                                    ).withAlpha(89), // 0.35 * 255
                                     width: 1.5,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color(0xFFCC0000)
-                                          .withAlpha(51),  // 0.2 * 255
+                                      color: const Color(
+                                        0xFFCC0000,
+                                      ).withAlpha(51), // 0.2 * 255
                                       blurRadius: 30,
                                       spreadRadius: 4,
                                     ),
@@ -336,7 +339,7 @@ class _NotificationPermissionScreenState
                       Text(
                         _currentMessage['subtitle']!,
                         style: TextStyle(
-                          color: Colors.white.withAlpha(115),  // 0.45 * 255
+                          color: Colors.white.withAlpha(115), // 0.45 * 255
                           fontSize: 14,
                           height: 1.6,
                           letterSpacing: 0.3,
@@ -353,14 +356,17 @@ class _NotificationPermissionScreenState
                         alignment: WrapAlignment.center,
                         children: const [
                           _FeaturePill(
-                              icon: Icons.sports_cricket,
-                              label: 'Live Scores'),
+                            icon: Icons.sports_cricket,
+                            label: 'Live Scores',
+                          ),
                           _FeaturePill(
-                              icon: Icons.bolt_rounded,
-                              label: 'Wicket Alerts'),
+                            icon: Icons.bolt_rounded,
+                            label: 'Wicket Alerts',
+                          ),
                           _FeaturePill(
-                              icon: Icons.newspaper_rounded,
-                              label: 'Breaking News'),
+                            icon: Icons.newspaper_rounded,
+                            label: 'Breaking News',
+                          ),
                         ],
                       ),
 
@@ -387,8 +393,7 @@ class _NotificationPermissionScreenState
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFCC0000),
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 16),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -397,22 +402,22 @@ class _NotificationPermissionScreenState
                           onPressed: _isLoading ? null : _onAllow,
                           child: _isLoading
                               ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
                               : const Text(
-                            "Allow Notifications",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
+                                  "Allow Notifications",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
                         ),
                       ),
 
@@ -426,7 +431,7 @@ class _NotificationPermissionScreenState
                           child: Text(
                             _deniedCount >= 2 ? "No Thanks" : "Not Now",
                             style: TextStyle(
-                              color: Colors.white.withAlpha(77),  // 0.3 * 255
+                              color: Colors.white.withAlpha(77), // 0.3 * 255
                               fontSize: 14,
                               letterSpacing: 0.3,
                             ),
@@ -458,10 +463,10 @@ class _FeaturePill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: Colors.white.withAlpha(10),        // 0.04 * 255
+        color: Colors.white.withAlpha(10), // 0.04 * 255
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: const Color(0xFFCC0000).withAlpha(51),  // 0.2 * 255
+          color: const Color(0xFFCC0000).withAlpha(51), // 0.2 * 255
           width: 1,
         ),
       ),
@@ -473,7 +478,7 @@ class _FeaturePill extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: Colors.white.withAlpha(153),  // 0.6 * 255
+              color: Colors.white.withAlpha(153), // 0.6 * 255
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
@@ -488,7 +493,8 @@ class _PitchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withAlpha(6)         // 0.025 * 255
+      ..color = Colors.white
+          .withAlpha(6) // 0.025 * 255
       ..strokeWidth = 1;
 
     for (int i = 1; i < 8; i++) {
@@ -496,7 +502,7 @@ class _PitchPainter extends CustomPainter {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
     }
 
-    paint.color = Colors.white.withAlpha(10);     // 0.04 * 255
+    paint.color = Colors.white.withAlpha(10); // 0.04 * 255
     canvas.drawLine(
       Offset(size.width / 2, 0),
       Offset(size.width / 2, size.height),
@@ -504,7 +510,8 @@ class _PitchPainter extends CustomPainter {
     );
 
     paint
-      ..color = const Color(0xFFCC0000).withAlpha(15)  // 0.06 * 255
+      ..color = const Color(0xFFCC0000)
+          .withAlpha(15) // 0.06 * 255
       ..strokeWidth = 1.5;
     canvas.drawLine(
       Offset(size.width * 0.15, size.height * 0.72),

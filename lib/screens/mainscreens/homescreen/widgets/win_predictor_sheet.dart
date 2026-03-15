@@ -5,8 +5,6 @@ import 'package:flutter/services.dart';
 import '../../../../models/winpredictor_model.dart';
 import '../../../../service/winpredictor_service.dart';
 
-
-
 class WinPredictorSheet {
   static Future<void> showIfNeeded(BuildContext context) async {
     // Fetch poll
@@ -42,10 +40,9 @@ class _WinPredictorSheetContent extends StatefulWidget {
       _WinPredictorSheetContentState();
 }
 
-class _WinPredictorSheetContentState
-    extends State<_WinPredictorSheetContent>
+class _WinPredictorSheetContentState extends State<_WinPredictorSheetContent>
     with TickerProviderStateMixin {
-  String? _voted;      // 'team1' | 'team2'
+  String? _voted; // 'team1' | 'team2'
   bool _voting = false;
   bool _closing = false;
 
@@ -67,15 +64,13 @@ class _WinPredictorSheetContentState
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-    _barAnim =
-        CurvedAnimation(parent: _barCtrl, curve: Curves.easeOutCubic);
+    _barAnim = CurvedAnimation(parent: _barCtrl, curve: Curves.easeOutCubic);
 
     _thanksCtrl = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
-    _thanksAnim =
-        CurvedAnimation(parent: _thanksCtrl, curve: Curves.easeOut);
+    _thanksAnim = CurvedAnimation(parent: _thanksCtrl, curve: Curves.easeOut);
   }
 
   @override
@@ -91,8 +86,7 @@ class _WinPredictorSheetContentState
     setState(() => _voting = true);
 
     try {
-      await WinPredictorService.castVote(
-          pollId: _poll.pollId, team: team);
+      await WinPredictorService.castVote(pollId: _poll.pollId, team: team);
 
       // Re-fetch to get updated counts
       final snap = await WinPredictorService.fetchPoll();
@@ -120,10 +114,8 @@ class _WinPredictorSheetContentState
     }
   }
 
-  Color get _t1Color =>
-      _hexColor(_poll.team1Color, const Color(0xFFCC0000));
-  Color get _t2Color =>
-      _hexColor(_poll.team2Color, const Color(0xFF1A73E8));
+  Color get _t1Color => _hexColor(_poll.team1Color, const Color(0xFFCC0000));
+  Color get _t2Color => _hexColor(_poll.team2Color, const Color(0xFF1A73E8));
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +131,8 @@ class _WinPredictorSheetContentState
         children: [
           // ── Handle ──────────────────────────────────────
           Container(
-            width: 36, height: 4,
+            width: 36,
+            height: 4,
             margin: const EdgeInsets.only(top: 12),
             decoration: BoxDecoration(
               color: Colors.white.withAlpha(20),
@@ -211,9 +204,7 @@ class _WinPredictorSheetContentState
                         votedTeam: _voted == 'team1'
                             ? _poll.team1
                             : _poll.team2,
-                        color: _voted == 'team1'
-                            ? _t1Color
-                            : _t2Color,
+                        color: _voted == 'team1' ? _t1Color : _t2Color,
                       ),
                     ),
                   ),
@@ -228,9 +219,10 @@ class _WinPredictorSheetContentState
                       child: Text(
                         'Skip',
                         style: TextStyle(
-                            color: Colors.white.withAlpha(30),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500),
+                          color: Colors.white.withAlpha(30),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
@@ -245,8 +237,7 @@ class _WinPredictorSheetContentState
 
   Color _hexColor(String hex, Color fallback) {
     try {
-      return Color(
-          int.parse('FF${hex.replaceAll('#', '')}', radix: 16));
+      return Color(int.parse('FF${hex.replaceAll('#', '')}', radix: 16));
     } catch (_) {
       return fallback;
     }
@@ -266,30 +257,33 @@ class _SheetHeader extends StatelessWidget {
       children: [
         // Match day badge
         Container(
-          padding: const EdgeInsets.symmetric(
-              horizontal: 12, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
           decoration: BoxDecoration(
             color: const Color(0xFFCC0000).withAlpha(20),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-                color: const Color(0xFFCC0000).withAlpha(60)),
+            border: Border.all(color: const Color(0xFFCC0000).withAlpha(60)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 5, height: 5,
+                width: 5,
+                height: 5,
                 margin: const EdgeInsets.only(right: 6),
                 decoration: const BoxDecoration(
-                    color: Color(0xFFCC0000),
-                    shape: BoxShape.circle),
+                  color: Color(0xFFCC0000),
+                  shape: BoxShape.circle,
+                ),
               ),
-              const Text('MATCH DAY',
-                  style: TextStyle(
-                      color: Color(0xFFCC0000),
-                      fontSize: 9,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 1.5)),
+              const Text(
+                'MATCH DAY',
+                style: TextStyle(
+                  color: Color(0xFFCC0000),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.5,
+                ),
+              ),
             ],
           ),
         ),
@@ -299,10 +293,11 @@ class _SheetHeader extends StatelessWidget {
         Text(
           voted == null ? 'Who will win today?' : 'You voted!',
           style: const TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
-              letterSpacing: -0.5),
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w900,
+            letterSpacing: -0.5,
+          ),
         ),
 
         const SizedBox(height: 6),
@@ -312,9 +307,10 @@ class _SheetHeader extends StatelessWidget {
               ? 'Tap your prediction below'
               : 'Here\'s what everyone thinks',
           style: TextStyle(
-              color: Colors.white.withAlpha(45),
-              fontSize: 13,
-              fontWeight: FontWeight.w400),
+            color: Colors.white.withAlpha(45),
+            fontSize: 13,
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ],
     );
@@ -353,10 +349,13 @@ class _VoteTeamBtnState extends State<_VoteTeamBtn>
   void initState() {
     super.initState();
     _ctrl = AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 120));
-    _scale = Tween<double>(begin: 1.0, end: 0.93)
-        .animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
+      vsync: this,
+      duration: const Duration(milliseconds: 120),
+    );
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: 0.93,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
   }
 
   @override
@@ -365,8 +364,7 @@ class _VoteTeamBtnState extends State<_VoteTeamBtn>
     super.dispose();
   }
 
-  bool get _canTap =>
-      !widget.isVoted && !widget.isOtherVoted && !widget.voting;
+  bool get _canTap => !widget.isVoted && !widget.isOtherVoted && !widget.voting;
 
   @override
   Widget build(BuildContext context) {
@@ -379,16 +377,15 @@ class _VoteTeamBtnState extends State<_VoteTeamBtn>
         onTapDown: _canTap ? (_) => _ctrl.forward() : null,
         onTapUp: _canTap
             ? (_) {
-          _ctrl.reverse();
-          widget.onTap();
-        }
+                _ctrl.reverse();
+                widget.onTap();
+              }
             : null,
         onTapCancel: _canTap ? () => _ctrl.reverse() : null,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOut,
-          padding: const EdgeInsets.symmetric(
-              vertical: 20, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
           decoration: BoxDecoration(
             color: selected
                 ? widget.color.withAlpha(20)
@@ -406,11 +403,12 @@ class _VoteTeamBtnState extends State<_VoteTeamBtn>
             ),
             boxShadow: selected
                 ? [
-              BoxShadow(
-                  color: widget.color.withAlpha(40),
-                  blurRadius: 20,
-                  spreadRadius: 1)
-            ]
+                    BoxShadow(
+                      color: widget.color.withAlpha(40),
+                      blurRadius: 20,
+                      spreadRadius: 1,
+                    ),
+                  ]
                 : [],
           ),
           child: Column(
@@ -420,7 +418,8 @@ class _VoteTeamBtnState extends State<_VoteTeamBtn>
                 duration: const Duration(milliseconds: 200),
                 opacity: dimmed ? 0.25 : 1.0,
                 child: Container(
-                  width: 64, height: 64,
+                  width: 64,
+                  height: 64,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white.withAlpha(6),
@@ -432,22 +431,22 @@ class _VoteTeamBtnState extends State<_VoteTeamBtn>
                     ),
                     boxShadow: selected
                         ? [
-                      BoxShadow(
-                          color: widget.color.withAlpha(60),
-                          blurRadius: 16)
-                    ]
+                            BoxShadow(
+                              color: widget.color.withAlpha(60),
+                              blurRadius: 16,
+                            ),
+                          ]
                         : [],
                   ),
                   child: ClipOval(
                     child: widget.logo.isNotEmpty
                         ? CachedNetworkImage(
-                      imageUrl: widget.logo,
-                      fit: BoxFit.cover,
-                      placeholder: (_, _) =>
-                          _Fallback(name: widget.name),
-                      errorWidget: (_, _, _) =>
-                          _Fallback(name: widget.name),
-                    )
+                            imageUrl: widget.logo,
+                            fit: BoxFit.cover,
+                            placeholder: (_, _) => _Fallback(name: widget.name),
+                            errorWidget: (_, _, _) =>
+                                _Fallback(name: widget.name),
+                          )
                         : _Fallback(name: widget.name),
                   ),
                 ),
@@ -465,12 +464,9 @@ class _VoteTeamBtnState extends State<_VoteTeamBtn>
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color:
-                    selected ? widget.color : Colors.white,
+                    color: selected ? widget.color : Colors.white,
                     fontSize: 14,
-                    fontWeight: selected
-                        ? FontWeight.w800
-                        : FontWeight.w600,
+                    fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
                   ),
                 ),
               ),
@@ -481,7 +477,9 @@ class _VoteTeamBtnState extends State<_VoteTeamBtn>
               AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 5),
+                  horizontal: 12,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: selected
                       ? widget.color.withAlpha(25)
@@ -497,12 +495,12 @@ class _VoteTeamBtnState extends State<_VoteTeamBtn>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (selected) ...[
-                      Icon(Icons.check_rounded,
-                          color: widget.color, size: 11),
+                      Icon(Icons.check_rounded, color: widget.color, size: 11),
                       const SizedBox(width: 5),
                     ] else if (widget.voting) ...[
                       SizedBox(
-                        width: 10, height: 10,
+                        width: 10,
+                        height: 10,
                         child: CircularProgressIndicator(
                           strokeWidth: 1.5,
                           color: widget.color,
@@ -573,16 +571,20 @@ class _ResultBar extends StatelessWidget {
                     Text(
                       '${t1Animated.toStringAsFixed(0)}%',
                       style: TextStyle(
-                          color: t1Color,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: -0.5),
+                        color: t1Color,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.5,
+                      ),
                     ),
-                    Text(poll.team1,
-                        style: TextStyle(
-                            color: Colors.white.withAlpha(35),
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600)),
+                    Text(
+                      poll.team1,
+                      style: TextStyle(
+                        color: Colors.white.withAlpha(35),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ],
                 ),
                 // Total votes
@@ -591,15 +593,19 @@ class _ResultBar extends StatelessWidget {
                     Text(
                       '${poll.totalVotes}',
                       style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800),
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                    Text('fans voted',
-                        style: TextStyle(
-                            color: Colors.white.withAlpha(30),
-                            fontSize: 9,
-                            fontWeight: FontWeight.w500)),
+                    Text(
+                      'fans voted',
+                      style: TextStyle(
+                        color: Colors.white.withAlpha(30),
+                        fontSize: 9,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ],
                 ),
                 Column(
@@ -608,16 +614,20 @@ class _ResultBar extends StatelessWidget {
                     Text(
                       '${t2Animated.toStringAsFixed(0)}%',
                       style: TextStyle(
-                          color: t2Color,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: -0.5),
+                        color: t2Color,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.5,
+                      ),
                     ),
-                    Text(poll.team2,
-                        style: TextStyle(
-                            color: Colors.white.withAlpha(35),
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600)),
+                    Text(
+                      poll.team2,
+                      style: TextStyle(
+                        color: Colors.white.withAlpha(35),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -637,26 +647,18 @@ class _ResultBar extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [
-                              t1Color,
-                              t1Color.withAlpha(180),
-                            ],
+                            colors: [t1Color, t1Color.withAlpha(180)],
                           ),
                         ),
                       ),
                     ),
-                    Container(
-                        width: 3,
-                        color: const Color(0xFF0F0F0F)),
+                    Container(width: 3, color: const Color(0xFF0F0F0F)),
                     Flexible(
                       flex: t2Animated.round().clamp(1, 99),
                       child: Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [
-                              t2Color.withAlpha(180),
-                              t2Color,
-                            ],
+                            colors: [t2Color.withAlpha(180), t2Color],
                           ),
                         ),
                       ),
@@ -678,15 +680,13 @@ class _ResultBar extends StatelessWidget {
 class _ThanksMessage extends StatelessWidget {
   final String votedTeam;
   final Color color;
-  const _ThanksMessage(
-      {required this.votedTeam, required this.color});
+  const _ThanksMessage({required this.votedTeam, required this.color});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-          horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: color.withAlpha(12),
         borderRadius: BorderRadius.circular(14),
@@ -695,15 +695,15 @@ class _ThanksMessage extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.check_circle_rounded,
-              color: color, size: 16),
+          Icon(Icons.check_circle_rounded, color: color, size: 16),
           const SizedBox(width: 8),
           Text(
             'You picked $votedTeam — good luck! 🏏',
             style: TextStyle(
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.w600),
+              color: Colors.white,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
@@ -720,13 +720,12 @@ class _Fallback extends StatelessWidget {
     color: Colors.white.withAlpha(8),
     child: Center(
       child: Text(
-        name.length >= 2
-            ? name.substring(0, 2).toUpperCase()
-            : name,
+        name.length >= 2 ? name.substring(0, 2).toUpperCase() : name,
         style: const TextStyle(
-            color: Colors.white38,
-            fontSize: 16,
-            fontWeight: FontWeight.w900),
+          color: Colors.white38,
+          fontSize: 16,
+          fontWeight: FontWeight.w900,
+        ),
       ),
     ),
   );

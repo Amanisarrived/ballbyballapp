@@ -1,6 +1,6 @@
 class Toss {
-  final String wonBy;       // "teamA" or "teamB"
-  final String decision;    // "bat" or "bowl"
+  final String wonBy; // "teamA" or "teamB"
+  final String decision; // "bat" or "bowl"
   final String battingFirst; // "teamA" or "teamB"
 
   const Toss({

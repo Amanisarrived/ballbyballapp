@@ -5,8 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 const _surface = Color(0xFF0F0F0F);
-const _line    = Color(0xFF1A1A1A);
-const _red     = Color(0xFFCC0000);
+const _line = Color(0xFF1A1A1A);
+const _red = Color(0xFFCC0000);
 
 class Pointstabelscreen extends StatelessWidget {
   const Pointstabelscreen({super.key});
@@ -31,11 +31,11 @@ class Pointstabelscreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _TournamentHeader(name: table.tournamentName),
-            const SizedBox(height: 20,),
-            ...table.groups.map((group) => _GroupTable(
-              group: group,
-              showGroupName: table.isGroupStage,
-            )),
+            const SizedBox(height: 20),
+            ...table.groups.map(
+              (group) =>
+                  _GroupTable(group: group, showGroupName: table.isGroupStage),
+            ),
           ],
         );
       },
@@ -61,7 +61,6 @@ class _InactiveState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-
             Stack(
               alignment: Alignment.center,
               children: [
@@ -74,11 +73,7 @@ class _InactiveState extends StatelessWidget {
                     border: Border.all(color: _red.withAlpha(30)),
                   ),
                 ),
-                const Icon(
-                  Icons.sports_cricket_rounded,
-                  color: _red,
-                  size: 26,
-                ),
+                const Icon(Icons.sports_cricket_rounded, color: _red, size: 26),
               ],
             ),
             const SizedBox(height: 20),
@@ -147,7 +142,6 @@ class _InactiveState extends StatelessWidget {
   }
 }
 
-
 class _LoadingState extends StatelessWidget {
   const _LoadingState();
 
@@ -162,10 +156,7 @@ class _LoadingState extends StatelessWidget {
             const SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator(
-                color: _red,
-                strokeWidth: 1.5,
-              ),
+              child: CircularProgressIndicator(color: _red, strokeWidth: 1.5),
             ),
             const SizedBox(height: 14),
             Text(
@@ -194,7 +185,8 @@ class _TournamentHeader extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 2, height: 12,
+            width: 2,
+            height: 12,
             margin: const EdgeInsets.only(right: 8),
             decoration: BoxDecoration(
               color: _red,
@@ -247,7 +239,8 @@ class _GroupTable extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    width: 2, height: 10,
+                    width: 2,
+                    height: 10,
                     margin: const EdgeInsets.only(right: 8),
                     decoration: BoxDecoration(
                       color: _red,
@@ -272,9 +265,13 @@ class _GroupTable extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(24),
               child: Center(
-                child: Text('No standings yet',
-                    style: TextStyle(
-                        color: Colors.white.withAlpha(20), fontSize: 13)),
+                child: Text(
+                  'No standings yet',
+                  style: TextStyle(
+                    color: Colors.white.withAlpha(20),
+                    fontSize: 13,
+                  ),
+                ),
               ),
             )
           else
@@ -291,7 +288,6 @@ class _GroupTable extends StatelessWidget {
   }
 }
 
-
 class _TableHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -304,29 +300,37 @@ class _TableHeader extends StatelessWidget {
           const SizedBox(width: 30),
           const SizedBox(width: 8),
           const Expanded(
-            child: Text('TEAM',
-                style: TextStyle(
-                    color: Colors.white24,
-                    fontSize: 8,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1.3)),
+            child: Text(
+              'TEAM',
+              style: TextStyle(
+                color: Colors.white24,
+                fontSize: 8,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.3,
+              ),
+            ),
           ),
           ...[
-            _ColW(' P',  28),
-            _ColW(' W',  28),
-            _ColW(' L',  28),
+            _ColW(' P', 28),
+            _ColW(' W', 28),
+            _ColW(' L', 28),
             _ColW('PTS', 32),
             _ColW('NRR', 46),
-          ].map((c) => SizedBox(
-            width: c.width,
-            child: Text(c.label,
+          ].map(
+            (c) => SizedBox(
+              width: c.width,
+              child: Text(
+                c.label,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                    color: Colors.white24,
-                    fontSize: 8,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1.0)),
-          )),
+                  color: Colors.white24,
+                  fontSize: 8,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.0,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -338,7 +342,6 @@ class _ColW {
   final double width;
   const _ColW(this.label, this.width);
 }
-
 
 class _TeamRow extends StatelessWidget {
   final TeamStanding team;
@@ -364,20 +367,26 @@ class _TeamRow extends StatelessWidget {
             children: [
               SizedBox(
                 width: 18,
-                child: Text('$position',
-                    style: TextStyle(
-                        color: _qualifies ? _red : Colors.white.withAlpha(22),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800)),
+                child: Text(
+                  '$position',
+                  style: TextStyle(
+                    color: _qualifies ? _red : Colors.white.withAlpha(22),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
               ),
               const SizedBox(width: 10),
               Container(
-                width: 30, height: 30,
+                width: 30,
+                height: 30,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white.withAlpha(5),
                   border: Border.all(
-                    color: _qualifies ? _red.withAlpha(55) : Colors.white.withAlpha(14),
+                    color: _qualifies
+                        ? _red.withAlpha(55)
+                        : Colors.white.withAlpha(14),
                     width: _qualifies ? 1.5 : 1,
                   ),
                   boxShadow: _qualifies
@@ -387,41 +396,53 @@ class _TeamRow extends StatelessWidget {
                 child: ClipOval(
                   child: team.logo.isNotEmpty
                       ? CachedNetworkImage(
-                    imageUrl: team.logo,
-                    fit: BoxFit.cover,
-                    errorWidget: (_, _, _) => _LogoFb(name: team.name),
-                  )
+                          imageUrl: team.logo,
+                          fit: BoxFit.cover,
+                          errorWidget: (_, _, _) => _LogoFb(name: team.name),
+                        )
                       : _LogoFb(name: team.name),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(team.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white.withAlpha(_qualifies ? 230 : 130),
-                        fontSize: 12,
-                        fontWeight: _qualifies ? FontWeight.w700 : FontWeight.w500)),
+                child: Text(
+                  team.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white.withAlpha(_qualifies ? 230 : 130),
+                    fontSize: 12,
+                    fontWeight: _qualifies ? FontWeight.w700 : FontWeight.w500,
+                  ),
+                ),
               ),
-              ...[team.played, team.won, team.lost]
-                  .map((v) => SizedBox(
-                width: 28,
-                child: Text(v.toString(),
+              ...[team.played, team.won, team.lost].map(
+                (v) => SizedBox(
+                  width: 28,
+                  child: Text(
+                    v.toString(),
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        color: Colors.white.withAlpha(45),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600)),
-              )),
+                      color: Colors.white.withAlpha(45),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(
                 width: 32,
-                child: Text(team.points.toString(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: _qualifies ? Colors.white : Colors.white.withAlpha(160),
-                        fontSize: 13,
-                        fontWeight: FontWeight.w900)),
+                child: Text(
+                  team.points.toString(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: _qualifies
+                        ? Colors.white
+                        : Colors.white.withAlpha(160),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
               ),
               SizedBox(
                 width: 46,
@@ -431,11 +452,12 @@ class _TeamRow extends StatelessWidget {
                       : team.nrr.toStringAsFixed(3),
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: team.nrr >= 0
-                          ? Colors.greenAccent.withAlpha(170)
-                          : Colors.redAccent.withAlpha(170),
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600),
+                    color: team.nrr >= 0
+                        ? Colors.greenAccent.withAlpha(170)
+                        : Colors.redAccent.withAlpha(170),
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],
@@ -446,7 +468,6 @@ class _TeamRow extends StatelessWidget {
     );
   }
 }
-
 
 class _EmptyState extends StatelessWidget {
   const _EmptyState();
@@ -460,32 +481,39 @@ class _EmptyState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 64, height: 64,
+              width: 64,
+              height: 64,
               decoration: BoxDecoration(
                 color: _surface,
                 shape: BoxShape.circle,
                 border: Border.all(color: _line),
               ),
-              child: Icon(Icons.table_chart_rounded,
-                  color: Colors.white.withAlpha(20), size: 28),
+              child: Icon(
+                Icons.table_chart_rounded,
+                color: Colors.white.withAlpha(20),
+                size: 28,
+              ),
             ),
             const SizedBox(height: 16),
-            Text('No standings yet',
-                style: TextStyle(
-                    color: Colors.white.withAlpha(40),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600)),
+            Text(
+              'No standings yet',
+              style: TextStyle(
+                color: Colors.white.withAlpha(40),
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             const SizedBox(height: 6),
-            Text('Check back during a tournament',
-                style: TextStyle(
-                    color: Colors.white.withAlpha(20), fontSize: 12)),
+            Text(
+              'Check back during a tournament',
+              style: TextStyle(color: Colors.white.withAlpha(20), fontSize: 12),
+            ),
           ],
         ),
       ),
     );
   }
 }
-
 
 class _LogoFb extends StatelessWidget {
   final String name;
@@ -499,7 +527,10 @@ class _LogoFb extends StatelessWidget {
         child: Text(
           name.isNotEmpty ? name[0].toUpperCase() : '?',
           style: const TextStyle(
-              color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w900),
+            color: Colors.white38,
+            fontSize: 10,
+            fontWeight: FontWeight.w900,
+          ),
         ),
       ),
     );

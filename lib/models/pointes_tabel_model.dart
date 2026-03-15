@@ -24,23 +24,23 @@ class TeamStanding {
   });
 
   factory TeamStanding.fromMap(Map<String, dynamic> m) => TeamStanding(
-    name:   m['name']   as String? ?? '',
-    logo:   m['logo']   as String? ?? '',
+    name: m['name'] as String? ?? '',
+    logo: m['logo'] as String? ?? '',
     played: (m['played'] as num?)?.toInt() ?? 0,
-    won:    (m['won']    as num?)?.toInt() ?? 0,
-    lost:   (m['lost']   as num?)?.toInt() ?? 0,
+    won: (m['won'] as num?)?.toInt() ?? 0,
+    lost: (m['lost'] as num?)?.toInt() ?? 0,
     points: (m['points'] as num?)?.toInt() ?? 0,
-    nrr:    (m['nrr']    as num?)?.toDouble() ?? 0.0,
+    nrr: (m['nrr'] as num?)?.toDouble() ?? 0.0,
   );
 
   Map<String, dynamic> toMap() => {
-    'name':   name,
-    'logo':   logo,
+    'name': name,
+    'logo': logo,
     'played': played,
-    'won':    won,
-    'lost':   lost,
+    'won': won,
+    'lost': lost,
     'points': points,
-    'nrr':    nrr,
+    'nrr': nrr,
   };
 
   TeamStanding copyWith({
@@ -51,26 +51,22 @@ class TeamStanding {
     int? lost,
     int? points,
     double? nrr,
-  }) =>
-      TeamStanding(
-        name:   name   ?? this.name,
-        logo:   logo   ?? this.logo,
-        played: played ?? this.played,
-        won:    won    ?? this.won,
-        lost:   lost   ?? this.lost,
-        points: points ?? this.points,
-        nrr:    nrr    ?? this.nrr,
-      );
+  }) => TeamStanding(
+    name: name ?? this.name,
+    logo: logo ?? this.logo,
+    played: played ?? this.played,
+    won: won ?? this.won,
+    lost: lost ?? this.lost,
+    points: points ?? this.points,
+    nrr: nrr ?? this.nrr,
+  );
 }
 
 class TableGroup {
   final String groupName; // ignored if single table
   final List<TeamStanding> teams;
 
-  const TableGroup({
-    required this.groupName,
-    required this.teams,
-  });
+  const TableGroup({required this.groupName, required this.teams});
 
   factory TableGroup.fromMap(Map<String, dynamic> m) => TableGroup(
     groupName: m['groupName'] as String? ?? '',
@@ -81,13 +77,13 @@ class TableGroup {
 
   Map<String, dynamic> toMap() => {
     'groupName': groupName,
-    'teams':     teams.map((t) => t.toMap()).toList(),
+    'teams': teams.map((t) => t.toMap()).toList(),
   };
 
   TableGroup copyWith({String? groupName, List<TeamStanding>? teams}) =>
       TableGroup(
         groupName: groupName ?? this.groupName,
-        teams:     teams     ?? this.teams,
+        teams: teams ?? this.teams,
       );
 }
 
@@ -108,8 +104,8 @@ class PointsTable {
     final d = doc.data() as Map<String, dynamic>;
     return PointsTable(
       tournamentName: d['tournamentName'] as String? ?? '',
-      isGroupStage:   d['isGroupStage']   as bool?   ?? false,
-      isVisible:      d['isVisible']      as bool?   ?? false,
+      isGroupStage: d['isGroupStage'] as bool? ?? false,
+      isVisible: d['isVisible'] as bool? ?? false,
       groups: ((d['groups'] as List?) ?? [])
           .map((g) => TableGroup.fromMap(g as Map<String, dynamic>))
           .toList(),
@@ -119,8 +115,8 @@ class PointsTable {
   // Empty default
   factory PointsTable.empty() => const PointsTable(
     tournamentName: '',
-    isGroupStage:   false,
-    isVisible:      false,
-    groups:         [],
+    isGroupStage: false,
+    isVisible: false,
+    groups: [],
   );
 }

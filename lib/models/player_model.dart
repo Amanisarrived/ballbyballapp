@@ -3,11 +3,7 @@ class Player {
   final String name;
   final String role;
 
-  const Player({
-    required this.id,
-    required this.name,
-    required this.role,
-  });
+  const Player({required this.id, required this.name, required this.role});
 
   factory Player.fromMap(Map<String, dynamic> map) {
     return Player(
@@ -17,11 +13,7 @@ class Player {
     );
   }
 
-  Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'role': role,
-  };
+  Map<String, dynamic> toMap() => {'id': id, 'name': name, 'role': role};
 
   @override
   String toString() => 'Player(id: $id, name: $name, role: $role)';

@@ -45,8 +45,11 @@ class TrendingCard extends StatelessWidget {
                 fit: BoxFit.cover,
                 errorBuilder: (_, _, _) => Container(
                   color: const Color(0xFF1E1E1E),
-                  child: const Icon(Icons.sports_cricket,
-                      color: Colors.white12, size: 48),
+                  child: const Icon(
+                    Icons.sports_cricket,
+                    color: Colors.white12,
+                    size: 48,
+                  ),
                 ),
               ),
 
@@ -57,7 +60,7 @@ class TrendingCard extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.black.withAlpha(64),  // 0.25
+                      Colors.black.withAlpha(64), // 0.25
                       Colors.transparent,
                       Colors.transparent,
                       Colors.black.withAlpha(217), // 0.85
@@ -75,11 +78,7 @@ class TrendingCard extends StatelessWidget {
               ),
 
               // YouTube chip — top right
-              const Positioned(
-                top: 12,
-                right: 12,
-                child: _YoutubeChip(),
-              ),
+              const Positioned(top: 12, right: 12, child: _YoutubeChip()),
 
               // Play icon — center
               const Center(
@@ -192,9 +191,10 @@ class _AnimatedTrendingChipState extends State<_AnimatedTrendingChip>
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     )..repeat(reverse: true);
-    _pulse = Tween<double>(begin: 0.6, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _pulse = Tween<double>(
+      begin: 0.6,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

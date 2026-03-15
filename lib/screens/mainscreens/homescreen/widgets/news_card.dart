@@ -66,12 +66,12 @@ class _FeaturedNewsCardState extends State<FeaturedNewsCard> {
                   // ── Background image ──────────────────
                   widget.news.imageUrl.isNotEmpty
                       ? CachedNetworkImage(
-                    imageUrl: widget.news.imageUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (_, _) =>
-                        Container(color: const Color(0xFF1C1C1C)),
-                    errorWidget: (_, _, _) => _imgFallback(),
-                  )
+                          imageUrl: widget.news.imageUrl,
+                          fit: BoxFit.cover,
+                          placeholder: (_, _) =>
+                              Container(color: const Color(0xFF1C1C1C)),
+                          errorWidget: (_, _, _) => _imgFallback(),
+                        )
                       : _imgFallback(),
 
                   // ── Deep editorial gradient ───────────
@@ -81,10 +81,10 @@ class _FeaturedNewsCardState extends State<FeaturedNewsCard> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.black.withAlpha(13),   // 0.05
-                          Colors.black.withAlpha(26),   // 0.10
-                          Colors.black.withAlpha(166),  // 0.65
-                          Colors.black.withAlpha(247),  // 0.97
+                          Colors.black.withAlpha(13), // 0.05
+                          Colors.black.withAlpha(26), // 0.10
+                          Colors.black.withAlpha(166), // 0.65
+                          Colors.black.withAlpha(247), // 0.97
                         ],
                         stops: const [0.0, 0.30, 0.62, 1.0],
                       ),
@@ -100,7 +100,9 @@ class _FeaturedNewsCardState extends State<FeaturedNewsCard> {
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFFCC0000),
                             borderRadius: BorderRadius.circular(6),
@@ -118,16 +120,20 @@ class _FeaturedNewsCardState extends State<FeaturedNewsCard> {
                         const Spacer(),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 9, vertical: 5),
+                            horizontal: 9,
+                            vertical: 5,
+                          ),
                           decoration: BoxDecoration(
-                            color: Colors.black.withAlpha(89),   // 0.35
+                            color: Colors.black.withAlpha(89), // 0.35
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
-                                color: Colors.white.withAlpha(31)), // 0.12
+                              color: Colors.white.withAlpha(31),
+                            ), // 0.12
                           ),
                           child: Text(
-                            DateFormat('dd MMM yyyy')
-                                .format(widget.news.createdAt),
+                            DateFormat(
+                              'dd MMM yyyy',
+                            ).format(widget.news.createdAt),
                             style: TextStyle(
                               color: Colors.white.withAlpha(166), // 0.65
                               fontSize: 9,
@@ -151,11 +157,13 @@ class _FeaturedNewsCardState extends State<FeaturedNewsCard> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            DateFormat('EEEE')
-                                .format(widget.news.createdAt)
-                                .toUpperCase(),
+                            DateFormat(
+                              'EEEE',
+                            ).format(widget.news.createdAt).toUpperCase(),
                             style: const TextStyle(
-                              color: Color(0xD9CC0000), // 0.85 * 255 = 217 ≈ 0xD9
+                              color: Color(
+                                0xD9CC0000,
+                              ), // 0.85 * 255 = 217 ≈ 0xD9
                               fontSize: 9,
                               fontWeight: FontWeight.w700,
                               letterSpacing: 1.8,
@@ -191,17 +199,21 @@ class _FeaturedNewsCardState extends State<FeaturedNewsCard> {
                                   height: 24,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: const Color(0xFFCC0000)
-                                        .withAlpha(46),  // 0.18
+                                    color: const Color(
+                                      0xFFCC0000,
+                                    ).withAlpha(46), // 0.18
                                     border: Border.all(
-                                        color: const Color(0xFFCC0000)
-                                            .withAlpha(89)), // 0.35
+                                      color: const Color(
+                                        0xFFCC0000,
+                                      ).withAlpha(89),
+                                    ), // 0.35
                                   ),
                                   child: const Center(
                                     child: Icon(
-                                        Icons.person_outline_rounded,
-                                        size: 12,
-                                        color: Color(0xFFCC0000)),
+                                      Icons.person_outline_rounded,
+                                      size: 12,
+                                      color: Color(0xFFCC0000),
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: 8),
@@ -217,12 +229,15 @@ class _FeaturedNewsCardState extends State<FeaturedNewsCard> {
                               const Spacer(),
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 6),
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withAlpha(26),  // 0.10
+                                  color: Colors.white.withAlpha(26), // 0.10
                                   borderRadius: BorderRadius.circular(20),
                                   border: Border.all(
-                                      color: Colors.white.withAlpha(46)), // 0.18
+                                    color: Colors.white.withAlpha(46),
+                                  ), // 0.18
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -230,15 +245,19 @@ class _FeaturedNewsCardState extends State<FeaturedNewsCard> {
                                     Text(
                                       'Read',
                                       style: TextStyle(
-                                        color: Colors.white.withAlpha(204), // 0.80
+                                        color: Colors.white.withAlpha(
+                                          204,
+                                        ), // 0.80
                                         fontSize: 10.5,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                     const SizedBox(width: 5),
-                                    Icon(Icons.arrow_forward_rounded,
-                                        size: 11,
-                                        color: Colors.white.withAlpha(204)), // 0.80
+                                    Icon(
+                                      Icons.arrow_forward_rounded,
+                                      size: 11,
+                                      color: Colors.white.withAlpha(204),
+                                    ), // 0.80
                                   ],
                                 ),
                               ),
@@ -260,8 +279,7 @@ class _FeaturedNewsCardState extends State<FeaturedNewsCard> {
   Widget _imgFallback() => Container(
     color: const Color(0xFF1C1C1C),
     child: const Center(
-      child: Icon(Icons.article_outlined,
-          color: Colors.white12, size: 48),
+      child: Icon(Icons.article_outlined, color: Colors.white12, size: 48),
     ),
   );
 }
@@ -307,8 +325,7 @@ class _NewsCardState extends State<NewsCard> {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 120),
             color: _pressed ? Colors.white.withAlpha(5) : Colors.transparent,
-            padding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -320,21 +337,27 @@ class _NewsCardState extends State<NewsCard> {
                     height: 74,
                     child: widget.news.imageUrl.isNotEmpty
                         ? CachedNetworkImage(
-                      imageUrl: widget.news.imageUrl,
-                      fit: BoxFit.cover,
-                      placeholder: (_, _) =>
-                          Container(color: const Color(0xFF1A1A1A)),
-                      errorWidget: (_, _, _) => Container(
-                        color: const Color(0xFF1A1A1A),
-                        child: const Icon(Icons.article_outlined,
-                            color: Colors.white12, size: 22),
-                      ),
-                    )
+                            imageUrl: widget.news.imageUrl,
+                            fit: BoxFit.cover,
+                            placeholder: (_, _) =>
+                                Container(color: const Color(0xFF1A1A1A)),
+                            errorWidget: (_, _, _) => Container(
+                              color: const Color(0xFF1A1A1A),
+                              child: const Icon(
+                                Icons.article_outlined,
+                                color: Colors.white12,
+                                size: 22,
+                              ),
+                            ),
+                          )
                         : Container(
-                      color: const Color(0xFF1A1A1A),
-                      child: const Icon(Icons.article_outlined,
-                          color: Colors.white12, size: 22),
-                    ),
+                            color: const Color(0xFF1A1A1A),
+                            child: const Icon(
+                              Icons.article_outlined,
+                              color: Colors.white12,
+                              size: 22,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(width: 14),
@@ -370,7 +393,8 @@ class _NewsCardState extends State<NewsCard> {
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 6),
+                                horizontal: 6,
+                              ),
                               child: Container(
                                 width: 2,
                                 height: 2,
@@ -382,17 +406,18 @@ class _NewsCardState extends State<NewsCard> {
                             ),
                           ],
                           Text(
-                            DateFormat('dd MMM')
-                                .format(widget.news.createdAt),
+                            DateFormat('dd MMM').format(widget.news.createdAt),
                             style: TextStyle(
                               color: Colors.white.withAlpha(42),
                               fontSize: 10,
                             ),
                           ),
                           const Spacer(),
-                          Icon(Icons.arrow_forward_ios_rounded,
-                              size: 9,
-                              color: Colors.white.withAlpha(18)),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 9,
+                            color: Colors.white.withAlpha(18),
+                          ),
                         ],
                       ),
                     ],

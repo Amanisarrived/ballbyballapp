@@ -21,9 +21,19 @@ class SquadsScreen extends StatelessWidget {
           // ── Team headers ─────────────────────────────
           Row(
             children: [
-              Expanded(child: _TeamHeader(team: match.teamA, align: CrossAxisAlignment.start)),
+              Expanded(
+                child: _TeamHeader(
+                  team: match.teamA,
+                  align: CrossAxisAlignment.start,
+                ),
+              ),
               const SizedBox(width: 10),
-              Expanded(child: _TeamHeader(team: match.teamB, align: CrossAxisAlignment.end)),
+              Expanded(
+                child: _TeamHeader(
+                  team: match.teamB,
+                  align: CrossAxisAlignment.end,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 10),
@@ -34,9 +44,11 @@ class SquadsScreen extends StatelessWidget {
             child: Column(
               children: List.generate(maxLen, (i) {
                 final p1 = i < match.teamA.players.length
-                    ? match.teamA.players[i] : null;
+                    ? match.teamA.players[i]
+                    : null;
                 final p2 = i < match.teamB.players.length
-                    ? match.teamB.players[i] : null;
+                    ? match.teamB.players[i]
+                    : null;
                 final isLast = i == maxLen - 1;
 
                 return Column(
@@ -44,7 +56,10 @@ class SquadsScreen extends StatelessWidget {
                     _DualPlayerRow(left: p1, right: p2, index: i),
                     if (!isLast)
                       const Divider(
-                          color: Color(0xFF1A1A1A), height: 1, indent: 0),
+                        color: Color(0xFF1A1A1A),
+                        height: 1,
+                        indent: 0,
+                      ),
                   ],
                 );
               }),
@@ -58,7 +73,7 @@ class SquadsScreen extends StatelessWidget {
 
 // ── Team header ───────────────────────────────────────────
 class _TeamHeader extends StatelessWidget {
-  final Team  team;
+  final Team team;
   final CrossAxisAlignment align;
   const _TeamHeader({required this.team, required this.align});
 
@@ -68,7 +83,7 @@ class _TeamHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: const Color(0xFF111111),
-        borderRadius: BorderRadius.circular(16),  // was 12
+        borderRadius: BorderRadius.circular(16), // was 12
         border: Border.all(color: Colors.white.withAlpha(12)),
       ),
       child: Column(
@@ -110,9 +125,7 @@ class _DualPlayerRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: index.isEven
-          ? const Color(0xFF0E0E0E)
-          : const Color(0xFF0A0A0A),
+      color: index.isEven ? const Color(0xFF0E0E0E) : const Color(0xFF0A0A0A),
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
       child: Row(
         children: [
@@ -158,26 +171,36 @@ class _PlayerCell extends StatelessWidget {
   Color get _roleColor {
     switch (player.role.toLowerCase()) {
       case 'batsman':
-      case 'batter':        return const Color(0xFF4A4A4A);
-      case 'bowler':        return const Color(0xFF3E3E3E);
+      case 'batter':
+        return const Color(0xFF4A4A4A);
+      case 'bowler':
+        return const Color(0xFF3E3E3E);
       case 'all-rounder':
-      case 'allrounder':    return const Color(0xFF484848);
+      case 'allrounder':
+        return const Color(0xFF484848);
       case 'wicket-keeper':
-      case 'keeper':        return const Color(0xFF424242);
-      default:              return const Color(0xFF3A3A3A);
+      case 'keeper':
+        return const Color(0xFF424242);
+      default:
+        return const Color(0xFF3A3A3A);
     }
   }
 
   String get _roleShort {
     switch (player.role.toLowerCase()) {
       case 'batsman':
-      case 'batter':        return 'BAT';
-      case 'bowler':        return 'BOWL';
+      case 'batter':
+        return 'BAT';
+      case 'bowler':
+        return 'BOWL';
       case 'all-rounder':
-      case 'allrounder':    return 'AR';
+      case 'allrounder':
+        return 'AR';
       case 'wicket-keeper':
-      case 'keeper':        return 'WK';
-      default:              return player.role.toUpperCase();
+      case 'keeper':
+        return 'WK';
+      default:
+        return player.role.toUpperCase();
     }
   }
 
@@ -205,8 +228,9 @@ class _PlayerCell extends StatelessWidget {
 
     final nameCol = Expanded(
       child: Column(
-        crossAxisAlignment:
-        isLeft ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+        crossAxisAlignment: isLeft
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
@@ -226,7 +250,7 @@ class _PlayerCell extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
             decoration: BoxDecoration(
               color: _roleColor.withAlpha(15),
-              borderRadius: BorderRadius.circular(6),  // was 3
+              borderRadius: BorderRadius.circular(6), // was 3
             ),
             child: Text(
               _roleShort,
@@ -243,8 +267,9 @@ class _PlayerCell extends StatelessWidget {
     );
 
     return Row(
-      mainAxisAlignment:
-      isLeft ? MainAxisAlignment.start : MainAxisAlignment.end,
+      mainAxisAlignment: isLeft
+          ? MainAxisAlignment.start
+          : MainAxisAlignment.end,
       children: isLeft
           ? [avatar, const SizedBox(width: 7), nameCol]
           : [nameCol, const SizedBox(width: 7), avatar],

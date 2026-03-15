@@ -44,9 +44,10 @@ class UpcomingFixtureCard extends StatelessWidget {
           border: Border.all(color: Colors.white.withAlpha(18)),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withAlpha(80),
-                blurRadius: 10,
-                offset: const Offset(0, 4)),
+              color: Colors.black.withAlpha(80),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
           ],
         ),
         child: Column(
@@ -67,8 +68,7 @@ class UpcomingFixtureCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withAlpha(6),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-        border:
-        Border(bottom: BorderSide(color: Colors.white.withAlpha(15))),
+        border: Border(bottom: BorderSide(color: Colors.white.withAlpha(15))),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -101,15 +101,19 @@ class UpcomingFixtureCard extends StatelessWidget {
           // ── Date/time ────────────────────────────────
           Row(
             children: [
-              const Icon(Icons.access_time_rounded,
-                  size: 10, color: Colors.white38),
+              const Icon(
+                Icons.access_time_rounded,
+                size: 10,
+                color: Colors.white38,
+              ),
               const SizedBox(width: 3),
               Text(
                 '$dateLabel • $timeLabel',
                 style: const TextStyle(
-                    color: Colors.white38,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w500),
+                  color: Colors.white38,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
@@ -127,14 +131,21 @@ class UpcomingFixtureCard extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-              child: _teamBlock(fixture.team1, fixture.team1Logo,
-                  isWinner: team1Won)),
+            child: _teamBlock(
+              fixture.team1,
+              fixture.team1Logo,
+              isWinner: team1Won,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Column(
               children: [
                 Container(
-                    width: 1, height: 18, color: Colors.white.withAlpha(18)),
+                  width: 1,
+                  height: 18,
+                  color: Colors.white.withAlpha(18),
+                ),
                 const SizedBox(height: 5),
                 Container(
                   width: 24,
@@ -145,9 +156,10 @@ class UpcomingFixtureCard extends StatelessWidget {
                         ? const Color(0xFF4CAF50).withAlpha(20)
                         : Colors.white.withAlpha(8),
                     border: Border.all(
-                        color: isOngoing
-                            ? const Color(0xFF4CAF50).withAlpha(77)
-                            : Colors.white.withAlpha(20)),
+                      color: isOngoing
+                          ? const Color(0xFF4CAF50).withAlpha(77)
+                          : Colors.white.withAlpha(20),
+                    ),
                   ),
                   child: Center(
                     child: Text(
@@ -165,13 +177,20 @@ class UpcomingFixtureCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Container(
-                    width: 1, height: 18, color: Colors.white.withAlpha(18)),
+                  width: 1,
+                  height: 18,
+                  color: Colors.white.withAlpha(18),
+                ),
               ],
             ),
           ),
           Expanded(
-              child: _teamBlock(fixture.team2, fixture.team2Logo,
-                  isWinner: team2Won)),
+            child: _teamBlock(
+              fixture.team2,
+              fixture.team2Logo,
+              isWinner: team2Won,
+            ),
+          ),
         ],
       ),
     );
@@ -195,32 +214,34 @@ class UpcomingFixtureCard extends StatelessWidget {
             ),
             boxShadow: isWinner
                 ? [
-              BoxShadow(
-                  color: Colors.white.withAlpha(20),
-                  blurRadius: 8,
-                  spreadRadius: 1)
-            ]
+                    BoxShadow(
+                      color: Colors.white.withAlpha(20),
+                      blurRadius: 8,
+                      spreadRadius: 1,
+                    ),
+                  ]
                 : [],
           ),
           child: ClipOval(
             child: logo.isNotEmpty
                 ? CachedNetworkImage(
-              imageUrl: logo,
-              fit: BoxFit.cover,
-              placeholder: (_, _) => Container(
-                color: const Color(0xFF1C1C1C),
-                child: const Center(
-                  child: SizedBox(
-                    width: 14,
-                    height: 14,
-                    child: CircularProgressIndicator(
-                        strokeWidth: 1.5,
-                        color: Color(0xFFCC0000)),
-                  ),
-                ),
-              ),
-              errorWidget: (_, _, _) => _logoFallback(name),
-            )
+                    imageUrl: logo,
+                    fit: BoxFit.cover,
+                    placeholder: (_, _) => Container(
+                      color: const Color(0xFF1C1C1C),
+                      child: const Center(
+                        child: SizedBox(
+                          width: 14,
+                          height: 14,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 1.5,
+                            color: Color(0xFFCC0000),
+                          ),
+                        ),
+                      ),
+                    ),
+                    errorWidget: (_, _, _) => _logoFallback(name),
+                  )
                 : _logoFallback(name),
           ),
         ),
@@ -248,18 +269,19 @@ class UpcomingFixtureCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white.withAlpha(5),
-        borderRadius:
-        const BorderRadius.vertical(bottom: Radius.circular(16)),
-        border:
-        Border(top: BorderSide(color: Colors.white.withAlpha(12))),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+        border: Border(top: BorderSide(color: Colors.white.withAlpha(12))),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.emoji_events_outlined,
-                  size: 10, color: Colors.white30),
+              const Icon(
+                Icons.emoji_events_outlined,
+                size: 10,
+                color: Colors.white30,
+              ),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
@@ -267,9 +289,10 @@ class UpcomingFixtureCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      color: Colors.white38,
-                      fontSize: 9,
-                      fontWeight: FontWeight.w500),
+                    color: Colors.white38,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
@@ -278,8 +301,11 @@ class UpcomingFixtureCard extends StatelessWidget {
             const SizedBox(height: 5),
             Row(
               children: [
-                const Icon(Icons.military_tech_rounded,
-                    size: 10, color: Color(0xFF757575)),
+                const Icon(
+                  Icons.military_tech_rounded,
+                  size: 10,
+                  color: Color(0xFF757575),
+                ),
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
@@ -333,9 +359,10 @@ class UpcomingFixtureCard extends StatelessWidget {
         child: Text(
           name.length >= 2 ? name.substring(0, 2).toUpperCase() : name,
           style: const TextStyle(
-              color: Colors.white54,
-              fontSize: 11,
-              fontWeight: FontWeight.w800),
+            color: Colors.white54,
+            fontSize: 11,
+            fontWeight: FontWeight.w800,
+          ),
         ),
       ),
     );
@@ -404,9 +431,10 @@ class _PulsingChipState extends State<_PulsingChip>
       vsync: this,
       duration: const Duration(milliseconds: 1400),
     )..repeat(reverse: true);
-    _pulse = Tween<double>(begin: 0.3, end: 1.0).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
-    );
+    _pulse = Tween<double>(
+      begin: 0.3,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
   }
 
   @override
@@ -424,10 +452,11 @@ class _PulsingChipState extends State<_PulsingChip>
       builder: (_, _) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
         decoration: BoxDecoration(
-          color: widget.bgColor.withAlpha(20),           // 0.08
+          color: widget.bgColor.withAlpha(20), // 0.08
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-              color: widget.borderColor.withAlpha(a(_pulse.value * 0.5))),
+            color: widget.borderColor.withAlpha(a(_pulse.value * 0.5)),
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

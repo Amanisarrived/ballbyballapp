@@ -27,30 +27,30 @@ class UpcomingFixtureModel {
     required this.tournament,
     required this.venue,
     required this.winningTeam,
-    this.team1Score         = '',
-    this.team2Score         = '',
-    this.playerOfMatch      = '',
+    this.team1Score = '',
+    this.team2Score = '',
+    this.playerOfMatch = '',
     this.playerOfMatchPhoto = '',
-    this.resultSummary      = '',
+    this.resultSummary = '',
   });
 
   factory UpcomingFixtureModel.fromDoc(DocumentSnapshot doc) {
     final d = doc.data() as Map<String, dynamic>;
     return UpcomingFixtureModel(
-      id:                 doc.id,
-      team1:              d['team1']              as String? ?? '',
-      team1Logo:          d['team1Logo']          as String? ?? '',
-      team2:              d['team2']              as String? ?? '',
-      team2Logo:          d['team2Logo']          as String? ?? '',
-      dateTime:           (d['time'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      tournament:         d['tournament']         as String? ?? '',
-      venue:              d['venue']              as String? ?? '',
-      winningTeam:        d['winningTeam']        as String? ?? '',
-      team1Score:         d['team1Score']         as String? ?? '',
-      team2Score:         d['team2Score']         as String? ?? '',
-      playerOfMatch:      d['playerOfMatch']      as String? ?? '',
+      id: doc.id,
+      team1: d['team1'] as String? ?? '',
+      team1Logo: d['team1Logo'] as String? ?? '',
+      team2: d['team2'] as String? ?? '',
+      team2Logo: d['team2Logo'] as String? ?? '',
+      dateTime: (d['time'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      tournament: d['tournament'] as String? ?? '',
+      venue: d['venue'] as String? ?? '',
+      winningTeam: d['winningTeam'] as String? ?? '',
+      team1Score: d['team1Score'] as String? ?? '',
+      team2Score: d['team2Score'] as String? ?? '',
+      playerOfMatch: d['playerOfMatch'] as String? ?? '',
       playerOfMatchPhoto: d['playerOfMatchPhoto'] as String? ?? '',
-      resultSummary:      d['resultSummary']      as String? ?? '',
+      resultSummary: d['resultSummary'] as String? ?? '',
     );
   }
 }

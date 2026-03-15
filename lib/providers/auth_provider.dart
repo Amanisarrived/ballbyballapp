@@ -8,7 +8,6 @@ class AuthProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _error;
 
-
   User? get user => _user;
   bool get isLoading => _isLoading;
   bool get isLoggedIn => _user != null;
@@ -24,7 +23,6 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     });
   }
-
 
   Future<bool> signInWithGoogle() async {
     _setLoading(true);
@@ -49,7 +47,6 @@ class AuthProvider extends ChangeNotifier {
     _user = null;
     _setLoading(false);
   }
-
 
   void _setLoading(bool value) {
     _isLoading = value;

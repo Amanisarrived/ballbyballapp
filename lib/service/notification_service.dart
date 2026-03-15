@@ -5,20 +5,17 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
-
     await _firebaseMessaging.requestPermission(
       alert: true,
       badge: true,
       sound: true,
     );
 
-
     final token = await _firebaseMessaging.getToken();
     debugPrint(" FCM Token: $token");
-
 
     await FirebaseMessaging.instance.subscribeToTopic("cricket_notification");
     debugPrint(" Subscribed to cricket_notification");
@@ -33,16 +30,13 @@ class NotificationService {
       },
     );
 
-
     FirebaseMessaging.onMessage.listen((message) {
       _showNotification(message);
     });
 
-
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       debugPrint(" App opened from background");
     });
-
 
     final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {

@@ -49,8 +49,11 @@ class _NewsState extends State<News> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.wifi_off_rounded,
-                    color: Colors.white24, size: 44),
+                const Icon(
+                  Icons.wifi_off_rounded,
+                  color: Colors.white24,
+                  size: 44,
+                ),
                 const SizedBox(height: 14),
                 Text(
                   provider.errorMessage!,
@@ -62,14 +65,17 @@ class _NewsState extends State<News> {
                   onTap: () => provider.loadNews(forceRefresh: true),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 22, vertical: 11),
+                      horizontal: 22,
+                      vertical: 11,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.white.withAlpha(28)),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text('Retry',
-                        style:
-                        TextStyle(color: Colors.white60, fontSize: 13)),
+                    child: const Text(
+                      'Retry',
+                      style: TextStyle(color: Colors.white60, fontSize: 13),
+                    ),
                   ),
                 ),
               ],
@@ -79,8 +85,10 @@ class _NewsState extends State<News> {
 
         if (provider.news.isEmpty) {
           return const Center(
-            child: Text('No news available',
-                style: TextStyle(color: Colors.white38)),
+            child: Text(
+              'No news available',
+              style: TextStyle(color: Colors.white38),
+            ),
           );
         }
 
@@ -147,12 +155,15 @@ class _NewsState extends State<News> {
                         const Spacer(),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 9, vertical: 4),
+                            horizontal: 9,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.white.withAlpha(8),
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
-                                color: Colors.white.withAlpha(12)),
+                              color: Colors.white.withAlpha(12),
+                            ),
                           ),
                           child: Text(
                             '${provider.news.length} articles',
@@ -210,7 +221,7 @@ class _NewsState extends State<News> {
 
                   // ── Remaining cards ────────────────────
                   ...rest.asMap().entries.map(
-                        (e) => _FadeIn(
+                    (e) => _FadeIn(
                       delay: Duration(milliseconds: 60 + e.key * 55),
                       child: GestureDetector(
                         onTap: () => _open(context, e.value),
@@ -251,11 +262,14 @@ class _NewsShimmerState extends State<_NewsShimmer>
   void initState() {
     super.initState();
     _ctrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1100))
-      ..repeat(reverse: true);
+      vsync: this,
+      duration: const Duration(milliseconds: 1100),
+    )..repeat(reverse: true);
     // 0.25 → 0.55 range — used to compute alpha below
-    _anim = Tween<double>(begin: 0.25, end: 0.55).animate(
-        CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
+    _anim = Tween<double>(
+      begin: 0.25,
+      end: 0.55,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
   }
 
   @override
@@ -265,7 +279,8 @@ class _NewsShimmerState extends State<_NewsShimmer>
   }
 
   // Helper: convert animated opacity value → alpha int
-  int _a(double multiplier) => (_anim.value * multiplier * 255).round().clamp(0, 255);
+  int _a(double multiplier) =>
+      (_anim.value * multiplier * 255).round().clamp(0, 255);
 
   @override
   Widget build(BuildContext context) {
@@ -281,19 +296,24 @@ class _NewsShimmerState extends State<_NewsShimmer>
             // Header shimmer
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(children: [
-                Container(
+              child: Row(
+                children: [
+                  Container(
                     width: 3,
                     height: 16,
-                    color: Colors.white.withAlpha(_a(0.4))),
-                const SizedBox(width: 9),
-                Container(
+                    color: Colors.white.withAlpha(_a(0.4)),
+                  ),
+                  const SizedBox(width: 9),
+                  Container(
                     width: 110,
                     height: 16,
                     decoration: BoxDecoration(
-                        color: Colors.white.withAlpha(_a(0.2)),
-                        borderRadius: BorderRadius.circular(6))),
-              ]),
+                      color: Colors.white.withAlpha(_a(0.2)),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 18),
 
@@ -312,53 +332,65 @@ class _NewsShimmerState extends State<_NewsShimmer>
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Container(
-                  width: 90,
-                  height: 8,
-                  decoration: BoxDecoration(
-                      color: Colors.white.withAlpha(_a(0.12)),
-                      borderRadius: BorderRadius.circular(4))),
+                width: 90,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: Colors.white.withAlpha(_a(0.12)),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
             ),
             const SizedBox(height: 8),
 
             // List skeletons
             ...List.generate(
               4,
-                  (i) => Padding(
+              (i) => Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 14),
+                  horizontal: 16,
+                  vertical: 14,
+                ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                        width: 88,
-                        height: 74,
-                        decoration: BoxDecoration(
-                            color: Colors.white.withAlpha(_a(0.12)),
-                            borderRadius: BorderRadius.circular(12))),
+                      width: 88,
+                      height: 74,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withAlpha(_a(0.12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                     const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                              height: 13,
-                              decoration: BoxDecoration(
-                                  color: Colors.white.withAlpha(_a(0.15)),
-                                  borderRadius: BorderRadius.circular(5))),
+                            height: 13,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withAlpha(_a(0.15)),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
                           const SizedBox(height: 7),
                           Container(
-                              width: 150,
-                              height: 13,
-                              decoration: BoxDecoration(
-                                  color: Colors.white.withAlpha(_a(0.15)),
-                                  borderRadius: BorderRadius.circular(5))),
+                            width: 150,
+                            height: 13,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withAlpha(_a(0.15)),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
                           const SizedBox(height: 10),
                           Container(
-                              width: 80,
-                              height: 9,
-                              decoration: BoxDecoration(
-                                  color: Colors.white.withAlpha(_a(0.08)),
-                                  borderRadius: BorderRadius.circular(4))),
+                            width: 80,
+                            height: 9,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withAlpha(_a(0.08)),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -384,8 +416,7 @@ class _FadeIn extends StatefulWidget {
   State<_FadeIn> createState() => _FadeInState();
 }
 
-class _FadeInState extends State<_FadeIn>
-    with SingleTickerProviderStateMixin {
+class _FadeInState extends State<_FadeIn> with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
   late Animation<double> _opacity;
   late Animation<Offset> _slide;
@@ -394,13 +425,17 @@ class _FadeInState extends State<_FadeIn>
   void initState() {
     super.initState();
     _ctrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 380));
-    _opacity = Tween<double>(begin: 0, end: 1).animate(
-        CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
-    _slide =
-        Tween<Offset>(begin: const Offset(0, 0.06), end: Offset.zero)
-            .animate(
-            CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
+      vsync: this,
+      duration: const Duration(milliseconds: 380),
+    );
+    _opacity = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
+    _slide = Tween<Offset>(
+      begin: const Offset(0, 0.06),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
     Future.delayed(widget.delay, () {
       if (mounted) _ctrl.forward();
     });

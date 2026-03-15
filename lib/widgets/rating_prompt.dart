@@ -19,10 +19,7 @@ class RatingPrompt {
       transitionDuration: const Duration(milliseconds: 350),
       pageBuilder: (_, _, _) => const SizedBox.shrink(),
       transitionBuilder: (ctx, anim, _, _) {
-        final curved = CurvedAnimation(
-          parent: anim,
-          curve: Curves.easeOutBack,
-        );
+        final curved = CurvedAnimation(parent: anim, curve: Curves.easeOutBack);
         return ScaleTransition(
           scale: curved,
           child: FadeTransition(
@@ -132,11 +129,13 @@ class _RatingDialogState extends State<_RatingDialog>
                 Container(
                   height: 3,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      Colors.transparent,
-                      Colors.amber.withAlpha(153), // 0.6
-                      Colors.transparent,
-                    ]),
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        Colors.amber.withAlpha(153), // 0.6
+                        Colors.transparent,
+                      ],
+                    ),
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(28),
                     ),
@@ -237,12 +236,18 @@ class _RatingDialogState extends State<_RatingDialog>
 
   String _starLabel(int stars) {
     switch (stars) {
-      case 1: return 'Terrible 😞';
-      case 2: return 'Not great 😕';
-      case 3: return "It's okay 😐";
-      case 4: return 'Pretty good 😊';
-      case 5: return 'Love it! 🏏🔥';
-      default: return 'Tap a star to rate';
+      case 1:
+        return 'Terrible 😞';
+      case 2:
+        return 'Not great 😕';
+      case 3:
+        return "It's okay 😐";
+      case 4:
+        return 'Pretty good 😊';
+      case 5:
+        return 'Love it! 🏏🔥';
+      default:
+        return 'Tap a star to rate';
     }
   }
 }
@@ -303,9 +308,10 @@ class _AnimatedStarIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ── scale deprecated fix: use ScaleTransition instead ──
-    final scaleAnim = Tween<double>(begin: 0.5, end: 1.0).animate(
-      CurvedAnimation(parent: controller, curve: Curves.elasticOut),
-    );
+    final scaleAnim = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: controller, curve: Curves.elasticOut));
 
     return ScaleTransition(
       scale: scaleAnim,
@@ -313,7 +319,7 @@ class _AnimatedStarIcon extends StatelessWidget {
         width: 72,
         height: 72,
         decoration: BoxDecoration(
-          color: Colors.amber.withAlpha(26),   // 0.1
+          color: Colors.amber.withAlpha(26), // 0.1
           shape: BoxShape.circle,
           border: Border.all(
             color: Colors.amber.withAlpha(51), // 0.2
@@ -327,11 +333,7 @@ class _AnimatedStarIcon extends StatelessWidget {
             ),
           ],
         ),
-        child: const Icon(
-          Icons.star_rounded,
-          color: Colors.amber,
-          size: 36,
-        ),
+        child: const Icon(Icons.star_rounded, color: Colors.amber, size: 36),
       ),
     );
   }
@@ -378,10 +380,10 @@ class _RateButtonState extends State<_RateButton> {
         decoration: BoxDecoration(
           gradient: widget.enabled
               ? const LinearGradient(
-            colors: [Color(0xFFFFB300), Color(0xFFFF8F00)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          )
+                  colors: [Color(0xFFFFB300), Color(0xFFFF8F00)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
               : null,
           color: widget.enabled ? null : const Color(0xFF1E1E1E),
           borderRadius: BorderRadius.circular(14),
@@ -392,35 +394,35 @@ class _RateButtonState extends State<_RateButton> {
           ),
           boxShadow: widget.enabled
               ? [
-            BoxShadow(
-              color: Colors.amber.withAlpha(77), // 0.3
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            ),
-          ]
+                  BoxShadow(
+                    color: Colors.amber.withAlpha(77), // 0.3
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ]
               : null,
         ),
         child: Center(
           child: widget.loading
               ? const SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              color: Colors.black,
-              strokeWidth: 2.5,
-            ),
-          )
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.black,
+                    strokeWidth: 2.5,
+                  ),
+                )
               : Text(
-            widget.label,
-            style: TextStyle(
-              color: widget.enabled
-                  ? Colors.black
-                  : const Color(0xFF3A3A3A),
-              fontSize: 15,
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.2,
-            ),
-          ),
+                  widget.label,
+                  style: TextStyle(
+                    color: widget.enabled
+                        ? Colors.black
+                        : const Color(0xFF3A3A3A),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.2,
+                  ),
+                ),
         ),
       ),
     );

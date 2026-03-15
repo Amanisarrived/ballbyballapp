@@ -38,21 +38,21 @@ class ProductModel {
   factory ProductModel.fromDoc(DocumentSnapshot doc) {
     final d = doc.data() as Map<String, dynamic>;
     return ProductModel(
-      id:            doc.id,
-      name:          d['name'] ?? '',
-      description:   d['description'] ?? '',
-      image:         d['image'] ?? '',
-      price:         (d['price'] ?? 0).toDouble(),
+      id: doc.id,
+      name: d['name'] ?? '',
+      description: d['description'] ?? '',
+      image: d['image'] ?? '',
+      price: (d['price'] ?? 0).toDouble(),
       originalPrice: (d['originalPrice'] ?? 0).toDouble(),
-      currency:      d['currency'] ?? 'INR',
-      category:      d['category'] ?? 'accessories',
-      source:        d['source'] ?? 'amazon',
-      affiliateUrl:  d['affiliateUrl'] ?? '',
-      isTrending:    d['isTrending'] ?? false,
-      discount:      (d['discount'] ?? 0).toInt(),
-      inStock:       d['inStock'] ?? true,
-      rating:        (d['rating'] ?? 0.0).toDouble(),
-      createdAt:     (d['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      currency: d['currency'] ?? 'INR',
+      category: d['category'] ?? 'accessories',
+      source: d['source'] ?? 'amazon',
+      affiliateUrl: d['affiliateUrl'] ?? '',
+      isTrending: d['isTrending'] ?? false,
+      discount: (d['discount'] ?? 0).toInt(),
+      inStock: d['inStock'] ?? true,
+      rating: (d['rating'] ?? 0.0).toDouble(),
+      createdAt: (d['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 }
@@ -60,16 +60,25 @@ class ProductModel {
 class ShopService {
   static final _col = FirebaseFirestore.instance.collection('products');
 
-  static Stream<List<ProductModel>> streamAll() =>
-      _col.orderBy('createdAt', descending: true).snapshots().map(
-              (s) => s.docs.map(ProductModel.fromDoc).toList());
+  static Stream<List<ProductModel>> streamAll() => _col
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((s) => s.docs.map(ProductModel.fromDoc).toList());
 
-  static Stream<List<ProductModel>> streamTrending() =>
-      _col.where('isTrending', isEqualTo: true).snapshots().map(
-              (s) => s.docs.map(ProductModel.fromDoc).toList());
+  static Stream<List<ProductModel>> streamTrending() => _col
+      .where('isTrending', isEqualTo: true)
+      .snapshots()
+      .map((s) => s.docs.map(ProductModel.fromDoc).toList());
 
   static const List<String> categories = [
-    'all', 'bat', 'ball', 'gloves', 'pads',
-    'shoes', 'helmet', 'kit', 'accessories',
+    'all',
+    'bat',
+    'ball',
+    'gloves',
+    'pads',
+    'shoes',
+    'helmet',
+    'kit',
+    'accessories',
   ];
 }

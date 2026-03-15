@@ -48,8 +48,12 @@ class NewsProvider with ChangeNotifier {
   List<NewsModel> searchNews(String query) {
     if (query.isEmpty) return _news;
     final q = query.toLowerCase();
-    return _news.where((n) =>
-    n.title.toLowerCase().contains(q) ||
-        n.description.toLowerCase().contains(q)).toList();
+    return _news
+        .where(
+          (n) =>
+              n.title.toLowerCase().contains(q) ||
+              n.description.toLowerCase().contains(q),
+        )
+        .toList();
   }
 }

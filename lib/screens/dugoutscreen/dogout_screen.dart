@@ -9,15 +9,15 @@ import '../../providers/auth_provider.dart';
 
 // ── Tokens ───────────────────────────────────────────────────
 class _C {
-  static const bg       = Color(0xFF0A0A0A);
-  static const surface  = Color(0xFF111111);
-  static const border   = Color(0xFF1C1C1C);
-  static const red      = Color(0xFFE53935);
-  static const redFade  = Color(0x1AE53935); // red @ 10%
-  static const white    = Color(0xFFFFFFFF);
-  static const t1       = Color(0xFFEEEEEE); // primary text
-  static const t2       = Color(0xFF888888); // secondary
-  static const t3       = Color(0xFF444444); // muted
+  static const bg = Color(0xFF0A0A0A);
+  static const surface = Color(0xFF111111);
+  static const border = Color(0xFF1C1C1C);
+  static const red = Color(0xFFE53935);
+  static const redFade = Color(0x1AE53935); // red @ 10%
+  static const white = Color(0xFFFFFFFF);
+  static const t1 = Color(0xFFEEEEEE); // primary text
+  static const t2 = Color(0xFF888888); // secondary
+  static const t3 = Color(0xFF444444); // muted
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -32,17 +32,21 @@ class DugoutScreen extends StatefulWidget {
 class _DugoutScreenState extends State<DugoutScreen> {
   final _db = FirebaseFirestore.instance;
   late final Stream<DocumentSnapshot> _postStream;
-  late final Stream<QuerySnapshot>    _commentsStream;
+  late final Stream<QuerySnapshot> _commentsStream;
 
-  DocumentReference   get _postRef      => _db.collection('dugout_post').doc('featured');
-  CollectionReference get _commentsRef  => _postRef.collection('comments');
+  DocumentReference get _postRef =>
+      _db.collection('dugout_post').doc('featured');
+  CollectionReference get _commentsRef => _postRef.collection('comments');
   CollectionReference get _reactionsRef => _postRef.collection('reactions');
 
   @override
   void initState() {
     super.initState();
-    _postStream     = _postRef.snapshots();
-    _commentsStream = _postRef.collection('comments').orderBy('createdAt', descending: true).snapshots();
+    _postStream = _postRef.snapshots();
+    _commentsStream = _postRef
+        .collection('comments')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
     // Show rules popup only on first visit
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowRules());
   }
@@ -74,11 +78,11 @@ class _DugoutScreenState extends State<DugoutScreen> {
             _AppBar(isLoggedIn: isLoggedIn, onProfile: _openProfile),
             Expanded(
               child: _Body(
-                postStream:     _postStream,
+                postStream: _postStream,
                 commentsStream: _commentsStream,
-                reactionsRef:   _reactionsRef,
-                postRef:        _postRef,
-                db:             _db,
+                reactionsRef: _reactionsRef,
+                postRef: _postRef,
+                db: _db,
               ),
             ),
             _InputBar(postRef: _postRef, commentsRef: _commentsRef),
@@ -97,7 +101,6 @@ class _DugoutScreenState extends State<DugoutScreen> {
     );
   }
 }
-
 
 class _AppBar extends StatelessWidget {
   final bool isLoggedIn;
@@ -125,7 +128,8 @@ class _AppBar extends StatelessWidget {
 
           const SizedBox(width: 6),
           Container(
-            width: 6, height: 6,
+            width: 6,
+            height: 6,
             decoration: const BoxDecoration(
               color: _C.red,
               shape: BoxShape.circle,
@@ -162,7 +166,7 @@ class _AvatarBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final photo = context.select<AuthProvider, String>((a) => a.userPhoto);
-    final name  = context.select<AuthProvider, String>((a) => a.userName);
+    final name = context.select<AuthProvider, String>((a) => a.userName);
     return GestureDetector(
       onTap: onTap,
       child: _Avatar(photo: photo, name: name, r: 16),
@@ -170,13 +174,12 @@ class _AvatarBtn extends StatelessWidget {
   }
 }
 
-
 class _Body extends StatelessWidget {
   final Stream<DocumentSnapshot> postStream;
-  final Stream<QuerySnapshot>    commentsStream;
-  final CollectionReference      reactionsRef;
-  final DocumentReference        postRef;
-  final FirebaseFirestore        db;
+  final Stream<QuerySnapshot> commentsStream;
+  final CollectionReference reactionsRef;
+  final DocumentReference postRef;
+  final FirebaseFirestore db;
 
   const _Body({
     required this.postStream,
@@ -194,25 +197,26 @@ class _Body extends StatelessWidget {
         if (!snap.hasData) {
           return const Center(
             child: SizedBox(
-              width: 20, height: 20,
-              child: CircularProgressIndicator(
-                color: _C.red, strokeWidth: 1.5,
-              ),
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(color: _C.red, strokeWidth: 1.5),
             ),
           );
         }
         if (!snap.data!.exists) {
           return const Center(
-            child: Text('Nothing here yet.',
-                style: TextStyle(color: _C.t3, fontSize: 14)),
+            child: Text(
+              'Nothing here yet.',
+              style: TextStyle(color: _C.t3, fontSize: 14),
+            ),
           );
         }
 
-        final d             = snap.data!.data() as Map<String, dynamic>;
-        final reactions     = Map<String, dynamic>.from(d['reactions'] ?? {});
+        final d = snap.data!.data() as Map<String, dynamic>;
+        final reactions = Map<String, dynamic>.from(d['reactions'] ?? {});
         final commentsCount = d['commentsCount'] ?? 0;
-        final imageUrl      = d['imageUrl'] ?? '';
-        final postText      = d['text'] ?? '';
+        final imageUrl = d['imageUrl'] ?? '';
+        final postText = d['text'] ?? '';
 
         return CustomScrollView(
           physics: const BouncingScrollPhysics(),
@@ -220,16 +224,15 @@ class _Body extends StatelessWidget {
             // Post card
             SliverToBoxAdapter(
               child: _PostCard(
-                text:          postText,
-                imageUrl:      imageUrl,
-                reactions:     reactions,
+                text: postText,
+                imageUrl: imageUrl,
+                reactions: reactions,
                 commentsCount: commentsCount,
-                reactionsRef:  reactionsRef,
-                postRef:       postRef,
-                db:            db,
+                reactionsRef: reactionsRef,
+                postRef: postRef,
+                db: db,
               ),
             ),
-
 
             SliverToBoxAdapter(
               child: Padding(
@@ -273,8 +276,8 @@ class _PostCard extends StatelessWidget {
   final Map<String, dynamic> reactions;
   final int commentsCount;
   final CollectionReference reactionsRef;
-  final DocumentReference   postRef;
-  final FirebaseFirestore   db;
+  final DocumentReference postRef;
+  final FirebaseFirestore db;
 
   const _PostCard({
     required this.text,
@@ -311,7 +314,8 @@ class _PostCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 3, height: 12,
+                width: 3,
+                height: 12,
                 decoration: BoxDecoration(
                   color: _C.red,
                   borderRadius: BorderRadius.circular(2),
@@ -348,11 +352,11 @@ class _PostCard extends StatelessWidget {
 
           // Reactions
           _ReactionsBar(
-            reactions:     reactions,
+            reactions: reactions,
             commentsCount: commentsCount,
-            reactionsRef:  reactionsRef,
-            postRef:       postRef,
-            db:            db,
+            reactionsRef: reactionsRef,
+            postRef: postRef,
+            db: db,
           ),
 
           const SizedBox(height: 20),
@@ -370,8 +374,8 @@ class _ReactionsBar extends StatefulWidget {
   final Map<String, dynamic> reactions;
   final int commentsCount;
   final CollectionReference reactionsRef;
-  final DocumentReference   postRef;
-  final FirebaseFirestore   db;
+  final DocumentReference postRef;
+  final FirebaseFirestore db;
 
   const _ReactionsBar({
     required this.reactions,
@@ -387,7 +391,7 @@ class _ReactionsBar extends StatefulWidget {
 
 class _ReactionsBarState extends State<_ReactionsBar> {
   String? _sel;
-  bool    _pending = false;
+  bool _pending = false;
 
   static const _defs = [
     ('❤️', 'heart'),
@@ -408,8 +412,9 @@ class _ReactionsBarState extends State<_ReactionsBar> {
     if (!auth.isLoggedIn) return;
     final doc = await widget.reactionsRef.doc(auth.userId).get();
     if (!mounted || !doc.exists) return;
-    setState(() =>
-    _sel = (doc.data() as Map<String, dynamic>)['reaction'] as String?);
+    setState(
+      () => _sel = (doc.data() as Map<String, dynamic>)['reaction'] as String?,
+    );
   }
 
   Future<void> _tap(String key) async {
@@ -426,7 +431,10 @@ class _ReactionsBarState extends State<_ReactionsBar> {
 
     final prev = _sel;
     final next = prev == key ? null : key;
-    setState(() { _sel = next; _pending = true; });
+    setState(() {
+      _sel = next;
+      _pending = true;
+    });
 
     try {
       final uRef = widget.reactionsRef.doc(auth.userId);
@@ -436,18 +444,28 @@ class _ReactionsBarState extends State<_ReactionsBar> {
         if (uDoc.exists) {
           final ex = uDoc['reaction'] as String?;
           if (ex == key) {
-            tx.update(widget.postRef, {'reactions.$ex': FieldValue.increment(-1)});
+            tx.update(widget.postRef, {
+              'reactions.$ex': FieldValue.increment(-1),
+            });
             tx.delete(uRef);
           } else {
             tx.update(widget.postRef, {
               if (ex != null) 'reactions.$ex': FieldValue.increment(-1),
               'reactions.$key': FieldValue.increment(1),
             });
-            tx.set(uRef, {'reaction': key, 'reactedAt': FieldValue.serverTimestamp()});
+            tx.set(uRef, {
+              'reaction': key,
+              'reactedAt': FieldValue.serverTimestamp(),
+            });
           }
         } else {
-          tx.update(widget.postRef, {'reactions.$key': FieldValue.increment(1)});
-          tx.set(uRef, {'reaction': key, 'reactedAt': FieldValue.serverTimestamp()});
+          tx.update(widget.postRef, {
+            'reactions.$key': FieldValue.increment(1),
+          });
+          tx.set(uRef, {
+            'reaction': key,
+            'reactedAt': FieldValue.serverTimestamp(),
+          });
         }
       });
     } catch (_) {
@@ -479,11 +497,12 @@ class _ReactionsBarState extends State<_ReactionsBar> {
         // Comment count
         Row(
           children: [
-            const Icon(Icons.mode_comment_outlined,
-                color: _C.t3, size: 14),
+            const Icon(Icons.mode_comment_outlined, color: _C.t3, size: 14),
             const SizedBox(width: 4),
-            Text('${widget.commentsCount}',
-                style: const TextStyle(color: _C.t3, fontSize: 12)),
+            Text(
+              '${widget.commentsCount}',
+              style: const TextStyle(color: _C.t3, fontSize: 12),
+            ),
           ],
         ),
       ],
@@ -562,9 +581,12 @@ class _CommentsSliver extends StatelessWidget {
               padding: EdgeInsets.all(32),
               child: Center(
                 child: SizedBox(
-                  width: 18, height: 18,
+                  width: 18,
+                  height: 18,
                   child: CircularProgressIndicator(
-                      color: _C.red, strokeWidth: 1.5),
+                    color: _C.red,
+                    strokeWidth: 1.5,
+                  ),
                 ),
               ),
             ),
@@ -589,7 +611,7 @@ class _CommentsSliver extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
-                  (ctx, i) => RepaintBoundary(
+              (ctx, i) => RepaintBoundary(
                 child: _CommentRow(
                   key: ValueKey(docs[i].id),
                   data: docs[i].data() as Map<String, dynamic>,
@@ -613,23 +635,25 @@ class _CommentRow extends StatelessWidget {
 
   String _ago(dynamic ts) {
     if (ts == null) return '';
-    final dt = ts is Timestamp ? ts.toDate()
-        : ts is String ? (DateTime.tryParse(ts) ?? DateTime.now())
+    final dt = ts is Timestamp
+        ? ts.toDate()
+        : ts is String
+        ? (DateTime.tryParse(ts) ?? DateTime.now())
         : DateTime.now();
     final d = DateTime.now().difference(dt);
     if (d.inMinutes < 1) return 'now';
     if (d.inMinutes < 60) return '${d.inMinutes}m';
-    if (d.inHours < 24)  return '${d.inHours}h';
+    if (d.inHours < 24) return '${d.inHours}h';
     return '${d.inDays}d';
   }
 
   @override
   Widget build(BuildContext context) {
     final photo = data['userPhoto'] ?? '';
-    final raw   = data['userName'];
-    final name  = (raw is String && raw.trim().isNotEmpty) ? raw.trim() : 'Fan';
-    final text  = data['text'] ?? '';
-    final ago   = _ago(data['createdAt']);
+    final raw = data['userName'];
+    final name = (raw is String && raw.trim().isNotEmpty) ? raw.trim() : 'Fan';
+    final text = data['text'] ?? '';
+    final ago = _ago(data['createdAt']);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 18),
@@ -644,25 +668,30 @@ class _CommentRow extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(name,
-                        style: const TextStyle(
-                          color: _C.t1,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        )),
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        color: _C.t1,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(width: 6),
-                    Text(ago,
-                        style: const TextStyle(
-                            color: _C.t3, fontSize: 11)),
+                    Text(
+                      ago,
+                      style: const TextStyle(color: _C.t3, fontSize: 11),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 3),
-                Text(text,
-                    style: const TextStyle(
-                      color: _C.t2,
-                      fontSize: 13,
-                      height: 1.5,
-                    )),
+                Text(
+                  text,
+                  style: const TextStyle(
+                    color: _C.t2,
+                    fontSize: 13,
+                    height: 1.5,
+                  ),
+                ),
               ],
             ),
           ),
@@ -676,7 +705,7 @@ class _CommentRow extends StatelessWidget {
 //  Input Bar — isolated, all state inside
 // ─────────────────────────────────────────────────────────────
 class _InputBar extends StatefulWidget {
-  final DocumentReference   postRef;
+  final DocumentReference postRef;
   final CollectionReference commentsRef;
   const _InputBar({required this.postRef, required this.commentsRef});
 
@@ -686,16 +715,17 @@ class _InputBar extends StatefulWidget {
 
 class _InputBarState extends State<_InputBar> {
   final _ctrl = TextEditingController();
-  bool   _posting   = false;
-  int    _cooldown  = 0;
+  bool _posting = false;
+  int _cooldown = 0;
   Timer? _timer;
-  bool   _hasText   = false;
+  bool _hasText = false;
 
   // ── Ban state ──────────────────────────────────────────
-  String    _banStatus  = 'none'; // 'none' | 'banned' | 'timedOut'
+  String _banStatus = 'none'; // 'none' | 'banned' | 'timedOut'
   DateTime? _banUntil;
-  static final _bannedRef =
-  FirebaseFirestore.instance.collection('dugout_banned');
+  static final _bannedRef = FirebaseFirestore.instance.collection(
+    'dugout_banned',
+  );
 
   @override
   void initState() {
@@ -713,9 +743,12 @@ class _InputBarState extends State<_InputBar> {
   Future<void> _checkBan(String userId) async {
     final doc = await _bannedRef.doc(userId).get();
     if (!mounted) return;
-    if (!doc.exists) { setState(() => _banStatus = 'none'); return; }
+    if (!doc.exists) {
+      setState(() => _banStatus = 'none');
+      return;
+    }
 
-    final d    = doc.data() as Map<String, dynamic>;
+    final d = doc.data() as Map<String, dynamic>;
     final type = d['type'] as String? ?? 'permanent';
 
     if (type == 'permanent') {
@@ -728,10 +761,17 @@ class _InputBarState extends State<_InputBar> {
         await _bannedRef.doc(userId).delete();
         setState(() => _banStatus = 'none');
       } else {
-        setState(() { _banStatus = 'timedOut'; _banUntil = until; });
+        setState(() {
+          _banStatus = 'timedOut';
+          _banUntil = until;
+        });
         // Auto-clear when timeout expires
         Future.delayed(until.difference(DateTime.now()), () {
-          if (mounted) setState(() { _banStatus = 'none'; _banUntil = null; });
+          if (mounted)
+            setState(() {
+              _banStatus = 'none';
+              _banUntil = null;
+            });
         });
       }
     }
@@ -741,12 +781,12 @@ class _InputBarState extends State<_InputBar> {
     if (_banUntil == null) return '';
     final diff = _banUntil!.difference(DateTime.now());
     if (diff.inMinutes < 1) return 'less than a minute';
-    if (diff.inHours < 1)   return '${diff.inMinutes}m';
+    if (diff.inHours < 1) return '${diff.inMinutes}m';
     final m = diff.inMinutes.remainder(60);
     return m > 0 ? '${diff.inHours}h ${m}m' : '${diff.inHours}h';
   }
 
-  bool get _isBanned   => _banStatus == 'banned';
+  bool get _isBanned => _banStatus == 'banned';
   bool get _isTimedOut => _banStatus == 'timedOut';
   bool get _busy => _posting || _cooldown > 0 || _isBanned || _isTimedOut;
 
@@ -754,10 +794,16 @@ class _InputBarState extends State<_InputBar> {
     _cooldown = 60;
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (!mounted) { t.cancel(); return; }
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
       setState(() {
         _cooldown--;
-        if (_cooldown <= 0) { _cooldown = 0; t.cancel(); }
+        if (_cooldown <= 0) {
+          _cooldown = 0;
+          t.cancel();
+        }
       });
     });
   }
@@ -784,10 +830,10 @@ class _InputBarState extends State<_InputBar> {
     setState(() => _posting = true);
     try {
       await widget.commentsRef.add({
-        'userId':    auth.userId,
-        'userName':  auth.userName,
+        'userId': auth.userId,
+        'userName': auth.userName,
         'userPhoto': auth.userPhoto,
-        'text':      text,
+        'text': text,
         'createdAt': FieldValue.serverTimestamp(),
       });
       await widget.postRef.update({'commentsCount': FieldValue.increment(1)});
@@ -820,9 +866,9 @@ class _InputBarState extends State<_InputBar> {
   @override
   Widget build(BuildContext context) {
     final isLoggedIn = context.select<AuthProvider, bool>((a) => a.isLoggedIn);
-    final photo      = context.select<AuthProvider, String>((a) => a.userPhoto);
-    final name       = context.select<AuthProvider, String>((a) => a.userName);
-    final canSend    = _hasText && !_busy && isLoggedIn;
+    final photo = context.select<AuthProvider, String>((a) => a.userPhoto);
+    final name = context.select<AuthProvider, String>((a) => a.userName);
+    final canSend = _hasText && !_busy && isLoggedIn;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -846,7 +892,11 @@ class _InputBarState extends State<_InputBar> {
             border: Border(top: BorderSide(color: _C.border, width: 0.5)),
           ),
           padding: EdgeInsets.fromLTRB(
-              16, 10, 16, MediaQuery.of(context).padding.bottom + 10),
+            16,
+            10,
+            16,
+            MediaQuery.of(context).padding.bottom + 10,
+          ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -857,17 +907,20 @@ class _InputBarState extends State<_InputBar> {
                   onTap: isLoggedIn
                       ? null
                       : () => showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    builder: (_) => const _SignInSheet(),
-                  ),
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          builder: (_) => const _SignInSheet(),
+                        ),
                   child: AbsorbPointer(
                     absorbing: !isLoggedIn || _isBanned || _isTimedOut,
                     child: TextField(
                       controller: _ctrl,
                       maxLines: null,
                       style: const TextStyle(
-                          color: _C.t1, fontSize: 14, height: 1.4),
+                        color: _C.t1,
+                        fontSize: 14,
+                        height: 1.4,
+                      ),
                       decoration: InputDecoration(
                         isDense: true,
                         hintText: _isBanned
@@ -902,7 +955,8 @@ class _InputBarState extends State<_InputBar> {
                 onTap: canSend ? _send : null,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 180),
-                  width: 32, height: 32,
+                  width: 32,
+                  height: 32,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: canSend ? _C.red : Colors.transparent,
@@ -924,18 +978,26 @@ class _InputBarState extends State<_InputBar> {
   Widget _btnChild(bool active) {
     if (_posting) {
       return const SizedBox(
-        width: 14, height: 14,
-        child: CircularProgressIndicator(
-            strokeWidth: 1.5, color: _C.t3),
+        width: 14,
+        height: 14,
+        child: CircularProgressIndicator(strokeWidth: 1.5, color: _C.t3),
       );
     }
     if (_cooldown > 0) {
-      return Text('$_cooldown',
-          style: const TextStyle(
-              color: _C.t3, fontSize: 10, fontWeight: FontWeight.w700));
+      return Text(
+        '$_cooldown',
+        style: const TextStyle(
+          color: _C.t3,
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+        ),
+      );
     }
-    return Icon(Icons.arrow_upward_rounded,
-        color: active ? _C.white : _C.t3, size: 15);
+    return Icon(
+      Icons.arrow_upward_rounded,
+      color: active ? _C.white : _C.t3,
+      size: 15,
+    );
   }
 }
 
@@ -946,10 +1008,10 @@ class _RulesDialog extends StatelessWidget {
   const _RulesDialog();
 
   static const _rules = [
-    ('🏏', 'Keep it cricket',      'Talk about the game. Stay on topic.'),
-    ('🤝', 'Respect everyone',     'No hate, abuse, or personal attacks.'),
-    ('🚫', 'No spam',              'Don\'t flood the chat or post links.'),
-    ('⚠️',  'Violations = ban',    'Breaking rules may get you removed.'),
+    ('🏏', 'Keep it cricket', 'Talk about the game. Stay on topic.'),
+    ('🤝', 'Respect everyone', 'No hate, abuse, or personal attacks.'),
+    ('🚫', 'No spam', 'Don\'t flood the chat or post links.'),
+    ('⚠️', 'Violations = ban', 'Breaking rules may get you removed.'),
   ];
 
   @override
@@ -969,7 +1031,8 @@ class _RulesDialog extends StatelessWidget {
           children: [
             // Icon + title
             Container(
-              width: 48, height: 48,
+              width: 48,
+              height: 48,
               decoration: BoxDecoration(
                 color: _C.redFade,
                 borderRadius: BorderRadius.circular(12),
@@ -1010,16 +1073,23 @@ class _RulesDialog extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(title,
-                              style: const TextStyle(
-                                color: _C.t1,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              )),
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              color: _C.t1,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                           const SizedBox(height: 1),
-                          Text(sub,
-                              style: const TextStyle(
-                                  color: _C.t3, fontSize: 12, height: 1.4)),
+                          Text(
+                            sub,
+                            style: const TextStyle(
+                              color: _C.t3,
+                              fontSize: 12,
+                              height: 1.4,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -1076,9 +1146,7 @@ class _BanBanner extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
       decoration: const BoxDecoration(
         color: Color(0x1AE53935), // red @ 10%
-        border: Border(
-          top: BorderSide(color: Color(0x33E53935), width: 0.5),
-        ),
+        border: Border(top: BorderSide(color: Color(0x33E53935), width: 0.5)),
       ),
       child: Row(
         children: [
@@ -1114,13 +1182,18 @@ class _ProfileSheet extends StatelessWidget {
         border: Border(top: BorderSide(color: _C.border, width: 0.5)),
       ),
       padding: EdgeInsets.fromLTRB(
-          24, 16, 24, MediaQuery.of(context).padding.bottom + 20),
+        24,
+        16,
+        24,
+        MediaQuery.of(context).padding.bottom + 20,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Handle
           Container(
-            width: 32, height: 3,
+            width: 32,
+            height: 3,
             decoration: BoxDecoration(
               color: _C.border,
               borderRadius: BorderRadius.circular(99),
@@ -1132,11 +1205,16 @@ class _ProfileSheet extends StatelessWidget {
           Text(
             auth.userName.isNotEmpty ? auth.userName : 'User',
             style: const TextStyle(
-                color: _C.t1, fontSize: 16, fontWeight: FontWeight.w600),
+              color: _C.t1,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 2),
-          Text(auth.user?.email ?? '',
-              style: const TextStyle(color: _C.t3, fontSize: 12)),
+          Text(
+            auth.user?.email ?? '',
+            style: const TextStyle(color: _C.t3, fontSize: 12),
+          ),
           const SizedBox(height: 24),
           const Divider(color: _C.border, height: 1, thickness: 0.5),
           const SizedBox(height: 4),
@@ -1144,10 +1222,18 @@ class _ProfileSheet extends StatelessWidget {
             dense: true,
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.logout_rounded, color: _C.red, size: 18),
-            title: const Text('Sign out',
-                style: TextStyle(
-                    color: _C.red, fontSize: 14, fontWeight: FontWeight.w500)),
-            onTap: () { Navigator.pop(context); auth.signOut(); },
+            title: const Text(
+              'Sign out',
+              style: TextStyle(
+                color: _C.red,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              auth.signOut();
+            },
           ),
         ],
       ),
@@ -1171,24 +1257,38 @@ class _SignInSheet extends StatelessWidget {
         border: Border(top: BorderSide(color: _C.border, width: 0.5)),
       ),
       padding: EdgeInsets.fromLTRB(
-          24, 16, 24, MediaQuery.of(context).padding.bottom + 20),
+        24,
+        16,
+        24,
+        MediaQuery.of(context).padding.bottom + 20,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 32, height: 3,
+            width: 32,
+            height: 3,
             decoration: BoxDecoration(
-                color: _C.border, borderRadius: BorderRadius.circular(99)),
+              color: _C.border,
+              borderRadius: BorderRadius.circular(99),
+            ),
           ),
           const SizedBox(height: 28),
           const Text('🏏', style: TextStyle(fontSize: 36)),
           const SizedBox(height: 14),
-          const Text('Join the Dugout',
-              style: TextStyle(
-                  color: _C.t1, fontSize: 18, fontWeight: FontWeight.w700)),
+          const Text(
+            'Join the Dugout',
+            style: TextStyle(
+              color: _C.t1,
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(height: 6),
-          const Text('Sign in to react and comment',
-              style: TextStyle(color: _C.t2, fontSize: 13)),
+          const Text(
+            'Sign in to react and comment',
+            style: TextStyle(color: _C.t2, fontSize: 13),
+          ),
           const SizedBox(height: 28),
           SizedBox(
             width: double.infinity,
@@ -1203,21 +1303,24 @@ class _SignInSheet extends StatelessWidget {
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: 13),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.network(
                     'https://www.google.com/favicon.ico',
-                    width: 16, height: 16,
+                    width: 16,
+                    height: 16,
                     errorBuilder: (_, _, _) =>
-                    const Icon(Icons.login, size: 16),
+                        const Icon(Icons.login, size: 16),
                   ),
                   const SizedBox(width: 8),
-                  const Text('Continue with Google',
-                      style: TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w600)),
+                  const Text(
+                    'Continue with Google',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
                 ],
               ),
             ),
@@ -1225,8 +1328,10 @@ class _SignInSheet extends StatelessWidget {
           const SizedBox(height: 8),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Maybe later',
-                style: TextStyle(color: _C.t3, fontSize: 13)),
+            child: const Text(
+              'Maybe later',
+              style: TextStyle(color: _C.t3, fontSize: 13),
+            ),
           ),
         ],
       ),
@@ -1248,13 +1353,18 @@ class _Avatar extends StatelessWidget {
     return CircleAvatar(
       radius: r,
       backgroundColor: _C.redFade,
-      backgroundImage: photo.isNotEmpty ? CachedNetworkImageProvider(photo) : null,
+      backgroundImage: photo.isNotEmpty
+          ? CachedNetworkImageProvider(photo)
+          : null,
       child: photo.isEmpty
-          ? Text(i,
-          style: TextStyle(
-              fontSize: r * 0.75,
-              color: _C.red,
-              fontWeight: FontWeight.w700))
+          ? Text(
+              i,
+              style: TextStyle(
+                fontSize: r * 0.75,
+                color: _C.red,
+                fontWeight: FontWeight.w700,
+              ),
+            )
           : null,
     );
   }

@@ -18,12 +18,10 @@ class HighlightsProvider with ChangeNotifier {
   MovieModel? _randomMovie;
   MovieModel? get randomMovie => _randomMovie;
 
-
   static const cacheDuration = Duration(minutes: 30);
 
   List<CategoryModel> get categories => _categories;
   List<MovieModel> get movies => _movies;
-
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -82,7 +80,7 @@ class HighlightsProvider with ChangeNotifier {
   CategoryModel? getCategoryByName(String categoryName) {
     try {
       return _categories.firstWhere(
-            (cat) => cat.name.toLowerCase() == categoryName.toLowerCase(),
+        (cat) => cat.name.toLowerCase() == categoryName.toLowerCase(),
       );
     } catch (_) {
       return null;
@@ -109,7 +107,6 @@ class HighlightsProvider with ChangeNotifier {
     return availableMovies.take(count).toList();
   }
 
-
   List<MovieModel> searchMovies(String query) {
     if (query.isEmpty) return _movies;
 
@@ -124,7 +121,6 @@ class HighlightsProvider with ChangeNotifier {
       await loadMovies(forceRefresh: true);
     }
 
-
     final reels = _movies.where((movie) {
       final categories = movie.categoryIds ?? [];
       return categories.contains(45);
@@ -134,5 +130,4 @@ class HighlightsProvider with ChangeNotifier {
 
     return reels;
   }
-
 }

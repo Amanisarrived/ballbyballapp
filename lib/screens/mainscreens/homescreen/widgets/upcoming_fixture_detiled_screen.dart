@@ -4,17 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-
-const _bg      = Color(0xFF050505);
-const _glass   = Color(0xFF0E0E0E);
-const _glass2  = Color(0xFF121212);
-const _stroke  = Color(0xFF1E1E1E);
+const _bg = Color(0xFF050505);
+const _glass = Color(0xFF0E0E0E);
+const _glass2 = Color(0xFF121212);
+const _stroke = Color(0xFF1E1E1E);
 const _stroke2 = Color(0xFF252525);
-const _red     = Color(0xFFCC0000);
-const _redHot  = Color(0xFFFF1A1A);
-const _gold    = Color(0xFFD4A847);
-const _goldFg  = Color(0xFFF0C96B);
-const _green   = Color(0xFF4CAF50);
+const _red = Color(0xFFCC0000);
+const _redHot = Color(0xFFFF1A1A);
+const _gold = Color(0xFFD4A847);
+const _goldFg = Color(0xFFF0C96B);
+const _green = Color(0xFF4CAF50);
 
 class UpcomingFixtureDetailScreen extends StatelessWidget {
   final UpcomingFixtureModel fixture;
@@ -50,12 +49,16 @@ class UpcomingFixtureDetailScreen extends StatelessWidget {
               ),
               if (_ended)
                 SliverToBoxAdapter(child: _WinnerChip(fixture: fixture)),
-              if (_ongoing)
-                SliverToBoxAdapter(child: _OngoingChip()),
+              if (_ongoing) SliverToBoxAdapter(child: _OngoingChip()),
               if (_ended &&
-                  (fixture.team1Score.isNotEmpty || fixture.team2Score.isNotEmpty))
+                  (fixture.team1Score.isNotEmpty ||
+                      fixture.team2Score.isNotEmpty))
                 SliverToBoxAdapter(
-                  child: _ScoreDuel(fixture: fixture, t1Won: t1Won, t2Won: t2Won),
+                  child: _ScoreDuel(
+                    fixture: fixture,
+                    t1Won: t1Won,
+                    t2Won: t2Won,
+                  ),
                 ),
               if (_ended && fixture.playerOfMatch.isNotEmpty)
                 SliverToBoxAdapter(child: _PotmSpotlight(fixture: fixture)),
@@ -93,9 +96,10 @@ class _OngoingChipState extends State<_OngoingChip>
       vsync: this,
       duration: const Duration(milliseconds: 1400),
     );
-    _pulse = Tween<double>(begin: 0.3, end: 1.0).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
-    );
+    _pulse = Tween<double>(
+      begin: 0.3,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
     _ctrl.repeat(reverse: true);
   }
 
@@ -121,8 +125,7 @@ class _OngoingChipState extends State<_OngoingChip>
             end: Alignment.centerRight,
           ),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-              color: _green.withAlpha(_a(_pulse.value * 0.5))),
+          border: Border.all(color: _green.withAlpha(_a(_pulse.value * 0.5))),
         ),
         child: Row(
           children: [
@@ -133,10 +136,14 @@ class _OngoingChipState extends State<_OngoingChip>
                 color: _green.withAlpha(38),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                    color: _green.withAlpha(_a(_pulse.value * 0.6))),
+                  color: _green.withAlpha(_a(_pulse.value * 0.6)),
+                ),
               ),
-              child: Icon(Icons.sports_cricket_rounded,
-                  color: _green.withAlpha(_a(_pulse.value)), size: 17),
+              child: Icon(
+                Icons.sports_cricket_rounded,
+                color: _green.withAlpha(_a(_pulse.value)),
+                size: 17,
+              ),
             ),
             const SizedBox(width: 14),
             Column(
@@ -210,13 +217,16 @@ class _StadiumHero extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Positioned.fill(
-            child: CustomPaint(painter: _HeroPainter(t1Won: t1Won, t2Won: t2Won)),
+            child: CustomPaint(
+              painter: _HeroPainter(t1Won: t1Won, t2Won: t2Won),
+            ),
           ),
-          Positioned.fill(
-            child: CustomPaint(painter: _ScanlinePainter()),
-          ),
+          Positioned.fill(child: CustomPaint(painter: _ScanlinePainter())),
           Positioned(
-            bottom: 0, left: 0, right: 0, height: 140,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 140,
             child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -239,8 +249,11 @@ class _StadiumHero extends StatelessWidget {
                         HapticFeedback.lightImpact();
                         Navigator.pop(context);
                       },
-                      child: const Icon(Icons.arrow_back_ios_new_rounded,
-                          color: Colors.white, size: 15),
+                      child: const Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: Colors.white,
+                        size: 15,
+                      ),
                     ),
                     const Spacer(),
                     _StatusCapsule(ended: ended, ongoing: ongoing),
@@ -325,14 +338,21 @@ class _HeroTeamBlock extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.emoji_events_rounded, color: _goldFg, size: 10),
+                const Icon(
+                  Icons.emoji_events_rounded,
+                  color: _goldFg,
+                  size: 10,
+                ),
                 const SizedBox(width: 5),
-                const Text('WINNER',
-                    style: TextStyle(
-                        color: _goldFg,
-                        fontSize: 8,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.5)),
+                const Text(
+                  'WINNER',
+                  style: TextStyle(
+                    color: _goldFg,
+                    fontSize: 8,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.5,
+                  ),
+                ),
               ],
             ),
           ),
@@ -381,19 +401,27 @@ class _TeamLogo extends StatelessWidget {
         ),
         boxShadow: isWinner
             ? [
-          BoxShadow(color: _gold.withAlpha(50), blurRadius: 28, spreadRadius: 4),
-          BoxShadow(color: _gold.withAlpha(20), blurRadius: 60, spreadRadius: 10),
-        ]
+                BoxShadow(
+                  color: _gold.withAlpha(50),
+                  blurRadius: 28,
+                  spreadRadius: 4,
+                ),
+                BoxShadow(
+                  color: _gold.withAlpha(20),
+                  blurRadius: 60,
+                  spreadRadius: 10,
+                ),
+              ]
             : [],
       ),
       child: ClipOval(
         child: logo.isNotEmpty
             ? CachedNetworkImage(
-          imageUrl: logo,
-          fit: BoxFit.cover,
-          placeholder: (_, _) => _Fallback(name: name),
-          errorWidget: (_, _, _) => _Fallback(name: name),
-        )
+                imageUrl: logo,
+                fit: BoxFit.cover,
+                placeholder: (_, _) => _Fallback(name: name),
+                errorWidget: (_, _, _) => _Fallback(name: name),
+              )
             : _Fallback(name: name),
       ),
     );
@@ -411,10 +439,11 @@ class _Fallback extends StatelessWidget {
         child: Text(
           name.length >= 2 ? name.substring(0, 2).toUpperCase() : name,
           style: const TextStyle(
-              color: Colors.white38,
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
-              letterSpacing: -1),
+            color: Colors.white38,
+            fontSize: 22,
+            fontWeight: FontWeight.w900,
+            letterSpacing: -1,
+          ),
         ),
       ),
     );
@@ -472,19 +501,21 @@ class _VsDivider extends StatelessWidget {
         Text(
           DateFormat('d MMM').format(dateTime).toUpperCase(),
           style: TextStyle(
-              color: Colors.white.withAlpha(30),
-              fontSize: 9,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1.5),
+            color: Colors.white.withAlpha(30),
+            fontSize: 9,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 1.5,
+          ),
         ),
         const SizedBox(height: 2),
         Text(
           DateFormat('HH:mm').format(dateTime),
           style: const TextStyle(
-              color: Colors.white60,
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.5),
+            color: Colors.white60,
+            fontSize: 14,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.5,
+          ),
         ),
         const SizedBox(height: 8),
         Container(width: 1, height: 20, color: Colors.white.withAlpha(10)),
@@ -516,9 +547,10 @@ class _StatusCapsuleState extends State<_StatusCapsule>
       vsync: this,
       duration: const Duration(milliseconds: 1400),
     );
-    _pulse = Tween<double>(begin: 0.4, end: 1.0).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
-    );
+    _pulse = Tween<double>(
+      begin: 0.4,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
     if (widget.ongoing) _ctrl.repeat(reverse: true);
   }
 
@@ -544,10 +576,11 @@ class _StatusCapsuleState extends State<_StatusCapsule>
         child: const Text(
           'MATCH ENDED',
           style: TextStyle(
-              color: Colors.white38,
-              fontSize: 9,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.2),
+            color: Colors.white38,
+            fontSize: 9,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 1.2,
+          ),
         ),
       );
     }
@@ -585,10 +618,11 @@ class _StatusCapsuleState extends State<_StatusCapsule>
               Text(
                 'ONGOING',
                 style: TextStyle(
-                    color: _green.withAlpha(_a(_pulse.value)),
-                    fontSize: 9,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.2),
+                  color: _green.withAlpha(_a(_pulse.value)),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.2,
+                ),
               ),
             ],
           ),
@@ -611,15 +645,19 @@ class _StatusCapsuleState extends State<_StatusCapsule>
             width: 5,
             height: 5,
             margin: const EdgeInsets.only(right: 7),
-            decoration: const BoxDecoration(color: _redHot, shape: BoxShape.circle),
+            decoration: const BoxDecoration(
+              color: _redHot,
+              shape: BoxShape.circle,
+            ),
           ),
           const Text(
             'UPCOMING',
             style: TextStyle(
-                color: _redHot,
-                fontSize: 9,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.2),
+              color: _redHot,
+              fontSize: 9,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.2,
+            ),
           ),
         ],
       ),
@@ -658,17 +696,22 @@ class _WinnerChip extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: _red.withAlpha(40)),
             ),
-            child: const Icon(Icons.military_tech_rounded, color: _red, size: 17),
+            child: const Icon(
+              Icons.military_tech_rounded,
+              color: _red,
+              size: 17,
+            ),
           ),
           const SizedBox(width: 14),
           Expanded(
             child: Text(
               fixture.resultSummary,
               style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  height: 1.4),
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                height: 1.4,
+              ),
             ),
           ),
         ],
@@ -683,7 +726,11 @@ class _WinnerChip extends StatelessWidget {
 class _ScoreDuel extends StatelessWidget {
   final UpcomingFixtureModel fixture;
   final bool t1Won, t2Won;
-  const _ScoreDuel({required this.fixture, required this.t1Won, required this.t2Won});
+  const _ScoreDuel({
+    required this.fixture,
+    required this.t1Won,
+    required this.t2Won,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -704,11 +751,14 @@ class _ScoreDuel extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
-            child: Text('·',
-                style: TextStyle(
-                    color: Colors.white.withAlpha(15),
-                    fontSize: 28,
-                    fontWeight: FontWeight.w900)),
+            child: Text(
+              '·',
+              style: TextStyle(
+                color: Colors.white.withAlpha(15),
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
           ),
           Expanded(
             child: _ScoreSide(
@@ -744,19 +794,23 @@ class _ScoreSide extends StatelessWidget {
       children: [
         Row(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment:
-          isLeft ? MainAxisAlignment.start : MainAxisAlignment.end,
+          mainAxisAlignment: isLeft
+              ? MainAxisAlignment.start
+              : MainAxisAlignment.end,
           children: [
             if (!isLeft) ...[
               Flexible(
-                child: Text(team,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                        color: Colors.white.withAlpha(40),
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700)),
+                child: Text(
+                  team,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    color: Colors.white.withAlpha(40),
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
               const SizedBox(width: 8),
               _SmallLogo(logo: logo, name: team),
@@ -764,13 +818,16 @@ class _ScoreSide extends StatelessWidget {
               _SmallLogo(logo: logo, name: team),
               const SizedBox(width: 8),
               Flexible(
-                child: Text(team,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white.withAlpha(40),
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700)),
+                child: Text(
+                  team,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white.withAlpha(40),
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ],
           ],
@@ -810,10 +867,10 @@ class _SmallLogo extends StatelessWidget {
       child: ClipOval(
         child: logo.isNotEmpty
             ? CachedNetworkImage(
-          imageUrl: logo,
-          fit: BoxFit.cover,
-          errorWidget: (_, _, _) => _miniText(name),
-        )
+                imageUrl: logo,
+                fit: BoxFit.cover,
+                errorWidget: (_, _, _) => _miniText(name),
+              )
             : _miniText(name),
       ),
     );
@@ -823,7 +880,10 @@ class _SmallLogo extends StatelessWidget {
     child: Text(
       n.isNotEmpty ? n[0] : '?',
       style: const TextStyle(
-          color: Colors.white38, fontSize: 8, fontWeight: FontWeight.w900),
+        color: Colors.white38,
+        fontSize: 8,
+        fontWeight: FontWeight.w900,
+      ),
     ),
   );
 }
@@ -862,18 +922,23 @@ class _PotmSpotlight extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                          width: 2,
-                          height: 10,
-                          margin: const EdgeInsets.only(right: 8),
-                          decoration: BoxDecoration(
-                              color: _gold,
-                              borderRadius: BorderRadius.circular(1))),
-                      Text('PLAYER OF THE MATCH',
-                          style: TextStyle(
-                              color: _gold.withAlpha(160),
-                              fontSize: 9,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 1.5)),
+                        width: 2,
+                        height: 10,
+                        margin: const EdgeInsets.only(right: 8),
+                        decoration: BoxDecoration(
+                          color: _gold,
+                          borderRadius: BorderRadius.circular(1),
+                        ),
+                      ),
+                      Text(
+                        'PLAYER OF THE MATCH',
+                        style: TextStyle(
+                          color: _gold.withAlpha(160),
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -891,23 +956,27 @@ class _PotmSpotlight extends StatelessWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                                color: _gold.withAlpha(60),
-                                blurRadius: 20,
-                                spreadRadius: 2),
+                              color: _gold.withAlpha(60),
+                              blurRadius: 20,
+                              spreadRadius: 2,
+                            ),
                           ],
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(2.5),
                           child: Container(
-                            decoration:
-                            const BoxDecoration(shape: BoxShape.circle, color: _glass),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _glass,
+                            ),
                             child: ClipOval(
                               child: hasPhoto
                                   ? CachedNetworkImage(
-                                imageUrl: fixture.playerOfMatchPhoto,
-                                fit: BoxFit.cover,
-                                errorWidget: (_, _,_) => const _PersonIcon(),
-                              )
+                                      imageUrl: fixture.playerOfMatchPhoto,
+                                      fit: BoxFit.cover,
+                                      errorWidget: (_, _, _) =>
+                                          const _PersonIcon(),
+                                    )
                                   : const _PersonIcon(),
                             ),
                           ),
@@ -918,20 +987,26 @@ class _PotmSpotlight extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Man of the Match',
-                                style: TextStyle(
-                                    color: _gold.withAlpha(120),
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.5)),
+                            Text(
+                              'Man of the Match',
+                              style: TextStyle(
+                                color: _gold.withAlpha(120),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
                             const SizedBox(height: 6),
-                            Text(fixture.playerOfMatch,
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: -0.5,
-                                    height: 1.1)),
+                            Text(
+                              fixture.playerOfMatch,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: -0.5,
+                                height: 1.1,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -943,7 +1018,11 @@ class _PotmSpotlight extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: _gold.withAlpha(50)),
                         ),
-                        child: const Icon(Icons.star_rounded, color: _goldFg, size: 20),
+                        child: const Icon(
+                          Icons.star_rounded,
+                          color: _goldFg,
+                          size: 20,
+                        ),
                       ),
                     ],
                   ),
@@ -1029,7 +1108,11 @@ class _DigitBox extends StatelessWidget {
   final int value;
   final String label;
   final bool accent;
-  const _DigitBox({required this.value, required this.label, this.accent = false});
+  const _DigitBox({
+    required this.value,
+    required this.label,
+    this.accent = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1057,12 +1140,15 @@ class _DigitBox extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 7),
-          Text(label,
-              style: TextStyle(
-                  color: Colors.white.withAlpha(25),
-                  fontSize: 7,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.5)),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white.withAlpha(25),
+              fontSize: 7,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 1.5,
+            ),
+          ),
         ],
       ),
     );
@@ -1073,9 +1159,14 @@ class _Colon extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const Padding(
     padding: EdgeInsets.fromLTRB(5, 0, 5, 22),
-    child: Text(':',
-        style: TextStyle(
-            color: Colors.white12, fontSize: 24, fontWeight: FontWeight.w900)),
+    child: Text(
+      ':',
+      style: TextStyle(
+        color: Colors.white12,
+        fontSize: 24,
+        fontWeight: FontWeight.w900,
+      ),
+    ),
   );
 }
 
@@ -1179,23 +1270,29 @@ class _InfoCell extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(label,
-                    style: TextStyle(
-                        color: Colors.white.withAlpha(25),
-                        fontSize: 8,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.2)),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    color: Colors.white.withAlpha(25),
+                    fontSize: 8,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.2,
+                  ),
+                ),
               ),
             ],
           ),
           const SizedBox(height: 10),
-          Text(value,
-              maxLines: 2,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  height: 1.3)),
+          Text(
+            value,
+            maxLines: 2,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              height: 1.3,
+            ),
+          ),
         ],
       ),
     );
@@ -1242,11 +1339,12 @@ class _EyebrowLabel extends StatelessWidget {
         Text(
           text.toUpperCase(),
           style: TextStyle(
-              color: Colors.white.withAlpha(30),
-              fontSize: 9,
-              fontWeight: FontWeight.w800,
-              overflow: TextOverflow.ellipsis,
-              letterSpacing: 1.9),
+            color: Colors.white.withAlpha(30),
+            fontSize: 9,
+            fontWeight: FontWeight.w800,
+            overflow: TextOverflow.ellipsis,
+            letterSpacing: 1.9,
+          ),
         ),
         const SizedBox(width: 10),
         Container(width: 20, height: 1, color: Colors.white.withAlpha(15)),
@@ -1285,20 +1383,25 @@ class _Card extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                    width: 2,
-                    height: 10,
-                    margin: const EdgeInsets.only(right: 10),
-                    decoration: BoxDecoration(
-                        color: accentColor,
-                        borderRadius: BorderRadius.circular(1))),
+                  width: 2,
+                  height: 10,
+                  margin: const EdgeInsets.only(right: 10),
+                  decoration: BoxDecoration(
+                    color: accentColor,
+                    borderRadius: BorderRadius.circular(1),
+                  ),
+                ),
                 Icon(icon, size: 12, color: Colors.white.withAlpha(28)),
                 const SizedBox(width: 7),
-                Text(label,
-                    style: TextStyle(
-                        color: Colors.white.withAlpha(28),
-                        fontSize: 9,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.5)),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: Colors.white.withAlpha(28),
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.5,
+                  ),
+                ),
               ],
             ),
           ),
@@ -1319,8 +1422,10 @@ class _HeroPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height),
-        Paint()..color = _bg);
+    canvas.drawRect(
+      Rect.fromLTWH(0, 0, size.width, size.height),
+      Paint()..color = _bg,
+    );
     final rPaint = Paint()
       ..shader = RadialGradient(
         center: Alignment.center,
@@ -1334,7 +1439,7 @@ class _HeroPainter extends CustomPainter {
         radius: 1.0,
         colors: [
           (t1Won ? _gold : _red).withAlpha(t1Won ? 30 : 14),
-          Colors.transparent
+          Colors.transparent,
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), leftGlow);
@@ -1344,7 +1449,7 @@ class _HeroPainter extends CustomPainter {
         radius: 1.0,
         colors: [
           (t2Won ? _gold : _red).withAlpha(t2Won ? 30 : 14),
-          Colors.transparent
+          Colors.transparent,
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), rightGlow);
@@ -1361,12 +1466,17 @@ class _HeroPainter extends CustomPainter {
       ..color = _red.withAlpha(5)
       ..strokeWidth = 0.5;
     for (double i = -size.height; i < size.width + size.height; i += 48) {
-      canvas.drawLine(Offset(i, 0), Offset(i + size.height, size.height), dPaint);
+      canvas.drawLine(
+        Offset(i, 0),
+        Offset(i + size.height, size.height),
+        dPaint,
+      );
     }
   }
 
   @override
-  bool shouldRepaint(_HeroPainter old) => old.t1Won != t1Won || old.t2Won != t2Won;
+  bool shouldRepaint(_HeroPainter old) =>
+      old.t1Won != t1Won || old.t2Won != t2Won;
 }
 
 class _ScanlinePainter extends CustomPainter {

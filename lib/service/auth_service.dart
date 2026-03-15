@@ -6,16 +6,13 @@ class AuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
   );
 
-
   static User? get currentUser => _auth.currentUser;
   static bool get isLoggedIn => _auth.currentUser != null;
   static Stream<User?> get authStateChanges => _auth.authStateChanges();
-
 
   static Future<User?> signInWithGoogle() async {
     try {
@@ -26,19 +23,17 @@ class AuthService {
         return null;
       }
 
-
       final GoogleSignInAuthentication googleAuth =
-      await googleUser.authentication;
-
+          await googleUser.authentication;
 
       final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential =
-      await _auth.signInWithCredential(credential);
-
+      final UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
 
       final User? user = userCredential.user;
       if (user != null) {
@@ -47,17 +42,14 @@ class AuthService {
 
       return user;
     } catch (e) {
-
       return null;
     }
   }
-
 
   static Future<void> signOut() async {
     await _googleSignIn.signOut();
     await _auth.signOut();
   }
-
 
   static Future<void> _saveUserToFirestore(User user) async {
     final userRef = _firestore.collection('users').doc(user.uid);
@@ -78,7 +70,6 @@ class AuthService {
       });
     }
   }
-
 
   static Future<void> updateFcmToken(String token) async {
     final user = currentUser;

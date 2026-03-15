@@ -1,5 +1,3 @@
-
-
 import 'package:ballbyball/models/target.dart';
 
 class LiveMatch {
@@ -18,7 +16,7 @@ class LiveMatch {
     required this.striker,
     required this.nonStriker,
     required this.currentBowler,
-    this.target
+    this.target,
   });
 
   factory LiveMatch.fromMap(Map<String, dynamic> map) {

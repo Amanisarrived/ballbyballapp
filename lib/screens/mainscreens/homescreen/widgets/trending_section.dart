@@ -46,7 +46,12 @@ class _TrendingSectionState extends State<TrendingSection> {
           children: [
             // Section header
             Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 16,
+                bottom: 8,
+              ),
               child: Row(
                 children: [
                   Container(
@@ -69,10 +74,7 @@ class _TrendingSectionState extends State<TrendingSection> {
                   const Spacer(),
                   Text(
                     '${trending.length} videos',
-                    style: TextStyle(
-                      color: Colors.grey[500],
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.grey[500], fontSize: 12),
                   ),
                 ],
               ),
@@ -105,19 +107,31 @@ class _TrendingShimmer extends StatelessWidget {
       children: [
         // Header shimmer
         Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: 8,
+          ),
           child: Row(
             children: [
               Container(
-                width: 3, height: 16,
+                width: 3,
+                height: 16,
                 decoration: BoxDecoration(
                   color: Colors.grey[800],
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
               const SizedBox(width: 8),
-              Container(width: 80, height: 14, decoration: BoxDecoration(
-                  color: Colors.grey[800], borderRadius: BorderRadius.circular(4))),
+              Container(
+                width: 80,
+                height: 14,
+                decoration: BoxDecoration(
+                  color: Colors.grey[800],
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
             ],
           ),
         ),
@@ -126,7 +140,7 @@ class _TrendingShimmer extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: 4,
-          itemBuilder: (_,_) => const _ShimmerCard(),
+          itemBuilder: (_, _) => const _ShimmerCard(),
         ),
       ],
     );
@@ -170,7 +184,7 @@ class _ShimmerCardState extends State<_ShimmerCard>
         height: 90,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
-            color: Colors.grey.withAlpha((_animation.value * 255).round())
+          color: Colors.grey.withAlpha((_animation.value * 255).round()),
         ),
       ),
     );

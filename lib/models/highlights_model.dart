@@ -2,12 +2,7 @@ class CategoryModel {
   final String name;
   final String thumbnail;
 
-
-  CategoryModel({
-
-    required this.name,
-    required this.thumbnail,
-  });
+  CategoryModel({required this.name, required this.thumbnail});
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
@@ -42,7 +37,7 @@ class MovieModel {
     required this.url,
     required this.isTrending,
     required this.createdAt,
-    this.categoryIds
+    this.categoryIds,
   });
 
   factory MovieModel.fromJson(Map<String, dynamic> json) {
@@ -65,7 +60,7 @@ class MovieModel {
       'url': url,
       'is_trending': isTrending,
       'created_at': createdAt.toIso8601String(),
-      "categories" : categoryIds
+      "categories": categoryIds,
     };
   }
 
@@ -85,5 +80,3 @@ class MovieModel {
     return 'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
   }
 }
-
-

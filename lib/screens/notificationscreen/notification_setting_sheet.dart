@@ -6,21 +6,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // ── Tokens (match your app's design tokens) ───────────────
-const _raised  = Color(0xFF131313);
-const _card    = Color(0xFF111111);
-const _line    = Color(0xFF1C1C1C);
-const _red     = Color(0xFFCC0000);
-const _redDim  = Color(0xFF2A0000);
+const _raised = Color(0xFF131313);
+const _card = Color(0xFF111111);
+const _line = Color(0xFF1C1C1C);
+const _red = Color(0xFFCC0000);
+const _redDim = Color(0xFF2A0000);
 
 // ══════════════════════════════════════════════════════════
 //  NOTIFICATION PREFERENCE HELPER  (same as your existing one,
 //  just extended with a topic-subscription key)
 // ══════════════════════════════════════════════════════════
 class NotificationPreference {
-  static const _statusKey      = 'notification_permission_status';
+  static const _statusKey = 'notification_permission_status';
   static const _deniedCountKey = 'notification_denied_count';
-  static const _topicKey       = 'notification_topic_cricket'; // NEW
-  static const maxDeniedCount  = 3;
+  static const _topicKey = 'notification_topic_cricket'; // NEW
+  static const maxDeniedCount = 3;
 
   static Future<void> saveGranted() async {
     final p = await SharedPreferences.getInstance();
@@ -46,7 +46,7 @@ class NotificationPreference {
 
   static Future<bool> shouldShowPermissionScreen() async {
     final p = await SharedPreferences.getInstance();
-    final status      = p.getString(_statusKey);
+    final status = p.getString(_statusKey);
     final deniedCount = p.getInt(_deniedCountKey) ?? 0;
     if (status == 'granted') return false;
     if (deniedCount >= maxDeniedCount) return false;
@@ -76,7 +76,7 @@ Future<void> showNotificationSettings(BuildContext context) async {
   final settings = await FirebaseMessaging.instance.getNotificationSettings();
   final isSystemGranted =
       settings.authorizationStatus == AuthorizationStatus.authorized ||
-          settings.authorizationStatus == AuthorizationStatus.provisional;
+      settings.authorizationStatus == AuthorizationStatus.provisional;
 
   if (!context.mounted) return;
 
@@ -84,9 +84,8 @@ Future<void> showNotificationSettings(BuildContext context) async {
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => _NotificationSettingsSheet(
-      isSystemGranted: isSystemGranted,
-    ),
+    builder: (_) =>
+        _NotificationSettingsSheet(isSystemGranted: isSystemGranted),
   );
 }
 
@@ -104,9 +103,9 @@ class _NotificationSettingsSheet extends StatefulWidget {
 
 class _NotificationSettingsSheetState
     extends State<_NotificationSettingsSheet> {
-  bool _masterEnabled  = false;
+  bool _masterEnabled = false;
   bool _cricketUpdates = true; // topic: cricket_notification
-  bool _loading        = true;
+  bool _loading = true;
 
   @override
   void initState() {
@@ -117,9 +116,9 @@ class _NotificationSettingsSheetState
   Future<void> _load() async {
     final topicOn = await NotificationPreference.isTopicSubscribed();
     setState(() {
-      _masterEnabled  = widget.isSystemGranted;
+      _masterEnabled = widget.isSystemGranted;
       _cricketUpdates = topicOn;
-      _loading        = false;
+      _loading = false;
     });
   }
 
@@ -129,24 +128,26 @@ class _NotificationSettingsSheetState
     setState(() => _cricketUpdates = value);
     await NotificationPreference.saveTopicSubscribed(value);
     if (value) {
-      await FirebaseMessaging.instance
-          .subscribeToTopic('cricket_notification');
+      await FirebaseMessaging.instance.subscribeToTopic('cricket_notification');
     } else {
-      await FirebaseMessaging.instance
-          .unsubscribeFromTopic('cricket_notification');
+      await FirebaseMessaging.instance.unsubscribeFromTopic(
+        'cricket_notification',
+      );
     }
   }
 
   // ── Request system permission ───────────────────────────
   Future<void> _requestPermission() async {
     final messaging = FirebaseMessaging.instance;
-    final result    = await messaging.requestPermission(
-      alert: true, badge: true, sound: true,
+    final result = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
     );
 
     final granted =
         result.authorizationStatus == AuthorizationStatus.authorized ||
-            result.authorizationStatus == AuthorizationStatus.provisional;
+        result.authorizationStatus == AuthorizationStatus.provisional;
 
     if (granted) {
       await NotificationPreference.saveGranted();
@@ -158,7 +159,7 @@ class _NotificationSettingsSheetState
     }
 
     setState(() {
-      _masterEnabled  = granted;
+      _masterEnabled = granted;
       _cricketUpdates = granted;
     });
   }
@@ -167,7 +168,8 @@ class _NotificationSettingsSheetState
   Widget build(BuildContext context) {
     final bottom = MediaQuery.of(context).viewInsets.bottom;
 
-    return  SafeArea(bottom: true,
+    return SafeArea(
+      bottom: true,
       child: Container(
         margin: EdgeInsets.only(bottom: bottom),
         decoration: const BoxDecoration(
@@ -180,7 +182,8 @@ class _NotificationSettingsSheetState
             // ── Drag handle ──────────────────────────────────
             const SizedBox(height: 12),
             Container(
-              width: 36, height: 4,
+              width: 36,
+              height: 4,
               decoration: BoxDecoration(
                 color: Colors.white.withAlpha(30),
                 borderRadius: BorderRadius.circular(2),
@@ -194,28 +197,38 @@ class _NotificationSettingsSheetState
               child: Row(
                 children: [
                   Container(
-                    width: 40, height: 40,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
                       color: const Color(0xFF8B5CF6).withAlpha(30),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(LucideIcons.bell,
-                        size: 18, color: Color(0xFF8B5CF6)),
+                    child: const Icon(
+                      LucideIcons.bell,
+                      size: 18,
+                      color: Color(0xFF8B5CF6),
+                    ),
                   ),
                   const SizedBox(width: 12),
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Notifications',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -0.5)),
-                      Text('Manage your alert preferences',
-                          style: TextStyle(
-                              color: Color(0x55FFFFFF),
-                              fontSize: 12)),
+                      Text(
+                        'Notifications',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                      Text(
+                        'Manage your alert preferences',
+                        style: TextStyle(
+                          color: Color(0x55FFFFFF),
+                          fontSize: 12,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -227,8 +240,7 @@ class _NotificationSettingsSheetState
             if (_loading)
               const Padding(
                 padding: EdgeInsets.all(32),
-                child: CircularProgressIndicator(
-                    color: _red, strokeWidth: 2),
+                child: CircularProgressIndicator(color: _red, strokeWidth: 2),
               )
             else ...[
               // ── Permission denied banner ─────────────────
@@ -259,9 +271,11 @@ class _NotificationSettingsSheetState
                             : null,
                       ),
 
-                      Container(height: 1,
-                          margin: const EdgeInsets.only(left: 60),
-                          color: _line),
+                      Container(
+                        height: 1,
+                        margin: const EdgeInsets.only(left: 60),
+                        color: _line,
+                      ),
 
                       // Breaking News (static for now — extend as needed)
                       _ToggleRow(
@@ -276,9 +290,11 @@ class _NotificationSettingsSheetState
                             : null,
                       ),
 
-                      Container(height: 1,
-                          margin: const EdgeInsets.only(left: 60),
-                          color: _line),
+                      Container(
+                        height: 1,
+                        margin: const EdgeInsets.only(left: 60),
+                        color: _line,
+                      ),
 
                       // Match Reminders
                       _ToggleRow(
@@ -306,7 +322,9 @@ class _NotificationSettingsSheetState
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 13),
+                      horizontal: 16,
+                      vertical: 13,
+                    ),
                     decoration: BoxDecoration(
                       color: _raised,
                       borderRadius: BorderRadius.circular(16),
@@ -314,18 +332,25 @@ class _NotificationSettingsSheetState
                     ),
                     child: Row(
                       children: [
-                        Icon(LucideIcons.settings,
-                            size: 16,
-                            color: Colors.white.withAlpha(60)),
+                        Icon(
+                          LucideIcons.settings,
+                          size: 16,
+                          color: Colors.white.withAlpha(60),
+                        ),
                         const SizedBox(width: 10),
-                        Text('Open System Notification Settings',
-                            style: TextStyle(
-                                color: Colors.white.withAlpha(60),
-                                fontSize: 13)),
+                        Text(
+                          'Open System Notification Settings',
+                          style: TextStyle(
+                            color: Colors.white.withAlpha(60),
+                            fontSize: 13,
+                          ),
+                        ),
                         const Spacer(),
-                        Icon(LucideIcons.externalLink,
-                            size: 14,
-                            color: Colors.white.withAlpha(30)),
+                        Icon(
+                          LucideIcons.externalLink,
+                          size: 14,
+                          color: Colors.white.withAlpha(30),
+                        ),
                       ],
                     ),
                   ),
@@ -367,16 +392,22 @@ class _PermissionBanner extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Notifications are off',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700)),
+                  const Text(
+                    'Notifications are off',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Text('Enable to get match alerts',
-                      style: TextStyle(
-                          color: Colors.white.withAlpha(50),
-                          fontSize: 11)),
+                  Text(
+                    'Enable to get match alerts',
+                    style: TextStyle(
+                      color: Colors.white.withAlpha(50),
+                      fontSize: 11,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -384,16 +415,21 @@ class _PermissionBanner extends StatelessWidget {
               onTap: onEnable,
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 7),
+                  horizontal: 12,
+                  vertical: 7,
+                ),
                 decoration: BoxDecoration(
                   color: _red,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Text('Enable',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700)),
+                child: const Text(
+                  'Enable',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ),
           ],
@@ -434,7 +470,8 @@ class _ToggleRow extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 36, height: 36,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
                 color: iconBg.withAlpha(220),
                 borderRadius: BorderRadius.circular(10),
@@ -446,16 +483,22 @@ class _ToggleRow extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600)),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Text(subtitle,
-                      style: TextStyle(
-                          color: Colors.white.withAlpha(45),
-                          fontSize: 12)),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: Colors.white.withAlpha(45),
+                      fontSize: 12,
+                    ),
+                  ),
                 ],
               ),
             ),

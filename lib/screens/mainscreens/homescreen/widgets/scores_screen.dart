@@ -17,12 +17,15 @@ class _ScoresScreenState extends State<ScoresScreen> {
   FeaturedMatch get match => widget.match;
 
   String get battingTeamKey1st => match.toss?.battingFirst ?? 'teamA';
-  String get bowlingTeamKey1st => battingTeamKey1st == 'teamA' ? 'teamB' : 'teamA';
+  String get bowlingTeamKey1st =>
+      battingTeamKey1st == 'teamA' ? 'teamB' : 'teamA';
   String get battingTeamKey2nd => bowlingTeamKey1st;
   String get bowlingTeamKey2nd => battingTeamKey1st;
 
-  String get currentBattingKey => _inningsTab == 0 ? battingTeamKey1st : battingTeamKey2nd;
-  String get currentBowlingKey => _inningsTab == 0 ? bowlingTeamKey1st : bowlingTeamKey2nd;
+  String get currentBattingKey =>
+      _inningsTab == 0 ? battingTeamKey1st : battingTeamKey2nd;
+  String get currentBowlingKey =>
+      _inningsTab == 0 ? bowlingTeamKey1st : bowlingTeamKey2nd;
 
   List<Player> _getBatters(String teamKey) {
     final team = teamKey == 'teamA' ? match.teamA : match.teamB;
@@ -73,11 +76,14 @@ class _ScoresScreenState extends State<ScoresScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool has2ndInnings = match.liveMatch != null && match.liveMatch!.innings == 2;
+    final bool has2ndInnings =
+        match.liveMatch != null && match.liveMatch!.innings == 2;
 
     // ✅ Wrap everything in SingleChildScrollView — fixes scroll issue
     return SingleChildScrollView(
-      child: SafeArea(top: false,bottom: true,
+      child: SafeArea(
+        top: false,
+        bottom: true,
         child: Column(
           children: [
             // Innings toggle
@@ -86,8 +92,12 @@ class _ScoresScreenState extends State<ScoresScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                 child: _InningsToggle(
                   selected: _inningsTab,
-                  team1Name: (battingTeamKey1st == 'teamA' ? match.teamA : match.teamB).name,
-                  team2Name: (battingTeamKey2nd == 'teamA' ? match.teamA : match.teamB).name,
+                  team1Name:
+                      (battingTeamKey1st == 'teamA' ? match.teamA : match.teamB)
+                          .name,
+                  team2Name:
+                      (battingTeamKey2nd == 'teamA' ? match.teamA : match.teamB)
+                          .name,
                   onChanged: (i) => setState(() => _inningsTab = i),
                 ),
               ),
@@ -98,10 +108,7 @@ class _ScoresScreenState extends State<ScoresScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ── Batting ─────────────────────────────
-                  _SectionHeader(
-                    title: 'BATTING',
-
-                  ),
+                  _SectionHeader(title: 'BATTING'),
                   const SizedBox(height: 8),
                   _BattingTable(
                     batters: _getBatters(currentBattingKey),
@@ -113,10 +120,7 @@ class _ScoresScreenState extends State<ScoresScreen> {
                   const SizedBox(height: 24),
 
                   // ── Bowling ─────────────────────────────
-                  _SectionHeader(
-                    title: 'BOWLING',
-
-                  ),
+                  _SectionHeader(title: 'BOWLING'),
                   const SizedBox(height: 8),
                   _BowlingTable(
                     bowlers: _getBowlers(currentBowlingKey),
@@ -135,15 +139,16 @@ class _ScoresScreenState extends State<ScoresScreen> {
   }
 }
 
-
 class _InningsToggle extends StatelessWidget {
   final int selected;
   final String team1Name, team2Name;
   final ValueChanged<int> onChanged;
 
   const _InningsToggle({
-    required this.selected, required this.team1Name,
-    required this.team2Name, required this.onChanged,
+    required this.selected,
+    required this.team1Name,
+    required this.team2Name,
+    required this.onChanged,
   });
 
   @override
@@ -177,14 +182,17 @@ class _InningsToggle extends StatelessWidget {
             color: isSelected ? const Color(0xFFCC0000) : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Text(label,
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: isSelected ? Colors.white : Colors.white.withAlpha(100),
-                fontSize: 11, fontWeight: FontWeight.w700,
-              )),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: isSelected ? Colors.white : Colors.white.withAlpha(100),
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ),
       ),
     );
@@ -200,10 +208,24 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(width: 3, height: 14,
-            decoration: BoxDecoration(color: const Color(0xFFCC0000), borderRadius: BorderRadius.circular(2))),
+        Container(
+          width: 3,
+          height: 14,
+          decoration: BoxDecoration(
+            color: const Color(0xFFCC0000),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
         const SizedBox(width: 8),
-        Text(title, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 1.2)),
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.2,
+          ),
+        ),
       ],
     );
   }
@@ -238,8 +260,13 @@ class _BattingTable extends StatelessWidget {
           if (batters.isEmpty)
             Padding(
               padding: const EdgeInsets.all(20),
-              child: Text('Match has not started',
-                  style: TextStyle(color: Colors.white.withAlpha(60), fontSize: 12)),
+              child: Text(
+                'Match has not started',
+                style: TextStyle(
+                  color: Colors.white.withAlpha(60),
+                  fontSize: 12,
+                ),
+              ),
             )
           else
             ...batters.asMap().entries.map((e) {
@@ -257,7 +284,8 @@ class _BattingTable extends StatelessWidget {
                     isStriker: isStriker,
                     isNonStriker: isNonStriker,
                   ),
-                  if (!isLast) const Divider(color: Color(0xFF1E1E1E), height: 1),
+                  if (!isLast)
+                    const Divider(color: Color(0xFF1E1E1E), height: 1),
                 ],
               );
             }),
@@ -299,61 +327,98 @@ class _BattingRow extends StatelessWidget {
                     // ✅ Striker = green dot, Non-striker = white dot
                     if (isStriker && !stat.isOut)
                       Container(
-                        width: 6, height: 6,
+                        width: 6,
+                        height: 6,
                         margin: const EdgeInsets.only(right: 5),
                         decoration: const BoxDecoration(
-                            color: Color(0xFF66BB6A), shape: BoxShape.circle),
+                          color: Color(0xFF66BB6A),
+                          shape: BoxShape.circle,
+                        ),
                       )
                     else if (isNonStriker && !stat.isOut)
                       Container(
-                        width: 6, height: 6,
+                        width: 6,
+                        height: 6,
                         margin: const EdgeInsets.only(right: 5),
                         decoration: BoxDecoration(
-                            color: Colors.white.withAlpha(120), shape: BoxShape.circle),
+                          color: Colors.white.withAlpha(120),
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     Expanded(
-                      child: Text(player.name,
-                          maxLines: 1, overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: stat.isOut
-                                ? Colors.white.withAlpha(100)
-                                : isStriker ? Colors.white : Colors.white.withAlpha(200),
-                            fontSize: 12,
-                            fontWeight: isStriker ? FontWeight.w700 : FontWeight.w600,
-                          )),
+                      child: Text(
+                        player.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: stat.isOut
+                              ? Colors.white.withAlpha(100)
+                              : isStriker
+                              ? Colors.white
+                              : Colors.white.withAlpha(200),
+                          fontSize: 12,
+                          fontWeight: isStriker
+                              ? FontWeight.w700
+                              : FontWeight.w600,
+                        ),
+                      ),
                     ),
                     // ✅ Batting tag
                     if (isStriker && !stat.isOut)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 5,
+                          vertical: 1,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFF66BB6A).withAlpha(25),
                           borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: const Color(0xFF66BB6A).withAlpha(80)),
+                          border: Border.all(
+                            color: const Color(0xFF66BB6A).withAlpha(80),
+                          ),
                         ),
-                        child: const Text('*',
-                            style: TextStyle(color: Color(0xFF66BB6A), fontSize: 10, fontWeight: FontWeight.w900)),
+                        child: const Text(
+                          '*',
+                          style: TextStyle(
+                            color: Color(0xFF66BB6A),
+                            fontSize: 10,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
                       ),
                   ],
                 ),
                 if (stat.dismissal.isNotEmpty) ...[
                   const SizedBox(height: 2),
-                  Text(stat.dismissal,
-                      maxLines: 1, overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.white.withAlpha(55), fontSize: 9)),
+                  Text(
+                    stat.dismissal,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white.withAlpha(55),
+                      fontSize: 9,
+                    ),
+                  ),
                 ],
               ],
             ),
           ),
-          _statCell('${stat.runs}', bold: true,
-              color: isStriker && !stat.isOut ? Colors.white : null),
+          _statCell(
+            '${stat.runs}',
+            bold: true,
+            color: isStriker && !stat.isOut ? Colors.white : null,
+          ),
           _statCell('${stat.balls}'),
           _statCell('${stat.fours}', color: const Color(0xFF4FC3F7)),
           _statCell('${stat.sixes}', color: const Color(0xFF66BB6A)),
-          _statCell(stat.strikeRate.toStringAsFixed(1),
-              color: stat.strikeRate >= 150
-                  ? const Color(0xFF66BB6A)
-                  : stat.strikeRate < 80 ? Colors.red.shade300 : null),
+          _statCell(
+            stat.strikeRate.toStringAsFixed(1),
+            color: stat.strikeRate >= 150
+                ? const Color(0xFF66BB6A)
+                : stat.strikeRate < 80
+                ? Colors.red.shade300
+                : null,
+          ),
         ],
       ),
     );
@@ -362,13 +427,15 @@ class _BattingRow extends StatelessWidget {
   Widget _statCell(String value, {bool bold = false, Color? color}) {
     return SizedBox(
       width: 36,
-      child: Text(value,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: color ?? Colors.white.withAlpha(180),
-            fontSize: 12,
-            fontWeight: bold ? FontWeight.w800 : FontWeight.w500,
-          )),
+      child: Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: color ?? Colors.white.withAlpha(180),
+          fontSize: 12,
+          fontWeight: bold ? FontWeight.w800 : FontWeight.w500,
+        ),
+      ),
     );
   }
 }
@@ -400,8 +467,13 @@ class _BowlingTable extends StatelessWidget {
           if (bowlers.isEmpty)
             Padding(
               padding: const EdgeInsets.all(20),
-              child: Text('Match has not started',
-                  style: TextStyle(color: Colors.white.withAlpha(60), fontSize: 12)),
+              child: Text(
+                'Match has not started',
+                style: TextStyle(
+                  color: Colors.white.withAlpha(60),
+                  fontSize: 12,
+                ),
+              ),
             )
           else
             ...bowlers.asMap().entries.map((e) {
@@ -413,7 +485,8 @@ class _BowlingTable extends StatelessWidget {
               return Column(
                 children: [
                   _BowlingRow(player: player, stat: stat, isCurrent: isCurrent),
-                  if (!isLast) const Divider(color: Color(0xFF1E1E1E), height: 1),
+                  if (!isLast)
+                    const Divider(color: Color(0xFF1E1E1E), height: 1),
                 ],
               );
             }),
@@ -428,7 +501,11 @@ class _BowlingRow extends StatelessWidget {
   final PlayerStat stat;
   final bool isCurrent;
 
-  const _BowlingRow({required this.player, required this.stat, required this.isCurrent});
+  const _BowlingRow({
+    required this.player,
+    required this.stat,
+    required this.isCurrent,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -443,46 +520,74 @@ class _BowlingRow extends StatelessWidget {
               children: [
                 if (isCurrent)
                   Container(
-                    width: 6, height: 6,
+                    width: 6,
+                    height: 6,
                     margin: const EdgeInsets.only(right: 5),
-                    decoration: const BoxDecoration(color: Color(0xFFCC0000), shape: BoxShape.circle),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFCC0000),
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 Expanded(
-                  child: Text(player.name,
-                      maxLines: 1, overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.white.withAlpha(isCurrent ? 255 : 200),
-                        fontSize: 12,
-                        fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w600,
-                      )),
+                  child: Text(
+                    player.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white.withAlpha(isCurrent ? 255 : 200),
+                      fontSize: 12,
+                      fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w600,
+                    ),
+                  ),
                 ),
                 if (isCurrent)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 1,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFCC0000).withAlpha(25),
                       borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: const Color(0xFFCC0000).withAlpha(80)),
+                      border: Border.all(
+                        color: const Color(0xFFCC0000).withAlpha(80),
+                      ),
                     ),
-                    child: const Text('bowling',
-                        style: TextStyle(color: Color(0xFFCC0000), fontSize: 8, fontWeight: FontWeight.w700)),
+                    child: const Text(
+                      'bowling',
+                      style: TextStyle(
+                        color: Color(0xFFCC0000),
+                        fontSize: 8,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
               ],
             ),
           ),
           _statCell('${stat.overs}.${stat.ballsBowled}'),
           _statCell('${stat.runsConceded}'),
-          _statCell('${stat.wickets}',
-              color: stat.wickets >= 3
-                  ? const Color(0xFFCC0000)
-                  : stat.wickets > 0 ? Colors.orange : null,
-              bold: stat.wickets > 0),
-          _statCell('${stat.wides}',
-              color: stat.wides > 0 ? Colors.orange.withAlpha(200) : null),
-          _statCell(stat.economy.toStringAsFixed(1),
-              color: stat.economy < 6
-                  ? const Color(0xFF66BB6A)
-                  : stat.economy > 10 ? Colors.red.shade300 : null),
+          _statCell(
+            '${stat.wickets}',
+            color: stat.wickets >= 3
+                ? const Color(0xFFCC0000)
+                : stat.wickets > 0
+                ? Colors.orange
+                : null,
+            bold: stat.wickets > 0,
+          ),
+          _statCell(
+            '${stat.wides}',
+            color: stat.wides > 0 ? Colors.orange.withAlpha(200) : null,
+          ),
+          _statCell(
+            stat.economy.toStringAsFixed(1),
+            color: stat.economy < 6
+                ? const Color(0xFF66BB6A)
+                : stat.economy > 10
+                ? Colors.red.shade300
+                : null,
+          ),
         ],
       ),
     );
@@ -491,13 +596,15 @@ class _BowlingRow extends StatelessWidget {
   Widget _statCell(String value, {bool bold = false, Color? color}) {
     return SizedBox(
       width: 36,
-      child: Text(value,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: color ?? Colors.white.withAlpha(180),
-            fontSize: 12,
-            fontWeight: bold ? FontWeight.w800 : FontWeight.w500,
-          )),
+      child: Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: color ?? Colors.white.withAlpha(180),
+          fontSize: 12,
+          fontWeight: bold ? FontWeight.w800 : FontWeight.w500,
+        ),
+      ),
     );
   }
 }
@@ -509,12 +616,26 @@ Widget _tableHeader(List<String> labels) {
     child: Row(
       children: [
         Expanded(flex: 3, child: Text(labels[0], style: _headerStyle)),
-        ...labels.skip(1).map((l) =>
-            SizedBox(width: 36, child: Text(l, textAlign: TextAlign.center, style: _headerStyle))),
+        ...labels
+            .skip(1)
+            .map(
+              (l) => SizedBox(
+                width: 36,
+                child: Text(
+                  l,
+                  textAlign: TextAlign.center,
+                  style: _headerStyle,
+                ),
+              ),
+            ),
       ],
     ),
   );
 }
 
 const _headerStyle = TextStyle(
-    color: Color(0xFF666666), fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.8);
+  color: Color(0xFF666666),
+  fontSize: 9,
+  fontWeight: FontWeight.w700,
+  letterSpacing: 0.8,
+);

@@ -98,9 +98,11 @@ class _LiveMatchCardState extends State<LiveMatchCard>
     if (t == null) return;
     void tick() {
       final diff = t.difference(DateTime.now());
-      if (mounted) setState(() => _remaining = diff.isNegative ? Duration.zero : diff);
+      if (mounted)
+        setState(() => _remaining = diff.isNegative ? Duration.zero : diff);
       if (diff.isNegative) _countdownTimer?.cancel();
     }
+
     tick();
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) => tick());
   }
@@ -108,9 +110,10 @@ class _LiveMatchCardState extends State<LiveMatchCard>
   @override
   void initState() {
     super.initState();
-    _controller =
-    AnimationController(vsync: this, duration: const Duration(seconds: 2))
-      ..repeat();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat();
     if (isUpcoming) _startCountdown();
   }
 
@@ -157,14 +160,16 @@ class _LiveMatchCardState extends State<LiveMatchCard>
             border: Border.all(color: Colors.white.withAlpha(20)),
             boxShadow: [
               BoxShadow(
-                  color: Colors.black.withAlpha(80),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4)),
+                color: Colors.black.withAlpha(80),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
               if (isLive)
                 BoxShadow(
-                    color: const Color(0xFFCC0000).withAlpha(25),
-                    blurRadius: 20,
-                    spreadRadius: 2),
+                  color: const Color(0xFFCC0000).withAlpha(25),
+                  blurRadius: 20,
+                  spreadRadius: 2,
+                ),
             ],
           ),
           child: Column(
@@ -204,27 +209,34 @@ class _LiveMatchCardState extends State<LiveMatchCard>
           ),
           if (series.isNotEmpty) ...[
             const SizedBox(height: 7),
-            Text(series,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700)),
+            Text(
+              series,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ],
           if (venue.isNotEmpty) ...[
             const SizedBox(height: 3),
             Row(
               children: [
-                const Icon(Icons.location_on_rounded,
-                    size: 10, color: Colors.white30),
+                const Icon(
+                  Icons.location_on_rounded,
+                  size: 10,
+                  color: Colors.white30,
+                ),
                 const SizedBox(width: 3),
                 Expanded(
-                  child: Text(venue,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          color: Colors.white38, fontSize: 10)),
+                  child: Text(
+                    venue,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.white38, fontSize: 10),
+                  ),
                 ),
               ],
             ),
@@ -257,11 +269,14 @@ class _LiveMatchCardState extends State<LiveMatchCard>
           children: [
             const Icon(Icons.timer_outlined, size: 10, color: Colors.orange),
             const SizedBox(width: 3),
-            Text(_formatCountdown(_remaining!),
-                style: const TextStyle(
-                    color: Colors.orange,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w700)),
+            Text(
+              _formatCountdown(_remaining!),
+              style: const TextStyle(
+                color: Colors.orange,
+                fontSize: 9,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ],
         ),
       );
@@ -272,11 +287,14 @@ class _LiveMatchCardState extends State<LiveMatchCard>
       children: [
         const Icon(Icons.access_time_rounded, size: 10, color: Colors.white38),
         const SizedBox(width: 3),
-        Text('${matchDate.split('-').reversed.join('-')} • $matchTime',
-            style: const TextStyle(
-                color: Colors.white38,
-                fontSize: 9,
-                fontWeight: FontWeight.w500)),
+        Text(
+          '${matchDate.split('-').reversed.join('-')} • $matchTime',
+          style: const TextStyle(
+            color: Colors.white38,
+            fontSize: 9,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ],
     );
   }
@@ -354,33 +372,35 @@ class _LiveMatchCardState extends State<LiveMatchCard>
                 ),
                 boxShadow: hasBattingGlow
                     ? [
-                  BoxShadow(
-                      color: const Color(0xFFCC0000).withAlpha(46),
-                      blurRadius: 12,
-                      spreadRadius: 1)
-                ]
+                        BoxShadow(
+                          color: const Color(0xFFCC0000).withAlpha(46),
+                          blurRadius: 12,
+                          spreadRadius: 1,
+                        ),
+                      ]
                     : [],
               ),
               child: ClipOval(
                 child: logo.isNotEmpty
                     ? CachedNetworkImage(
-                  imageUrl: logo,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                    color: const Color(0xFF1C1C1C),
-                    child: const Center(
-                      child: SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                            strokeWidth: 1.5,
-                            color: Color(0xFFCC0000)),
-                      ),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) =>
-                      _logoFallback(name),
-                )
+                        imageUrl: logo,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          color: const Color(0xFF1C1C1C),
+                          child: const Center(
+                            child: SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                                color: Color(0xFFCC0000),
+                              ),
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            _logoFallback(name),
+                      )
                     : _logoFallback(name),
               ),
             ),
@@ -395,7 +415,9 @@ class _LiveMatchCardState extends State<LiveMatchCard>
                     color: const Color(0xFF66BB6A),
                     shape: BoxShape.circle,
                     border: Border.all(
-                        color: const Color(0xFF161616), width: 2),
+                      color: const Color(0xFF161616),
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
@@ -404,18 +426,20 @@ class _LiveMatchCardState extends State<LiveMatchCard>
 
         const SizedBox(height: 7),
 
-        Text(name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: isLeading
-                  ? Colors.white.withAlpha(220)
-                  : Colors.white.withAlpha(128),
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.4,
-            )),
+        Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: isLeading
+                ? Colors.white.withAlpha(220)
+                : Colors.white.withAlpha(128),
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.4,
+          ),
+        ),
 
         const SizedBox(height: 7),
 
@@ -424,21 +448,25 @@ class _LiveMatchCardState extends State<LiveMatchCard>
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
           children: [
-            Text('$runs',
-                style: TextStyle(
-                  color: isLeading ? Colors.white : Colors.white.withAlpha(166),
-                  fontSize: 26,
-                  fontWeight: FontWeight.w900,
-                  height: 1,
-                  letterSpacing: -1,
-                )),
-            Text('/$wickets',
-                style: TextStyle(
-                  color: Colors.white.withAlpha(isLeading ? 102 : 64),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  height: 1,
-                )),
+            Text(
+              '$runs',
+              style: TextStyle(
+                color: isLeading ? Colors.white : Colors.white.withAlpha(166),
+                fontSize: 26,
+                fontWeight: FontWeight.w900,
+                height: 1,
+                letterSpacing: -1,
+              ),
+            ),
+            Text(
+              '/$wickets',
+              style: TextStyle(
+                color: Colors.white.withAlpha(isLeading ? 102 : 64),
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                height: 1,
+              ),
+            ),
           ],
         ),
 
@@ -453,23 +481,31 @@ class _LiveMatchCardState extends State<LiveMatchCard>
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(oversDisplay,
-                  style: TextStyle(
-                      color: Colors.white.withAlpha(100),
-                      fontSize: 9,
-                      fontWeight: FontWeight.w600)),
+              Text(
+                oversDisplay,
+                style: TextStyle(
+                  color: Colors.white.withAlpha(100),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: Container(
-                    width: 1, height: 8, color: Colors.white.withAlpha(30)),
+                  width: 1,
+                  height: 8,
+                  color: Colors.white.withAlpha(30),
+                ),
               ),
               // ── RR — neutral color, no red ──────────────
-              Text('RR $rr',
-                  style: TextStyle(
-                    color: Colors.white.withAlpha(89),
-                    fontSize: 9,
-                    fontWeight: FontWeight.w700,
-                  )),
+              Text(
+                'RR $rr',
+                style: TextStyle(
+                  color: Colors.white.withAlpha(89),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ],
           ),
         ),
@@ -494,12 +530,15 @@ class _LiveMatchCardState extends State<LiveMatchCard>
               border: Border.all(color: Colors.white.withAlpha(25)),
             ),
             child: const Center(
-              child: Text('VS',
-                  style: TextStyle(
-                      color: Colors.white30,
-                      fontSize: 8,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 0.5)),
+              child: Text(
+                'VS',
+                style: TextStyle(
+                  color: Colors.white30,
+                  fontSize: 8,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.5,
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 6),
@@ -515,13 +554,12 @@ class _LiveMatchCardState extends State<LiveMatchCard>
     final runsNeeded = t.runsNeeded;
     final ballsRemaining = t.ballsRemaining;
 
-    final battingWickets =
-    battingTeamKey == 'teamA' ? team1Wickets : team2Wickets;
+    final battingWickets = battingTeamKey == 'teamA'
+        ? team1Wickets
+        : team2Wickets;
     final wicketsLeft = 10 - battingWickets;
-    final bowlingTeamName =
-    battingTeamKey == 'teamA' ? team2Name : team1Name;
-    final battingTeamName =
-    battingTeamKey == 'teamA' ? team1Name : team2Name;
+    final bowlingTeamName = battingTeamKey == 'teamA' ? team2Name : team1Name;
+    final battingTeamName = battingTeamKey == 'teamA' ? team1Name : team2Name;
 
     final chasingTeamWon = runsNeeded <= 0;
     final allOut = battingWickets >= 10 && runsNeeded > 0;
@@ -563,49 +601,66 @@ class _LiveMatchCardState extends State<LiveMatchCard>
                 children: [
                   if (chasingTeamWon) ...[
                     TextSpan(
-                        text: battingTeamName,
-                        style: const TextStyle(fontWeight: FontWeight.w700)),
+                      text: battingTeamName,
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
                     const TextSpan(
-                        text: ' won by ',
-                        style: TextStyle(fontWeight: FontWeight.w400)),
+                      text: ' won by ',
+                      style: TextStyle(fontWeight: FontWeight.w400),
+                    ),
                     TextSpan(
-                        text: '$wicketsLeft wickets',
-                        style: const TextStyle(fontWeight: FontWeight.w800)),
+                      text: '$wicketsLeft wickets',
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
                   ] else if (allOut) ...[
                     TextSpan(
-                        text: bowlingTeamName,
-                        style: const TextStyle(fontWeight: FontWeight.w700)),
+                      text: bowlingTeamName,
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
                     const TextSpan(
-                        text: ' won by ',
-                        style: TextStyle(fontWeight: FontWeight.w400)),
+                      text: ' won by ',
+                      style: TextStyle(fontWeight: FontWeight.w400),
+                    ),
                     TextSpan(
-                        text: '$runsByWhichWon runs',
-                        style: const TextStyle(fontWeight: FontWeight.w800)),
+                      text: '$runsByWhichWon runs',
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
                   ] else ...[
                     TextSpan(
-                        text: battingTeamName,
-                        style: TextStyle(
-                            color: Colors.white.withAlpha(180),
-                            fontWeight: FontWeight.w600)),
+                      text: battingTeamName,
+                      style: TextStyle(
+                        color: Colors.white.withAlpha(180),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     TextSpan(
-                        text: ' need ',
-                        style: TextStyle(
-                            color: Colors.white.withAlpha(100),
-                            fontWeight: FontWeight.w400)),
+                      text: ' need ',
+                      style: TextStyle(
+                        color: Colors.white.withAlpha(100),
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                     TextSpan(
-                        text: '$runsNeeded runs',
-                        style: TextStyle(
-                            color: urgency, fontWeight: FontWeight.w800)),
+                      text: '$runsNeeded runs',
+                      style: TextStyle(
+                        color: urgency,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                     TextSpan(
-                        text: ' in ',
-                        style: TextStyle(
-                            color: Colors.white.withAlpha(100),
-                            fontWeight: FontWeight.w400)),
+                      text: ' in ',
+                      style: TextStyle(
+                        color: Colors.white.withAlpha(100),
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                     TextSpan(
-                        text: '$ballsRemaining balls',
-                        style: TextStyle(
-                            color: Colors.white.withAlpha(180),
-                            fontWeight: FontWeight.w700)),
+                      text: '$ballsRemaining balls',
+                      style: TextStyle(
+                        color: Colors.white.withAlpha(180),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ],
                 ],
               ),
@@ -622,10 +677,8 @@ class _LiveMatchCardState extends State<LiveMatchCard>
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white.withAlpha(6),
-        borderRadius:
-        const BorderRadius.vertical(bottom: Radius.circular(16)),
-        border:
-        Border(top: BorderSide(color: Colors.white.withAlpha(18))),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+        border: Border(top: BorderSide(color: Colors.white.withAlpha(18))),
       ),
       child: Row(
         children: [
@@ -635,19 +688,24 @@ class _LiveMatchCardState extends State<LiveMatchCard>
               color: const Color(0xFFCC0000).withAlpha(25),
               borderRadius: BorderRadius.circular(5),
             ),
-            child: Icon(Icons.toll_rounded,
-                size: 11,
-                color: const Color(0xFFCC0000).withAlpha(191)),
+            child: Icon(
+              Icons.toll_rounded,
+              size: 11,
+              color: const Color(0xFFCC0000).withAlpha(191),
+            ),
           ),
           const SizedBox(width: 7),
           Expanded(
-            child: Text(tossDisplay,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    color: Colors.white60,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500)),
+            child: Text(
+              tossDisplay,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.white60,
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
         ],
       ),
@@ -667,8 +725,7 @@ class _LiveMatchCardState extends State<LiveMatchCard>
       case 'delayed':
         return _pill('DELAYED', Colors.orange.shade700);
       default:
-        return _pill(
-            normalizedStatus.toUpperCase(), Colors.grey.shade800);
+        return _pill(normalizedStatus.toUpperCase(), Colors.grey.shade800);
     }
   }
 
@@ -676,13 +733,18 @@ class _LiveMatchCardState extends State<LiveMatchCard>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-          color: color, borderRadius: BorderRadius.circular(20)),
-      child: Text(label,
-          style: const TextStyle(
-              color: Colors.white,
-              fontSize: 8,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.5)),
+        color: color,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 8,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.5,
+        ),
+      ),
     );
   }
 
@@ -692,15 +754,17 @@ class _LiveMatchCardState extends State<LiveMatchCard>
       decoration: BoxDecoration(
         color: const Color(0xFFFFB300).withAlpha(38),
         borderRadius: BorderRadius.circular(20),
-        border:
-        Border.all(color: const Color(0xFFFFB300).withAlpha(76)),
+        border: Border.all(color: const Color(0xFFFFB300).withAlpha(76)),
       ),
-      child: Text(format.toUpperCase(),
-          style: const TextStyle(
-              color: Color(0xFFFFD54F),
-              fontSize: 8,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.5)),
+      child: Text(
+        format.toUpperCase(),
+        style: const TextStyle(
+          color: Color(0xFFFFD54F),
+          fontSize: 8,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.5,
+        ),
+      ),
     );
   }
 
@@ -716,9 +780,9 @@ class _LiveMatchCardState extends State<LiveMatchCard>
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                  color: const Color(0xFFCC0000)
-                      .withAlpha((127 * pulse).toInt()),
-                  blurRadius: 8),
+                color: const Color(0xFFCC0000).withAlpha((127 * pulse).toInt()),
+                blurRadius: 8,
+              ),
             ],
           ),
           child: Row(
@@ -729,17 +793,19 @@ class _LiveMatchCardState extends State<LiveMatchCard>
                 height: 5,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white
-                      .withAlpha((140 + (115 * pulse)).toInt()),
+                  color: Colors.white.withAlpha((140 + (115 * pulse)).toInt()),
                 ),
               ),
               const SizedBox(width: 4),
-              const Text('LIVE',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 8,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 0.7)),
+              const Text(
+                'LIVE',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 8,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.7,
+                ),
+              ),
             ],
           ),
         );
@@ -754,9 +820,10 @@ class _LiveMatchCardState extends State<LiveMatchCard>
         child: Text(
           name.length >= 2 ? name.substring(0, 2).toUpperCase() : name,
           style: const TextStyle(
-              color: Colors.white54,
-              fontSize: 12,
-              fontWeight: FontWeight.w800),
+            color: Colors.white54,
+            fontSize: 12,
+            fontWeight: FontWeight.w800,
+          ),
         ),
       ),
     );
