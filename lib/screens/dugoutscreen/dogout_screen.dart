@@ -7,7 +7,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/auth_provider.dart';
 
-// ── Tokens ────────────────────────────────────────────────────
 class _C {
   static const bg = Color(0xFF0A0A0A);
   static const surface = Color(0xFF111111);
@@ -22,9 +21,6 @@ class _C {
   static const white = Colors.white;
 }
 
-// ─────────────────────────────────────────────────────────────
-//  DugoutScreen
-// ─────────────────────────────────────────────────────────────
 class DugoutScreen extends StatefulWidget {
   const DugoutScreen({super.key});
   @override
@@ -102,9 +98,6 @@ class _DugoutScreenState extends State<DugoutScreen> {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-//  App Bar
-// ─────────────────────────────────────────────────────────────
 class _AppBar extends StatelessWidget {
   final bool isLoggedIn;
   final VoidCallback onProfile;
@@ -178,9 +171,7 @@ class _AppBar extends StatelessWidget {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-//  Feed
-// ─────────────────────────────────────────────────────────────
+
 class _Feed extends StatelessWidget {
   final Stream<DocumentSnapshot> postStream;
   final Stream<QuerySnapshot> commentsStream;
@@ -236,7 +227,6 @@ class _Feed extends StatelessWidget {
         return CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
-            // ── Vote card ───────────────────────────────
             SliverToBoxAdapter(
               child: _VoteCard(
                 postText: postText,
@@ -251,7 +241,7 @@ class _Feed extends StatelessWidget {
               ),
             ),
 
-            // ── Reactions ───────────────────────────────
+
             SliverToBoxAdapter(
               child: _ReactionsBar(
                 reactions: reactions,
@@ -262,7 +252,7 @@ class _Feed extends StatelessWidget {
               ),
             ),
 
-            // ── Comments label ──────────────────────────
+
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
@@ -287,7 +277,7 @@ class _Feed extends StatelessWidget {
               ),
             ),
 
-            // ── Comments ────────────────────────────────
+
             _CommentsSliver(stream: commentsStream),
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
           ],
@@ -297,9 +287,7 @@ class _Feed extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  Vote Card
-// ─────────────────────────────────────────────────────────────
+
 class _VoteCard extends StatefulWidget {
   final String postText;
   final Map<String, dynamic> teamA, teamB;
@@ -1350,9 +1338,7 @@ class _InputBarState extends State<_InputBar> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  Rules Dialog
-// ─────────────────────────────────────────────────────────────
+
 class _RulesDialog extends StatelessWidget {
   const _RulesDialog();
 
@@ -1472,9 +1458,6 @@ class _RulesDialog extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  Ban Banner
-// ─────────────────────────────────────────────────────────────
 class _BanBanner extends StatelessWidget {
   final IconData icon;
   final String message;
@@ -1507,9 +1490,6 @@ class _BanBanner extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  Profile Sheet
-// ─────────────────────────────────────────────────────────────
 class _ProfileSheet extends StatelessWidget {
   final AuthProvider auth;
   const _ProfileSheet({required this.auth});
@@ -1573,9 +1553,6 @@ class _ProfileSheet extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  Sign In Sheet
-// ─────────────────────────────────────────────────────────────
 class _SignInSheet extends StatelessWidget {
   const _SignInSheet();
 
@@ -1664,9 +1641,6 @@ class _SignInSheet extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  Shared helpers
-// ─────────────────────────────────────────────────────────────
 Widget _handle() => Center(
   child: Container(
     width: 32,
