@@ -1125,11 +1125,12 @@ class _InputBarState extends State<_InputBar> {
           _banUntil = until;
         });
         Future.delayed(until.difference(DateTime.now()), () {
-          if (mounted)
+          if (mounted) {
             setState(() {
               _banStatus = 'none';
               _banUntil = null;
             });
+          }
         });
       }
     }
