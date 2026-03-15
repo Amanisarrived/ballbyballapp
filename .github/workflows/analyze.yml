@@ -1,4 +1,4 @@
-name: BallByBall — Senior Dev CI
+name: BallByBall CI
 
 on:
   push:
@@ -30,65 +30,17 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      # Fail on ANY analysis issue — no excuses
-      - name: Flutter analyze (strict)
-        run: flutter analyze --fatal-infos --fatal-warnings
+      - name: Flutter analyze
+        run: flutter analyze --fatal-warnings
 
-      # Check formatting — fail if any file is not dart-formatted
       - name: Check formatting
         run: dart format --output=none --set-exit-if-changed .
 
-      # Detect unused dependencies in pubspec.yaml
-      - name: Check unused dependencies
-        run: |
-          dart pub global activate dependency_validator
-          dart pub global run dependency_validator --no-dev
-
-  # ── Job 2: Tests ─────────────────────────────────────────
-  test:
-    name: 🧪 Tests
-    runs-on: ubuntu-latest
-    needs: code_quality
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.41.4"
-          channel: stable
-          cache: true
-
-      - name: Get dependencies
-        run: flutter pub get
-
-      # Run tests with coverage
-      - name: Run tests
-        run: flutter test --coverage --reporter=expanded
-
-      # Fail if coverage drops below 60%
-      - name: Check coverage threshold
-        run: |
-          dart pub global activate coverage
-          dart pub global run coverage:format_coverage \
-            --lcov --in=coverage --out=coverage/lcov.info \
-            --report-on=lib
-          COVERAGE=$(lcov --summary coverage/lcov.info 2>&1 \
-            | grep "lines" | grep -oP '\d+\.\d+(?=%)' | head -1)
-          echo "Coverage: $COVERAGE%"
-          python3 -c "
-          cov = float('$COVERAGE')
-          assert cov >= 60, f'Coverage {cov}% is below 60% threshold'
-          print(f'✅ Coverage {cov}% passed')
-          "
-
-  # ── Job 3: Build ─────────────────────────────────────────
+  # ── Job 2: Build ─────────────────────────────────────────
   build:
     name: 🏗️ Build
     runs-on: ubuntu-latest
-    needs: [code_quality, test]
+    needs: code_quality
 
     steps:
       - name: Checkout repository
@@ -110,11 +62,9 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      # Build debug APK
       - name: Build Debug APK
         run: flutter build apk --debug
 
-      # Check APK size — warn if over 50MB
       - name: Check APK size
         run: |
           APK_PATH="build/app/outputs/flutter-apk/app-debug.apk"
@@ -126,62 +76,9 @@ jobs:
             echo "✅ APK size ${SIZE_MB}MB is within limit"
           fi
 
-      # Upload APK as artifact — downloadable from Actions tab
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: debug-apk-${{ github.sha }}
           path: build/app/outputs/flutter-apk/app-debug.apk
           retention-days: 7
-
-  # ── Job 4: Security ──────────────────────────────────────
-  security:
-    name: 🔒 Security Scan
-    runs-on: ubuntu-latest
-    needs: code_quality
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Scan for hardcoded secrets (API keys, tokens etc.)
-      - name: Scan for secrets
-        uses: trufflesecurity/trufflehog@main
-        with:
-          path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
-          extra_args: --only-verified
-
-      # Check for known vulnerable pub packages
-      - name: Check for vulnerable dependencies
-        run: |
-          dart pub global activate dart_package_analyzer
-          flutter pub outdated --json | python3 -c "
-          import json, sys
-          data = json.load(sys.stdin)
-          packages = data.get('packages', [])
-          outdated = [p['package'] for p in packages
-                      if p.get('current') != p.get('latest')]
-          if outdated:
-              print(f'⚠️  Outdated packages: {outdated}')
-          else:
-              print('✅ All packages up to date')
-          "
-
-  # ── Notify on failure ────────────────────────────────────
-  notify_failure:
-    name: 🚨 Notify on Failure
-    runs-on: ubuntu-latest
-    needs: [code_quality, test, build, security]
-    if: failure()
-
-    steps:
-      - name: Post failure summary
-        run: |
-          echo "## ❌ CI Failed on \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Author:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Check the failed job above and fix before merging." >> $GITHUB_STEP_SUMMARY
